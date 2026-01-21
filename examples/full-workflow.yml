@@ -1,0 +1,100 @@
+# Full Blueprint Workflow with Dress
+#
+# This example shows all available options and includes:
+# - Disk space optimization for large Mathlib projects
+# - Lake package caching
+# - Full Mathlib cache fetching
+# - PDF and web blueprint generation
+# - GitHub Pages deployment
+#
+# Copy this file to .github/workflows/blueprint.yml in your project.
+
+name: Blueprint with Dress
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Free up disk space for large Mathlib projects
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.0
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          docker-images: false
+          swap-storage: false
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Cache Lake packages and build artifacts
+      - name: Cache Lake packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}
+          restore-keys: |
+            lake-${{ runner.os }}-
+
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      # Build blueprint with all options
+      - name: Build blueprint with Dress
+        uses: e-vergo/dress-blueprint-action@v1
+        with:
+          # Core build options
+          build-dressed: true
+          blueprint-facet: true
+          build-pdf: true
+          build-web: true
+          check-decls: true
+
+          # Paths (defaults shown)
+          lake-package-directory: "."
+          blueprint-directory: "blueprint"
+
+          # Deployment
+          deploy-pages: true
+          output-directory: "_site"
+
+          # Advanced
+          use-mathlib-cache: true
+          clean-dressed: false
+          leanblueprint-version: "git+https://github.com/e-vergo/leanblueprint.git"
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

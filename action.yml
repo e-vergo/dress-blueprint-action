@@ -1,0 +1,216 @@
+name: "Dress Blueprint Action"
+description: "Build Lean 4 projects with Dress syntax highlighting and leanblueprint documentation"
+author: "e-vergo"
+
+branding:
+  icon: "book-open"
+  color: "blue"
+
+inputs:
+  build-dressed:
+    description: "Build with Dress artifact generation enabled"
+    required: false
+    default: "true"
+
+  blueprint-facet:
+    description: "Run `lake build :blueprint` to generate library index"
+    required: false
+    default: "true"
+
+  build-pdf:
+    description: "Build PDF version of blueprint"
+    required: false
+    default: "true"
+
+  build-web:
+    description: "Build web version of blueprint"
+    required: false
+    default: "true"
+
+  check-decls:
+    description: "Run declaration check against lean_decls file"
+    required: false
+    default: "true"
+
+  lake-package-directory:
+    description: "Directory containing the Lake package"
+    required: false
+    default: "."
+
+  blueprint-directory:
+    description: "Directory containing blueprint source"
+    required: false
+    default: "blueprint"
+
+  deploy-pages:
+    description: "Upload artifact for GitHub Pages deployment"
+    required: false
+    default: "true"
+
+  output-directory:
+    description: "Directory for assembled site output"
+    required: false
+    default: "_site"
+
+  leanblueprint-version:
+    description: "leanblueprint package to install (pip spec)"
+    required: false
+    default: "git+https://github.com/e-vergo/leanblueprint.git"
+
+  use-mathlib-cache:
+    description: "Fetch Mathlib cache before building"
+    required: false
+    default: "true"
+
+  clean-dressed:
+    description: "Remove dressed artifacts before build"
+    required: false
+    default: "false"
+
+outputs:
+  blueprint-pdf-path:
+    description: "Path to generated PDF"
+    value: ${{ steps.build-blueprint.outputs.pdf-path }}
+
+  blueprint-web-path:
+    description: "Path to generated web directory"
+    value: ${{ steps.build-blueprint.outputs.web-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Validate configuration
+      id: validate
+      shell: bash
+      run: |
+        cd "${{ inputs.lake-package-directory }}"
+        if [ ! -d "${{ inputs.blueprint-directory }}" ]; then
+          echo "::warning::Blueprint directory not found: ${{ inputs.blueprint-directory }}"
+        fi
+        if [ ! -f "lakefile.toml" ] && [ ! -f "lakefile.lean" ]; then
+          echo "::error::No lakefile found in ${{ inputs.lake-package-directory }}"
+          exit 1
+        fi
+        echo "Configuration validated"
+
+    - name: Fetch Mathlib cache
+      if: inputs.use-mathlib-cache == 'true'
+      shell: bash
+      working-directory: ${{ inputs.lake-package-directory }}
+      run: |
+        lake exe cache get || echo "::warning::Cache fetch completed with some skipped files"
+
+    - name: Clean dressed artifacts
+      if: inputs.clean-dressed == 'true'
+      shell: bash
+      working-directory: ${{ inputs.lake-package-directory }}
+      run: |
+        rm -rf .lake/build/dressed
+        echo "Cleaned dressed artifacts"
+
+    - name: Build with Dress artifacts
+      if: inputs.build-dressed == 'true'
+      id: build-dressed
+      shell: bash
+      working-directory: ${{ inputs.lake-package-directory }}
+      run: |
+        echo "Creating .dress marker file"
+        mkdir -p .lake/build
+        echo "1" > .lake/build/.dress
+
+        echo "Building project with Dress artifact generation..."
+        lake build
+
+        echo "Removing .dress marker file"
+        rm -f .lake/build/.dress
+
+        echo "::notice::Dressed artifacts generated in .lake/build/dressed/"
+
+    - name: Build blueprint Lake facet
+      if: inputs.blueprint-facet == 'true'
+      shell: bash
+      working-directory: ${{ inputs.lake-package-directory }}
+      run: |
+        echo "Generating library index..."
+        lake build :blueprint
+        echo "::notice::Library index generated"
+
+    - name: Build blueprint documentation
+      if: inputs.build-pdf == 'true' || inputs.build-web == 'true'
+      id: build-blueprint
+      uses: xu-cheng/texlive-action@v2
+      with:
+        docker_image: ghcr.io/xu-cheng/texlive-full:20250101
+        run: |
+          # Install system dependencies
+          apk update
+          apk add --update make py3-pip git pkgconfig graphviz graphviz-dev gcc musl-dev python3-dev
+
+          # Configure git for container
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+
+          # Create Python venv and install dependencies
+          cd $GITHUB_WORKSPACE
+          python3 -m venv env
+          source env/bin/activate
+          pip install --upgrade pip requests wheel
+          pip install pygraphviz --config-settings="--global-option=build_ext" \
+            --config-settings="--global-option=-L/usr/lib/graphviz/" \
+            --config-settings="--global-option=-R/usr/lib/graphviz/"
+          pip install "${{ inputs.leanblueprint-version }}"
+
+          cd "${{ inputs.lake-package-directory }}/${{ inputs.blueprint-directory }}"
+
+          # Build PDF
+          if [ "${{ inputs.build-pdf }}" == "true" ]; then
+            echo "Building PDF..."
+            leanblueprint pdf || echo "::warning::PDF build failed or skipped"
+            if [ -f "print/print.pdf" ]; then
+              echo "pdf-path=${{ inputs.lake-package-directory }}/${{ inputs.blueprint-directory }}/print/print.pdf" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+          # Build web
+          if [ "${{ inputs.build-web }}" == "true" ]; then
+            echo "Building web..."
+            leanblueprint web
+            echo "web-path=${{ inputs.lake-package-directory }}/${{ inputs.blueprint-directory }}/web" >> $GITHUB_OUTPUT
+          fi
+
+    - name: Check declarations
+      if: inputs.check-decls == 'true'
+      shell: bash
+      working-directory: ${{ inputs.lake-package-directory }}
+      run: |
+        DECLS_FILE="${{ inputs.blueprint-directory }}/lean_decls"
+        if [ -f "$DECLS_FILE" ]; then
+          echo "Checking declarations..."
+          lake exe checkdecls "$DECLS_FILE" || echo "::warning::Declaration check failed"
+        else
+          echo "::notice::No lean_decls file found, skipping declaration check"
+        fi
+
+    - name: Assemble site
+      if: inputs.deploy-pages == 'true'
+      shell: bash
+      working-directory: ${{ inputs.lake-package-directory }}
+      run: |
+        mkdir -p "${{ inputs.output-directory }}"
+
+        # Copy web output
+        if [ -d "${{ inputs.blueprint-directory }}/web" ]; then
+          cp -r "${{ inputs.blueprint-directory }}/web"/* "${{ inputs.output-directory }}/"
+          echo "Copied web output to ${{ inputs.output-directory }}/"
+        fi
+
+        # Copy PDF
+        if [ -f "${{ inputs.blueprint-directory }}/print/print.pdf" ]; then
+          cp "${{ inputs.blueprint-directory }}/print/print.pdf" "${{ inputs.output-directory }}/blueprint.pdf"
+          echo "Copied PDF to ${{ inputs.output-directory }}/blueprint.pdf"
+        fi
+
+    - name: Upload Pages artifact
+      if: inputs.deploy-pages == 'true'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ${{ inputs.lake-package-directory }}/${{ inputs.output-directory }}
