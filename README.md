@@ -1,5 +1,9 @@
 # Dress Blueprint Action
 
+> **Experience Prototype**: This GitHub Action is part of an experimental exploration of enhanced tooling for Lean mathematical blueprints. It orchestrates the build process using [Dress](https://github.com/e-vergo/Dress) and experimental forks of [leanblueprint](https://github.com/e-vergo/leanblueprint) to produce interactive documentation with side-by-side LaTeX/Lean display.
+
+---
+
 A GitHub Action for building Lean 4 projects with [Dress](https://github.com/e-vergo/Dress) syntax highlighting and [leanblueprint](https://github.com/e-vergo/leanblueprint) documentation.
 
 ## Features
