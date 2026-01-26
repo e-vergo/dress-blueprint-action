@@ -1,0 +1,198 @@
+/* ar5iv-style academic paper */
+.ar5iv-paper {
+  font-family: "Computer Modern Serif", "Latin Modern Roman", Georgia, serif;
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #fff;
+  color: #333;
+  line-height: 1.7;
+}
+
+/* Header */
+.paper-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.paper-title {
+  font-size: 1.75rem;
+  font-weight: normal;
+  margin: 0 0 0.75rem 0;
+}
+
+.paper-authors {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.paper-abstract {
+  text-align: left;
+  font-size: 0.95rem;
+  margin: 1.5rem 2rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-left: 3px solid #ccc;
+}
+
+/* Sections */
+.paper-content h1 { font-size: 1.4rem; margin-top: 2rem; font-weight: bold; }
+.paper-content h2 { font-size: 1.2rem; margin-top: 1.5rem; font-weight: bold; }
+.paper-content h3 { font-size: 1.1rem; margin-top: 1.25rem; font-weight: bold; }
+
+.paper-content p {
+  margin: 1rem 0;
+  text-align: justify;
+}
+
+/* Theorem environments */
+.paper-theorem {
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 3px;
+}
+
+.paper-definition {
+  background: #f5f9ff;
+  border-color: #d0e0f0;
+}
+
+.paper-lemma {
+  background: #fff9f5;
+  border-color: #f0e0d0;
+}
+
+.paper-theorem-header {
+  margin-bottom: 0.5rem;
+}
+
+.paper-theorem-type {
+  font-weight: bold;
+  font-style: italic;
+}
+
+.paper-theorem-statement {
+  margin-left: 0.5rem;
+}
+
+/* Proofs */
+.paper-proof {
+  margin: 0.75rem 0 1.5rem 0;
+}
+
+.paper-proof-header {
+  font-style: italic;
+}
+
+.paper-qed {
+  float: right;
+}
+
+/* Verification badges */
+.verification-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  font-style: normal;
+}
+
+.verification-badge.verified {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.verification-badge.in-progress {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+.verification-badge.not-started {
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+
+.badge-icon { font-size: 0.8em; }
+.badge-text { font-size: 0.85em; }
+
+/* Blueprint link */
+.blueprint-link {
+  font-size: 0.75rem;
+  color: #0066cc;
+  text-decoration: none;
+  margin-left: 0.4rem;
+  font-style: normal;
+}
+
+.blueprint-link:hover {
+  text-decoration: underline;
+}
+
+/* Math display */
+.paper-content .MathJax {
+  font-size: 1.1em;
+}
+
+/* Display math blocks */
+.paper-displaymath {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+/* Footer */
+.paper-footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}
+
+.paper-footer a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.paper-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .ar5iv-paper { padding: 1rem; }
+  .paper-abstract { margin: 1rem 0; }
+  .paper-theorem { padding: 0.5rem; }
+}
+
+/* Print styles */
+@media print {
+  .ar5iv-paper {
+    max-width: none;
+    padding: 0;
+  }
+
+  .verification-badge {
+    border: 1px solid #999;
+  }
+
+  .blueprint-link {
+    display: none;
+  }
+
+  .paper-footer {
+    display: none;
+  }
+}
