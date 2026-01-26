@@ -60,4 +60,42 @@ $(document).ready(function() {
     function() {
       $(this).parent().parent().parent().hide();
     })
+
+  // Dependency graph modal functionality
+  // Escape special characters in node IDs for jQuery selectors
+  function latexLabelEscaper(label) {
+    return label.replace(/:/g, '\\:').replace(/\./g, '\\.');
+  }
+
+  // Legend toggle
+  $("span#legend_title").on("click", function () {
+    $(this).siblings('dl').toggle();
+  });
+
+  // Graph node click handler - show modal for clicked node
+  // Works with SVG nodes that have class="node" and <title> containing node ID
+  $(".node").on("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var title = $(this).find('title').text().trim();
+    if (title) {
+      $('#statements > div').hide();
+      $('#' + latexLabelEscaper(title) + '_modal').show().children().show().children().show();
+      $('#statements').show();
+    }
+  });
+
+  // Modal close button handler
+  $(".dep-closebtn").on("click", function(e) {
+    e.stopPropagation();
+    $(this).closest('.dep-modal-container').hide();
+  });
+
+  // Close modal when clicking outside of it
+  $(document).on("click", function(e) {
+    if ($(e.target).closest('.dep-modal-content').length === 0 &&
+        $(e.target).closest('.node').length === 0) {
+      $('.dep-modal-container').hide();
+    }
+  });
 });
