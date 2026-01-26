@@ -425,14 +425,15 @@ document.addEventListener('DOMContentLoaded', function() {
             var titleEl = node.querySelector('title');
             if (!titleEl) return;
             var nodeId = titleEl.textContent.trim();
+            // Normalize ID to match Runway's format (colons become hyphens)
+            var normalizedId = nodeId.replace(/:/g, '-');
 
             // Hide all modals first
             var allModals = document.querySelectorAll('.dep-modal-container');
             allModals.forEach(function(m) { m.style.display = 'none'; });
 
-            // Show the corresponding modal
-            var modalId = escapeLabel(nodeId) + '_modal';
-            var modal = document.getElementById(nodeId + '_modal');
+            // Show the corresponding modal (use normalized ID)
+            var modal = document.getElementById(normalizedId + '_modal');
             if (modal) {
                 modal.style.display = 'flex';
                 onModalOpen(modal);
