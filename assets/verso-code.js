@@ -262,23 +262,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fitToWindow() {
-        var viewportRect = viewport.getBoundingClientRect();
+        // Use clientWidth/Height for inner dimensions (excludes borders/scrollbars)
+        var viewportWidth = viewport.clientWidth;
+        var viewportHeight = viewport.clientHeight;
 
-        // Use getBBox() to get actual content bounds (not element dimensions)
-        // This accounts for content that doesn't start at (0,0)
+        // Use getBBox() to get actual content bounds
         var bbox = svg.getBBox();
-        var contentWidth = bbox.width;
-        var contentHeight = bbox.height;
 
         // Scale to fit with padding
-        var scaleX = (viewportRect.width - 40) / contentWidth;
-        var scaleY = (viewportRect.height - 40) / contentHeight;
+        var scaleX = (viewportWidth - 40) / bbox.width;
+        var scaleY = (viewportHeight - 40) / bbox.height;
         scale = Math.min(scaleX, scaleY, 1);  // Don't scale up, only down
 
-        // Center the content, accounting for content origin offset
-        // bbox.x and bbox.y tell us where the content actually starts
-        translateX = (viewportRect.width - contentWidth * scale) / 2 - bbox.x * scale;
-        translateY = (viewportRect.height - contentHeight * scale) / 2 - bbox.y * scale;
+        // After scaling, content center is at:
+        var scaledCenterX = (bbox.x + bbox.width / 2) * scale;
+        var scaledCenterY = (bbox.y + bbox.height / 2) * scale;
+
+        // We want content center at viewport center
+        var viewportCenterX = viewportWidth / 2;
+        var viewportCenterY = viewportHeight / 2;
+
+        // Translation moves the scaled content so centers align
+        translateX = viewportCenterX - scaledCenterX;
+        translateY = viewportCenterY - scaledCenterY;
 
         updateTransform();
     }
