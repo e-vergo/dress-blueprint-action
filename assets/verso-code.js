@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
         scale = Math.min(scaleX, scaleY, 1);  // Don't scale up, only down
 
         translateX = (viewportRect.width - svgWidth * scale) / 2;
-        translateY = 10;
+        translateY = (viewportRect.height - svgHeight * scale) / 2;
         updateTransform();
     }
 
