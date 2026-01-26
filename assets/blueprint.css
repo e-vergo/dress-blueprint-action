@@ -1171,8 +1171,10 @@ pre.lean-code {
 .dep-modal-content {
   background: white;
   padding: 20px;
-  width: 60%;
-  max-width: 600px;
+  width: 90%;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: relative;
@@ -1338,4 +1340,51 @@ pre.lean-code {
 
 .dep-graph-legend .legend-shape.box {
   border-radius: 2px;
+}
+
+/* ========== SBS Container in Modal ========== */
+/* Ensure sbs-container displays properly in modal */
+.dep-modal-content .sbs-container {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: 0;  /* Override the normal 3rem margin */
+  margin-bottom: 1rem;
+}
+
+.dep-modal-content .sbs-latex-column,
+.dep-modal-content .sbs-lean-column {
+  flex: 1;
+  min-width: 0;  /* Allow shrinking below content size */
+}
+
+/* LaTeX proof toggle in modal */
+.dep-modal-content .proof_wrapper {
+  margin-top: 0.5rem;
+}
+
+.dep-modal-content .proof_heading {
+  cursor: pointer;
+}
+
+/* Lean code max height in modal */
+.dep-modal-content .lean-code {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Modal links section - right-aligned with border */
+.dep-modal-content .dep-modal-links {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--bp-border, #e0e0e0);
+  text-align: right;
+}
+
+.dep-modal-content .dep-modal-links a {
+  color: var(--bp-link, #0066cc);
+  text-decoration: none;
+}
+
+.dep-modal-content .dep-modal-links a:hover {
+  text-decoration: underline;
 }

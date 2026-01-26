@@ -265,23 +265,21 @@ document.addEventListener('DOMContentLoaded', function() {
         var viewportWidth = viewport.clientWidth;
         var viewportHeight = viewport.clientHeight;
 
-        // Get actual content bounds within SVG coordinate system
-        var bbox = svg.getBBox();
+        // Use SVG's declared dimensions (includes padding on all sides)
+        var svgWidth = parseFloat(svg.getAttribute('width')) || svg.getBBox().width;
+        var svgHeight = parseFloat(svg.getAttribute('height')) || svg.getBBox().height;
 
-        // Scale based on content size, not SVG declared size
-        var scaleX = (viewportWidth - 40) / bbox.width;
-        var scaleY = (viewportHeight - 40) / bbox.height;
+        // Scale to fit the full SVG in viewport
+        var scaleX = (viewportWidth - 40) / svgWidth;
+        var scaleY = (viewportHeight - 40) / svgHeight;
         scale = Math.min(scaleX, scaleY, 1);  // Don't scale up, only down
 
-        // Content center in SVG coordinates
-        var contentCenterX = bbox.x + bbox.width / 2;
-        var contentCenterY = bbox.y + bbox.height / 2;
+        // Center the full SVG (from 0,0 to svgWidth,svgHeight)
+        var svgCenterX = svgWidth / 2;
+        var svgCenterY = svgHeight / 2;
 
-        // After transform: point (x,y) in SVG coords ends up at (x*scale + translateX, y*scale + translateY)
-        // We want content center to end up at viewport center
-        // So: contentCenterX * scale + translateX = viewportWidth / 2
-        translateX = viewportWidth / 2 - contentCenterX * scale;
-        translateY = viewportHeight / 2 - contentCenterY * scale;
+        translateX = viewportWidth / 2 - svgCenterX * scale;
+        translateY = viewportHeight / 2 - svgCenterY * scale;
 
         updateTransform();
     }
@@ -384,6 +382,29 @@ document.addEventListener('DOMContentLoaded', function() {
     fitToWindow();
 });
 
+// Initialize MathJax and Tippy.js when a modal is opened
+function onModalOpen(modalElement) {
+    // Render MathJax in modal content
+    if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+        MathJax.typesetPromise([modalElement]).catch(function(err) {
+            console.warn('MathJax typeset failed:', err);
+        });
+    }
+
+    // Initialize Tippy.js on hover elements within the modal
+    if (typeof tippy !== 'undefined') {
+        // Initialize on elements that haven't been initialized yet
+        var selector = '.dep-modal-content .const.token, .dep-modal-content .keyword.token, .dep-modal-content .literal.token, .dep-modal-content .option.token, .dep-modal-content .var.token, .dep-modal-content .typed.token, .dep-modal-content .has-info';
+        var elements = modalElement.querySelectorAll(selector);
+        elements.forEach(function(el) {
+            // Only initialize if not already done
+            if (!el._tippy) {
+                tippy(el, defaultTippyProps);
+            }
+        });
+    }
+}
+
 // Dependency graph node click modal handling
 document.addEventListener('DOMContentLoaded', function() {
     // Helper to escape special characters in label for CSS selector
@@ -414,6 +435,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var modal = document.getElementById(nodeId + '_modal');
             if (modal) {
                 modal.style.display = 'flex';
+                onModalOpen(modal);
             }
         });
     });
