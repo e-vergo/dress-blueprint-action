@@ -67,6 +67,16 @@ inputs:
     required: false
     default: "false"
 
+  use-runway:
+    description: "Use Runway (Lean) instead of leanblueprint (Python) for site generation"
+    required: false
+    default: "false"
+
+  runway-target:
+    description: "Lake target for Runway build (e.g., 'SBSTest:runway')"
+    required: false
+    default: ""
+
 outputs:
   blueprint-pdf-path:
     description: "Path to generated PDF"
@@ -135,8 +145,17 @@ runs:
         lake build :blueprint
         echo "::notice::Library index generated"
 
+    - name: Build with Runway
+      if: inputs.use-runway == 'true' && inputs.runway-target != ''
+      shell: bash
+      working-directory: ${{ inputs.lake-package-directory }}
+      run: |
+        echo "Building site with Runway..."
+        lake build ${{ inputs.runway-target }}
+        echo "::notice::Runway site generated in .lake/build/runway/"
+
     - name: Build blueprint documentation
-      if: inputs.build-pdf == 'true' || inputs.build-web == 'true'
+      if: (inputs.build-pdf == 'true' || inputs.build-web == 'true') && inputs.use-runway != 'true'
       id: build-blueprint
       uses: xu-cheng/texlive-action@v2
       with:
@@ -197,13 +216,19 @@ runs:
       run: |
         mkdir -p "${{ inputs.output-directory }}"
 
-        # Copy web output
-        if [ -d "${{ inputs.blueprint-directory }}/web" ]; then
+        # Check for Runway output first (new Lean toolchain)
+        if [ -d ".lake/build/runway" ]; then
+          cp -r .lake/build/runway/* "${{ inputs.output-directory }}/"
+          echo "Copied Runway output to ${{ inputs.output-directory }}/"
+        # Fall back to leanblueprint output (Python toolchain)
+        elif [ -d "${{ inputs.blueprint-directory }}/web" ]; then
           cp -r "${{ inputs.blueprint-directory }}/web"/* "${{ inputs.output-directory }}/"
-          echo "Copied web output to ${{ inputs.output-directory }}/"
+          echo "Copied leanblueprint web output to ${{ inputs.output-directory }}/"
+        else
+          echo "::warning::No site output found in .lake/build/runway or ${{ inputs.blueprint-directory }}/web"
         fi
 
-        # Copy PDF
+        # Copy PDF if available
         if [ -f "${{ inputs.blueprint-directory }}/print/print.pdf" ]; then
           cp "${{ inputs.blueprint-directory }}/print/print.pdf" "${{ inputs.output-directory }}/blueprint.pdf"
           echo "Copied PDF to ${{ inputs.output-directory }}/blueprint.pdf"
