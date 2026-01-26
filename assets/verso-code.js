@@ -294,7 +294,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Zoom buttons
     var zoomIn = document.getElementById('graph-zoom-in');
     var zoomOut = document.getElementById('graph-zoom-out');
-    var resetBtn = document.getElementById('graph-reset');
     var fitBtn = document.getElementById('graph-fit');
 
     if (zoomIn) {
@@ -309,10 +308,6 @@ document.addEventListener('DOMContentLoaded', function() {
             scale = Math.max(scale / 1.2, 0.1);
             updateTransform();
         });
-    }
-
-    if (resetBtn) {
-        resetBtn.addEventListener('click', resetView);
     }
 
     if (fitBtn) {
