@@ -79,8 +79,10 @@ $(document).ready(function() {
     e.stopPropagation();
     var title = $(this).find('title').text().trim();
     if (title) {
+      // Normalize ID: colons become hyphens to match Runway's modal ID format
+      var normalizedId = title.replace(/:/g, '-');
       $('#statements > div').hide();
-      $('#' + latexLabelEscaper(title) + '_modal').show().children().show().children().show();
+      $('#' + latexLabelEscaper(normalizedId) + '_modal').show().children().show().children().show();
       $('#statements').show();
     }
   });
