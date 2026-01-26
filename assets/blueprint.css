@@ -872,6 +872,7 @@ nav.toc li.active a {
   overflow: auto;
   cursor: grab;
   background: #ffffff;  /* Explicit white to match SVG background */
+  margin-left: 200px;  /* Make room for legend (~180px + padding) */
 }
 
 .dep-graph-viewport:active {
