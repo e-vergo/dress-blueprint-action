@@ -244,6 +244,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var isDragging = false;
     var startX, startY;
 
+    // Prevent all selection during drag
+    function preventSelection(e) {
+        e.preventDefault();
+        return false;
+    }
+
     function updateTransform() {
         svgContainer.style.transform = 'translate(' + translateX + 'px, ' + translateY + 'px) scale(' + scale + ')';
     }
@@ -269,6 +275,22 @@ document.addEventListener('DOMContentLoaded', function() {
         updateTransform();
     }
 
+    // Zoom centered on cursor position
+    function zoomAtPoint(delta, clientX, clientY) {
+        var rect = viewport.getBoundingClientRect();
+        var x = clientX - rect.left;
+        var y = clientY - rect.top;
+
+        var oldScale = scale;
+        scale = Math.max(0.1, Math.min(5, scale * delta));
+
+        // Adjust translation to keep cursor point fixed
+        translateX = x - (x - translateX) * (scale / oldScale);
+        translateY = y - (y - translateY) * (scale / oldScale);
+
+        updateTransform();
+    }
+
     // Zoom buttons
     var zoomIn = document.getElementById('graph-zoom-in');
     var zoomOut = document.getElementById('graph-zoom-out');
@@ -277,14 +299,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (zoomIn) {
         zoomIn.addEventListener('click', function() {
-            scale = Math.min(scale * 1.2, 3);
+            scale = Math.min(scale * 1.2, 5);
             updateTransform();
         });
     }
 
     if (zoomOut) {
         zoomOut.addEventListener('click', function() {
-            scale = Math.max(scale / 1.2, 0.3);
+            scale = Math.max(scale / 1.2, 0.1);
             updateTransform();
         });
     }
@@ -297,12 +319,11 @@ document.addEventListener('DOMContentLoaded', function() {
         fitBtn.addEventListener('click', fitToWindow);
     }
 
-    // Mouse wheel zoom
+    // Mouse wheel zoom (centered on cursor)
     viewport.addEventListener('wheel', function(e) {
         e.preventDefault();
         var delta = e.deltaY > 0 ? 0.9 : 1.1;
-        scale = Math.max(0.3, Math.min(3, scale * delta));
-        updateTransform();
+        zoomAtPoint(delta, e.clientX, e.clientY);
     }, { passive: false });
 
     // Pan with pointer drag (pointer events provide better tracking than mouse events)
@@ -314,8 +335,15 @@ document.addEventListener('DOMContentLoaded', function() {
         isDragging = true;
         startX = e.clientX - translateX;
         startY = e.clientY - translateY;
+
+        // Disable transitions during drag
+        svgContainer.classList.add('dragging');
         viewport.style.cursor = 'grabbing';
         viewport.setPointerCapture(e.pointerId);
+
+        // Prevent all selection
+        document.addEventListener('selectstart', preventSelection);
+        document.addEventListener('dragstart', preventSelection);
     });
 
     viewport.addEventListener('pointermove', function(e) {
@@ -329,13 +357,21 @@ document.addEventListener('DOMContentLoaded', function() {
     viewport.addEventListener('pointerup', function(e) {
         if (!isDragging) return;
         isDragging = false;
+
+        svgContainer.classList.remove('dragging');
         viewport.style.cursor = 'grab';
         viewport.releasePointerCapture(e.pointerId);
+
+        document.removeEventListener('selectstart', preventSelection);
+        document.removeEventListener('dragstart', preventSelection);
     });
 
     viewport.addEventListener('pointercancel', function(e) {
         isDragging = false;
+        svgContainer.classList.remove('dragging');
         viewport.style.cursor = 'grab';
+        document.removeEventListener('selectstart', preventSelection);
+        document.removeEventListener('dragstart', preventSelection);
     });
 
     // Initial fit
