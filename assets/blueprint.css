@@ -1242,11 +1242,12 @@ pre.lean-code {
 
 /* Compact legend styles */
 .dep-graph-legend {
-  background: var(--bp-bg);
-  border: 1px solid var(--bp-border);
+  background: white;
+  border: 1px solid #ccc;
   border-radius: 4px;
   padding: 0.5rem;
   font-size: 0.875rem;
+  color: #333;
 }
 
 .dep-graph-legend .legend-title {
