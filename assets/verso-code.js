@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mouse wheel zoom (centered on cursor)
     viewport.addEventListener('wheel', function(e) {
         e.preventDefault();
-        var delta = e.deltaY > 0 ? 0.96 : 1.04;  // Reduced sensitivity (was 0.9/1.1)
+        var delta = e.deltaY > 0 ? 0.975 : 1.025;  // 4x reduced sensitivity (was 0.9/1.1)
         zoomAtPoint(delta, e.clientX, e.clientY);
     }, { passive: false });
 
