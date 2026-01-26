@@ -1,7 +1,7 @@
 /* ar5iv-style academic paper */
 .ar5iv-paper {
   font-family: "Computer Modern Serif", "Latin Modern Roman", Georgia, serif;
-  max-width: 750px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
   background: #fff;
@@ -53,18 +53,15 @@
   margin: 1.5rem 0;
   padding: 0.75rem 1rem;
   background: #fafafa;
-  border: 1px solid #e5e5e5;
   border-radius: 3px;
 }
 
 .paper-definition {
   background: #f5f9ff;
-  border-color: #d0e0f0;
 }
 
 .paper-lemma {
   background: #fff9f5;
-  border-color: #f0e0d0;
 }
 
 .paper-theorem-header {
