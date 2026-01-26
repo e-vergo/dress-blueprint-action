@@ -872,6 +872,9 @@ nav.toc li.active a {
   overflow: auto;
   cursor: grab;
   background: #ffffff;  /* Explicit white to match SVG background */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
 }
 
 .dep-graph-viewport:active {
@@ -882,11 +885,18 @@ nav.toc li.active a {
   transform-origin: 0 0;
   transition: transform 0.05s ease-out;
   display: inline-block;  /* Shrink-wrap to SVG size */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .dep-graph-svg svg {
   display: block;
   background: #ffffff;  /* Ensure SVG has white background */
+}
+
+.dep-graph-svg text,
+.dep-graph-svg tspan {
+  pointer-events: none;  /* Prevent text from interfering with drag */
 }
 
 .dep-graph-placeholder {
