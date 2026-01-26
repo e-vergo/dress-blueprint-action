@@ -235,6 +235,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var svg = svgContainer.querySelector('svg');
     if (!svg) return;
 
+    // Set transform origin for proper scaling behavior
+    svgContainer.style.transformOrigin = '0 0';
+
     var scale = 1;
     var translateX = 0;
     var translateY = 0;
@@ -302,23 +305,35 @@ document.addEventListener('DOMContentLoaded', function() {
         updateTransform();
     }, { passive: false });
 
-    // Pan with mouse drag
-    viewport.addEventListener('mousedown', function(e) {
+    // Pan with pointer drag (pointer events provide better tracking than mouse events)
+    viewport.addEventListener('pointerdown', function(e) {
         if (e.button !== 0) return;  // Only left click
+        // Don't start drag if clicking on a node
+        if (e.target.closest('.node')) return;
+        e.preventDefault();
         isDragging = true;
         startX = e.clientX - translateX;
         startY = e.clientY - translateY;
         viewport.style.cursor = 'grabbing';
+        viewport.setPointerCapture(e.pointerId);
     });
 
-    document.addEventListener('mousemove', function(e) {
+    viewport.addEventListener('pointermove', function(e) {
         if (!isDragging) return;
+        e.preventDefault();
         translateX = e.clientX - startX;
         translateY = e.clientY - startY;
         updateTransform();
     });
 
-    document.addEventListener('mouseup', function() {
+    viewport.addEventListener('pointerup', function(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        viewport.style.cursor = 'grab';
+        viewport.releasePointerCapture(e.pointerId);
+    });
+
+    viewport.addEventListener('pointercancel', function(e) {
         isDragging = false;
         viewport.style.cursor = 'grab';
     });
