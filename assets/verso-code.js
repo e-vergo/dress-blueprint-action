@@ -265,23 +265,23 @@ document.addEventListener('DOMContentLoaded', function() {
         var viewportWidth = viewport.clientWidth;
         var viewportHeight = viewport.clientHeight;
 
-        // Use SVG's declared dimensions (which match content bounds from Lean)
-        // These are set as width="X" height="Y" attributes on the SVG element
-        var svgWidth = svg.width.baseVal.value || svg.clientWidth || 800;
-        var svgHeight = svg.height.baseVal.value || svg.clientHeight || 600;
+        // Get actual content bounds within SVG coordinate system
+        var bbox = svg.getBBox();
 
-        // Scale to fit with padding
-        var scaleX = (viewportWidth - 40) / svgWidth;
-        var scaleY = (viewportHeight - 40) / svgHeight;
+        // Scale based on content size, not SVG declared size
+        var scaleX = (viewportWidth - 40) / bbox.width;
+        var scaleY = (viewportHeight - 40) / bbox.height;
         scale = Math.min(scaleX, scaleY, 1);  // Don't scale up, only down
 
-        // After scaling, SVG dimensions become:
-        var scaledWidth = svgWidth * scale;
-        var scaledHeight = svgHeight * scale;
+        // Content center in SVG coordinates
+        var contentCenterX = bbox.x + bbox.width / 2;
+        var contentCenterY = bbox.y + bbox.height / 2;
 
-        // Center the scaled SVG in viewport
-        translateX = (viewportWidth - scaledWidth) / 2;
-        translateY = (viewportHeight - scaledHeight) / 2;
+        // After transform: point (x,y) in SVG coords ends up at (x*scale + translateX, y*scale + translateY)
+        // We want content center to end up at viewport center
+        // So: contentCenterX * scale + translateX = viewportWidth / 2
+        translateX = viewportWidth / 2 - contentCenterX * scale;
+        translateY = viewportHeight / 2 - contentCenterY * scale;
 
         updateTransform();
     }
