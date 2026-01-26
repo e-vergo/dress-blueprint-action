@@ -1270,14 +1270,26 @@ pre.lean-code {
 .dep-graph-legend .legend-swatch {
   width: 16px;
   height: 16px;
-  border: 1px solid #333;
   border-radius: 3px;
 }
 
-.dep-graph-legend .legend-swatch.stated { background: #f0f0f0; }
-.dep-graph-legend .legend-swatch.proven { background: #90EE90; }
-.dep-graph-legend .legend-swatch.not-ready { background: #FFB6C1; }
-.dep-graph-legend .legend-swatch.mathlib { background: #87CEEB; }
+/* 8 Status Colors */
+.dep-graph-legend .legend-swatch.not-ready { background-color: #F4A460; }
+.dep-graph-legend .legend-swatch.stated { background-color: #FFD700; }
+.dep-graph-legend .legend-swatch.ready { background-color: #20B2AA; }
+.dep-graph-legend .legend-swatch.sorry { background-color: #8B0000; }
+.dep-graph-legend .legend-swatch.proven { background-color: #90EE90; }
+.dep-graph-legend .legend-swatch.fully-proven { background-color: #228B22; }
+.dep-graph-legend .legend-swatch.mathlib-ready { background-color: #4169E1; }
+.dep-graph-legend .legend-swatch.in-mathlib { background-color: #191970; }
+
+/* Legend separator line between colors and shapes */
+.dep-graph-legend .legend-separator {
+  width: 100%;
+  height: 1px;
+  background-color: #ccc;
+  margin: 0.5rem 0;
+}
 
 .dep-graph-legend .legend-shape {
   width: 16px;
