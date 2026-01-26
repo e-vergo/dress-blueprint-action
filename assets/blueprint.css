@@ -865,6 +865,11 @@ nav.toc li.active a {
   background: var(--bp-border);
 }
 
+/* Fit button expands to fill available width */
+.dep-graph-toolbar button#graph-fit {
+  flex: 1;
+}
+
 .dep-graph-viewport {
   width: 100%;
   min-height: 200px;

@@ -263,15 +263,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function fitToWindow() {
         var viewportRect = viewport.getBoundingClientRect();
-        var svgWidth = parseFloat(svg.getAttribute('width')) || svg.viewBox.baseVal.width;
-        var svgHeight = parseFloat(svg.getAttribute('height')) || svg.viewBox.baseVal.height;
 
-        var scaleX = (viewportRect.width - 20) / svgWidth;
-        var scaleY = (viewportRect.height - 20) / svgHeight;
+        // Use getBBox() to get actual content bounds (not element dimensions)
+        // This accounts for content that doesn't start at (0,0)
+        var bbox = svg.getBBox();
+        var contentWidth = bbox.width;
+        var contentHeight = bbox.height;
+
+        // Scale to fit with padding
+        var scaleX = (viewportRect.width - 40) / contentWidth;
+        var scaleY = (viewportRect.height - 40) / contentHeight;
         scale = Math.min(scaleX, scaleY, 1);  // Don't scale up, only down
 
-        translateX = (viewportRect.width - svgWidth * scale) / 2;
-        translateY = (viewportRect.height - svgHeight * scale) / 2;
+        // Center the content, accounting for content origin offset
+        // bbox.x and bbox.y tell us where the content actually starts
+        translateX = (viewportRect.width - contentWidth * scale) / 2 - bbox.x * scale;
+        translateY = (viewportRect.height - contentHeight * scale) / 2 - bbox.y * scale;
+
         updateTransform();
     }
 
