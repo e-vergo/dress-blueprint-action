@@ -1228,9 +1228,17 @@ pre.lean-code {
   cursor: pointer;
 }
 
-.dep-graph-svg .node:hover polygon,
-.dep-graph-svg .node:hover ellipse {
-  stroke-width: 3;
+/* Node hover highlight with smooth transition */
+.dep-graph-svg .node ellipse,
+.dep-graph-svg .node rect,
+.dep-graph-svg .node polygon {
+  transition: stroke-width 0.15s ease;
+}
+
+.dep-graph-svg .node:hover ellipse,
+.dep-graph-svg .node:hover rect,
+.dep-graph-svg .node:hover polygon {
+  stroke-width: 3px;
 }
 
 /* ========== Static HTML Legend and Toolbar ========== */
