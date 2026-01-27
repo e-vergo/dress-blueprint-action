@@ -27,10 +27,19 @@ $(document).ready(function() {
   $("div.proof_heading").click(
     function() {
       var expand_span = $(this).children('span.expand-proof');
-      if ($(expand_span).html() == "▼") {
-        $(expand_span).html("▶");
+      var proofWrapper = $(this).closest('.proof_wrapper');
+      var sbsContainer = $(this).closest('.sbs-container');
+
+      if ($(expand_span).html() == "\u25BC") {
+        $(expand_span).html("\u25B6");
+        proofWrapper.removeClass('expanded');
+        // Also hide the Lean proof body
+        sbsContainer.find('.lean-proof-body').slideUp();
       } else {
-        $(expand_span).html("▼");
+        $(expand_span).html("\u25BC");
+        proofWrapper.addClass('expanded');
+        // Also show the Lean proof body
+        sbsContainer.find('.lean-proof-body').slideDown();
       };
       $(this).siblings("div.proof_content").slideToggle()
     })

@@ -1,18 +1,18 @@
 /* ar5iv-style academic paper */
 .ar5iv-paper {
   font-family: "Computer Modern Serif", "Latin Modern Roman", Georgia, serif;
-  max-width: 900px;  /* Slightly narrower to fit sidebar layout */
-  margin: 0;  /* No auto margin - let sidebar layout handle positioning */
+  width: 65%;
+  margin: 0 auto;  /* Center horizontally */
   padding: 1.5rem 2rem;
   background: #fff;
   color: #333;
   line-height: 1.7;
 }
 
-/* When inside sidebar layout, ensure paper fills available width nicely */
+/* When inside sidebar layout, center within content area */
 .content .ar5iv-paper {
-  max-width: 100%;
-  width: 100%;
+  width: 65%;
+  margin: 0 auto;
 }
 
 /* Header */
@@ -81,6 +81,76 @@
 
 .paper-theorem-statement {
   margin-left: 0.5rem;
+}
+
+/* Side-by-side display in paper - override blueprint.css styles */
+.paper-theorem.sbs-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.paper-theorem .sbs-latex-column {
+  min-width: 0;  /* Allow proper grid sizing */
+}
+
+.paper-theorem .sbs-lean-column {
+  min-width: 0;  /* Allow proper grid sizing */
+  background: #f8f8f8;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.paper-theorem .sbs-lean-column pre {
+  margin: 0;
+  font-size: 0.85rem;
+  overflow-x: auto;
+}
+
+/* Proof toggle in paper - use same pattern as blueprint */
+.paper-theorem .proof_wrapper {
+  margin-top: 0.75rem;
+}
+
+.paper-theorem .proof_heading {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.paper-theorem .proof_caption {
+  font-style: italic;
+}
+
+.paper-theorem .expand-proof {
+  font-size: 0.8rem;
+  transition: transform 0.2s;
+}
+
+.paper-theorem .proof_content {
+  display: none;
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+}
+
+.paper-theorem .proof_wrapper.expanded .proof_content {
+  display: block;
+}
+
+.paper-theorem .proof_wrapper.expanded .expand-proof {
+  transform: rotate(90deg);
+}
+
+/* Lean proof body visibility - synced with LaTeX proof toggle */
+.paper-theorem .lean-proof-body {
+  display: none;
+}
+
+.paper-theorem .proof_wrapper.expanded ~ .sbs-lean-column .lean-proof-body,
+.paper-theorem.proof-expanded .lean-proof-body {
+  display: block;
 }
 
 /* Proofs */
@@ -174,8 +244,31 @@
 }
 
 /* Responsive */
+@media (max-width: 1200px) {
+  .ar5iv-paper {
+    width: 85%;
+  }
+  .content .ar5iv-paper {
+    width: 85%;
+  }
+}
+
+@media (max-width: 900px) {
+  .ar5iv-paper {
+    width: 95%;
+  }
+  .content .ar5iv-paper {
+    width: 95%;
+  }
+  /* Stack side-by-side on smaller screens */
+  .paper-theorem.sbs-container {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 600px) {
-  .ar5iv-paper { padding: 1rem; }
+  .ar5iv-paper { padding: 1rem; width: 100%; }
+  .content .ar5iv-paper { width: 100%; }
   .paper-abstract { margin: 1rem 0; }
   .paper-theorem { padding: 0.5rem; }
 }
