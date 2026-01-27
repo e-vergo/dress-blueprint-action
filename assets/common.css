@@ -49,8 +49,13 @@
 }
 
 .expand-proof {
-  font-size: 0.8rem;
-  transition: transform 0.2s;
+  font-size: 0.75rem;
+  color: #0066cc;
+  font-weight: normal;
+}
+
+.expand-proof:hover {
+  text-decoration: underline;
 }
 
 .proof_content {
@@ -61,10 +66,6 @@
 
 .proof_wrapper.expanded .proof_content {
   display: block;
-}
-
-.proof_wrapper.expanded .expand-proof {
-  transform: rotate(90deg);
 }
 
 /* Lean proof body - synced with LaTeX proof toggle */

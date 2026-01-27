@@ -30,13 +30,13 @@ $(document).ready(function() {
       var proofWrapper = $(this).closest('.proof_wrapper');
       var sbsContainer = $(this).closest('.sbs-container');
 
-      if ($(expand_span).html() == "\u25BC") {
-        $(expand_span).html("\u25B6");
+      if ($(expand_span).html() == "[hide]") {
+        $(expand_span).html("[show]");
         proofWrapper.removeClass('expanded');
         // Also hide the Lean proof body
         sbsContainer.find('.lean-proof-body').slideUp();
       } else {
-        $(expand_span).html("\u25BC");
+        $(expand_span).html("[hide]");
         proofWrapper.addClass('expanded');
         // Also show the Lean proof body
         sbsContainer.find('.lean-proof-body').slideDown();
