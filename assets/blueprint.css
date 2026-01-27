@@ -28,8 +28,8 @@ blockquote{padding:0 15px 0 40px}
 table{font-size:13px;width:100%;margin:20px 0;background:var(--sbs-bg-surface)}
 table th{font-size:16px;font-weight:700}
 table tr td{padding:7px}
-::selection{color:#fff;background:#000}
-::-moz-selection{color:#fff;background:#000}
+::selection{color:var(--sbs-selection-text);background:var(--sbs-selection-bg)}
+::-moz-selection{color:var(--sbs-selection-text);background:var(--sbs-selection-bg)}
 body{height:100vh;margin:0;flex-direction:column;color:var(--sbs-text);background-color:var(--sbs-bg-page)}
 body,div.wrapper{display:flex;overflow:hidden}
 div.wrapper{flex-grow:1}
@@ -49,9 +49,9 @@ li>p{margin:.28rem 0}
 .icon{display:inline-block;-webkit-user-select:none;-moz-user-select:none;user-select:none;width:1rem;height:1rem;stroke-width:0;stroke:currentColor;fill:currentColor}
 h1,h2,h3,h4,h5,h6{font-family:Lucida Grande,Arial,Helvetica,sans-serif}
 h1{font-size:2rem;line-height:2rem;margin:1rem 0}
-h1,h2{color:#0f2f48}
+h1,h2{color:var(--sbs-heading)}
 h2{font-size:1.5rem;margin:.8rem 0}
-h3,h4{margin:.67rem 0;color:#0f2f48}
+h3,h4{margin:.67rem 0;color:var(--sbs-heading)}
 h3,h4,p{font-size:1rem}
 p{margin:.5rem 0}
 .titlepage{text-align:center}
@@ -110,7 +110,7 @@ span.caption_ref,span.caption_title,span.subcaption{font-weight:700}
 span.caption_ref:after{content:":"}
 span.subref:after{content:")"}
 footer#footnotes{clear:both;padding-top:1rem;padding-left:1rem;border-color:var(--sbs-border);border-top:1px solid}
-footer#footnotes h1{font-size:1.5rem;margin:0;margin-bottom:.5rem;color:#000}
+footer#footnotes h1{font-size:1.5rem;margin:0;margin-bottom:.5rem;color:var(--sbs-text)}
 a.footnote{text-decoration:none}
 a.footnote sup:after{content:"]"}
 a.footnote sup:before{content:"["}
@@ -184,7 +184,7 @@ nav.active{width:100%}
   list-style: none;
 }
 .toc ul li{display:flex;min-width:100%;align-items:center;flex-wrap:wrap;justify-content:space-between;background-color:var(--sbs-accent-light)}
-.toc ul li.current{background-color:#89aecb;font-weight:400}  /* Keep this specific highlight color */
+.toc ul li.current{background-color:var(--sbs-nav-current);font-weight:400}
 .sub-toc-0 a{padding-left:.8rem}
 .sub-toc-1 a{padding-left:1.6rem}
 .sub-toc-2 a{padding-left:2.4rem}
@@ -309,7 +309,7 @@ a.github_link {
 
 .chapter-list h2 {
   margin-bottom: 1rem;
-  color: #0f2f48;
+  color: var(--sbs-heading);
 }
 
 .chapter-index {
@@ -336,7 +336,7 @@ a.github_link {
 }
 
 .chapter-title {
-  color: #0f2f48;
+  color: var(--sbs-heading);
   margin-bottom: 1.5rem;
 }
 
@@ -351,7 +351,7 @@ a.github_link {
 }
 
 .section-title {
-  color: #0f2f48;
+  color: var(--sbs-heading);
   margin-bottom: 1rem;
 }
 
@@ -1076,7 +1076,7 @@ nav.toc li.active a {
   max-height: 600px;
   overflow: auto;
   cursor: grab;
-  background: #ffffff;  /* Explicit white to match SVG background */
+  background: var(--sbs-graph-bg);
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1103,7 +1103,7 @@ nav.toc li.active a {
 
 .dep-graph-svg svg {
   display: block;
-  background: #ffffff;  /* Ensure SVG has white background */
+  background: var(--sbs-graph-bg);
 }
 
 .dep-graph-svg text,
@@ -1261,7 +1261,7 @@ pre.lean-code {
 }
 
 .graph-card:hover {
-  background-color: #f0f4f8;
+  background-color: var(--sbs-graph-card-hover);
   border-color: var(--bp-primary);
 }
 
@@ -1443,12 +1443,12 @@ pre.lean-code {
 
 /* Compact legend styles */
 .dep-graph-legend {
-  background: white;
-  border: 1px solid #ccc;
+  background: var(--sbs-legend-bg);
+  border: 1px solid var(--sbs-border);
   border-radius: 4px;
   padding: 0.5rem;
   font-size: 0.875rem;
-  color: #333;
+  color: var(--sbs-legend-text);
 }
 
 .dep-graph-legend .legend-title {
@@ -1488,15 +1488,15 @@ pre.lean-code {
 .dep-graph-legend .legend-separator {
   width: 100%;
   height: 1px;
-  background-color: #ccc;
+  background-color: var(--sbs-legend-separator);
   margin: 0.5rem 0;
 }
 
 .dep-graph-legend .legend-shape {
   width: 16px;
   height: 12px;
-  border: 1px solid #333;
-  background: #f0f0f0;
+  border: 1px solid var(--sbs-legend-shape-border);
+  background: var(--sbs-legend-shape-bg);
 }
 
 .dep-graph-legend .legend-shape.ellipse {

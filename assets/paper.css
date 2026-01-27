@@ -81,11 +81,11 @@
 }
 
 .paper-definition {
-  background: #f5f9ff;  /* Keep distinctive tint for definitions */
+  background: var(--sbs-def-bg);
 }
 
 .paper-lemma {
-  background: #fff9f5;  /* Keep distinctive tint for lemmas */
+  background: var(--sbs-lemma-bg);
 }
 
 .paper-theorem-header {
@@ -141,15 +141,15 @@
 }
 
 .verification-badge.verified {
-  background: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background: var(--sbs-badge-verified-bg);
+  color: var(--sbs-badge-verified-text);
+  border: 1px solid var(--sbs-badge-verified-border);
 }
 
 .verification-badge.in-progress {
-  background: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffeeba;
+  background: var(--sbs-badge-progress-bg);
+  color: var(--sbs-badge-progress-text);
+  border: 1px solid var(--sbs-badge-progress-border);
 }
 
 .verification-badge.not-started {

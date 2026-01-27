@@ -1,3 +1,52 @@
+// Dark mode toggle functionality
+(function() {
+  // Check for saved theme preference or system preference
+  function getPreferredTheme() {
+    const savedTheme = localStorage.getItem('sbs-theme');
+    if (savedTheme) {
+      return savedTheme;
+    }
+    // Check system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  }
+
+  // Apply theme to document
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }
+
+  // Toggle between light and dark
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('sbs-theme', newTheme);
+    applyTheme(newTheme);
+  }
+
+  // Apply theme immediately on page load (before DOM ready)
+  applyTheme(getPreferredTheme());
+
+  // Listen for system preference changes
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+      // Only apply system preference if user hasn't set a manual preference
+      if (!localStorage.getItem('sbs-theme')) {
+        applyTheme(e.matches ? 'dark' : 'light');
+      }
+    });
+  }
+
+  // Expose toggle function globally
+  window.toggleSbsTheme = toggleTheme;
+})();
+
 $(document).ready(function() {
   var icon = function($icon, $class, $id) {
     if ($id) {
@@ -7,6 +56,13 @@ $(document).ready(function() {
     }
     return '<svg'+ $id + ' class="icon icon-' + $icon + ' ' + $class +'"><use xlink:href="symbol-defs.svg#icon-'+$icon+'"></use></svg>'
   };
+
+  // Attach click handler to theme toggle
+  $(document).on('click', '.theme-toggle', function() {
+    if (window.toggleSbsTheme) {
+      window.toggleSbsTheme();
+    }
+  });
 
   $("#toc-toggle").click(function() {
     $("nav.toc").toggle()

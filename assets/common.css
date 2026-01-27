@@ -34,6 +34,46 @@
   --sbs-accent-light: #6696bb;      /* Lighter accent */
   --sbs-accent-dark: #2d4f68;       /* Darker accent */
 
+  /* Headings */
+  --sbs-heading: #0f2f48;           /* Primary heading color */
+
+  /* Sidebar Navigation */
+  --sbs-nav-current: #89aecb;       /* Current item highlight */
+
+  /* Theorem Environments */
+  --sbs-def-bg: #f5f9ff;            /* Definition background */
+  --sbs-lemma-bg: #fff9f5;          /* Lemma background */
+
+  /* Tooltip Themes */
+  --sbs-tooltip-warning-bg: #fff8e6;
+  --sbs-tooltip-warning-text: #333333;
+  --sbs-tooltip-warning-border: #f0ad4e;
+  --sbs-tooltip-error-bg: #fff0f0;
+  --sbs-tooltip-error-text: #333333;
+  --sbs-tooltip-error-border: #d9534f;
+  --sbs-tooltip-info-bg: #f0f8ff;
+  --sbs-tooltip-info-text: #333333;
+  --sbs-tooltip-info-border: #5bc0de;
+
+  /* Graph & Legend */
+  --sbs-graph-bg: #ffffff;
+  --sbs-graph-edge: #666666;
+  --sbs-graph-edge-hover: #333333;
+  --sbs-legend-bg: #ffffff;
+  --sbs-legend-text: #333333;
+  --sbs-legend-separator: #cccccc;
+  --sbs-legend-shape-border: #333333;
+  --sbs-legend-shape-bg: #f0f0f0;
+  --sbs-graph-card-hover: #f0f4f8;
+
+  /* Verification Badges */
+  --sbs-badge-verified-bg: #d4edda;
+  --sbs-badge-verified-text: #155724;
+  --sbs-badge-verified-border: #c3e6cb;
+  --sbs-badge-progress-bg: #fff3cd;
+  --sbs-badge-progress-text: #856404;
+  --sbs-badge-progress-border: #ffeeba;
+
   /* Status Colors (8-status model) */
   --sbs-status-not-ready: #F4A460;
   --sbs-status-stated: #FFD700;
@@ -49,6 +89,156 @@
   --sbs-warning: #ffc107;
   --sbs-danger: #dc3545;
   --sbs-info: #0dcaf0;
+
+  /* Selection */
+  --sbs-selection-bg: #000000;
+  --sbs-selection-text: #ffffff;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Page & Surface Backgrounds */
+    --sbs-bg-page: #1a1a2e;
+    --sbs-bg-surface: #16213e;
+    --sbs-bg-raised: #1f2937;
+    --sbs-bg-sbs: #1a2744;
+
+    /* Borders - LIGHT borders for dark mode */
+    --sbs-border: #4b5563;
+    --sbs-border-light: #374151;
+    --sbs-border-dark: #6b7280;
+
+    /* Text */
+    --sbs-text: #f8f9fa;
+    --sbs-text-muted: #9ca3af;
+    --sbs-text-light: #6b7280;
+
+    /* Links */
+    --sbs-link: #60a5fa;
+    --sbs-link-hover: #93c5fd;
+
+    /* Accent (Sidebar/Header) - slightly brighter for dark */
+    --sbs-accent: #4a7a9e;
+    --sbs-accent-light: #5a8ab0;
+    --sbs-accent-dark: #3a6a8e;
+
+    /* Headings */
+    --sbs-heading: #e2e8f0;
+
+    /* Sidebar Navigation */
+    --sbs-nav-current: #3a5a7a;
+
+    /* Theorem Environments - darker versions */
+    --sbs-def-bg: #1e293b;
+    --sbs-lemma-bg: #27272a;
+
+    /* Tooltip Themes - dark versions */
+    --sbs-tooltip-warning-bg: #422006;
+    --sbs-tooltip-warning-text: #fef3c7;
+    --sbs-tooltip-warning-border: #f59e0b;
+    --sbs-tooltip-error-bg: #450a0a;
+    --sbs-tooltip-error-text: #fecaca;
+    --sbs-tooltip-error-border: #ef4444;
+    --sbs-tooltip-info-bg: #0c2744;
+    --sbs-tooltip-info-text: #bfdbfe;
+    --sbs-tooltip-info-border: #3b82f6;
+
+    /* Graph & Legend */
+    --sbs-graph-bg: #1a1a2e;
+    --sbs-graph-edge: #9ca3af;
+    --sbs-graph-edge-hover: #e5e7eb;
+    --sbs-legend-bg: #1f2937;
+    --sbs-legend-text: #e5e7eb;
+    --sbs-legend-separator: #4b5563;
+    --sbs-legend-shape-border: #9ca3af;
+    --sbs-legend-shape-bg: #374151;
+    --sbs-graph-card-hover: #374151;
+
+    /* Verification Badges - dark versions */
+    --sbs-badge-verified-bg: #064e3b;
+    --sbs-badge-verified-text: #a7f3d0;
+    --sbs-badge-verified-border: #059669;
+    --sbs-badge-progress-bg: #451a03;
+    --sbs-badge-progress-text: #fde68a;
+    --sbs-badge-progress-border: #d97706;
+
+    /* Selection */
+    --sbs-selection-bg: #60a5fa;
+    --sbs-selection-text: #000000;
+  }
+}
+
+/* Manual Dark Mode Override (JavaScript-controlled) */
+html[data-theme="dark"] {
+  /* Page & Surface Backgrounds */
+  --sbs-bg-page: #1a1a2e;
+  --sbs-bg-surface: #16213e;
+  --sbs-bg-raised: #1f2937;
+  --sbs-bg-sbs: #1a2744;
+
+  /* Borders - LIGHT borders for dark mode */
+  --sbs-border: #4b5563;
+  --sbs-border-light: #374151;
+  --sbs-border-dark: #6b7280;
+
+  /* Text */
+  --sbs-text: #f8f9fa;
+  --sbs-text-muted: #9ca3af;
+  --sbs-text-light: #6b7280;
+
+  /* Links */
+  --sbs-link: #60a5fa;
+  --sbs-link-hover: #93c5fd;
+
+  /* Accent (Sidebar/Header) - slightly brighter for dark */
+  --sbs-accent: #4a7a9e;
+  --sbs-accent-light: #5a8ab0;
+  --sbs-accent-dark: #3a6a8e;
+
+  /* Headings */
+  --sbs-heading: #e2e8f0;
+
+  /* Sidebar Navigation */
+  --sbs-nav-current: #3a5a7a;
+
+  /* Theorem Environments - darker versions */
+  --sbs-def-bg: #1e293b;
+  --sbs-lemma-bg: #27272a;
+
+  /* Tooltip Themes - dark versions */
+  --sbs-tooltip-warning-bg: #422006;
+  --sbs-tooltip-warning-text: #fef3c7;
+  --sbs-tooltip-warning-border: #f59e0b;
+  --sbs-tooltip-error-bg: #450a0a;
+  --sbs-tooltip-error-text: #fecaca;
+  --sbs-tooltip-error-border: #ef4444;
+  --sbs-tooltip-info-bg: #0c2744;
+  --sbs-tooltip-info-text: #bfdbfe;
+  --sbs-tooltip-info-border: #3b82f6;
+
+  /* Graph & Legend */
+  --sbs-graph-bg: #1a1a2e;
+  --sbs-graph-edge: #9ca3af;
+  --sbs-graph-edge-hover: #e5e7eb;
+  --sbs-legend-bg: #1f2937;
+  --sbs-legend-text: #e5e7eb;
+  --sbs-legend-separator: #4b5563;
+  --sbs-legend-shape-border: #9ca3af;
+  --sbs-legend-shape-bg: #374151;
+  --sbs-graph-card-hover: #374151;
+
+  /* Verification Badges - dark versions */
+  --sbs-badge-verified-bg: #064e3b;
+  --sbs-badge-verified-text: #a7f3d0;
+  --sbs-badge-verified-border: #059669;
+  --sbs-badge-progress-bg: #451a03;
+  --sbs-badge-progress-text: #fde68a;
+  --sbs-badge-progress-border: #d97706;
+
+  /* Selection */
+  --sbs-selection-bg: #60a5fa;
+  --sbs-selection-text: #000000;
 }
 
 /* ---------------------------------------------
@@ -256,34 +446,34 @@
 .tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before { border-right-color: var(--sbs-bg-raised); }
 
 .tippy-box[data-theme~='warning'] {
-  background-color: #fff8e6;
-  color: black;
-  border: 2px solid #f0ad4e;
+  background-color: var(--sbs-tooltip-warning-bg);
+  color: var(--sbs-tooltip-warning-text);
+  border: 2px solid var(--sbs-tooltip-warning-border);
   border-radius: 4px;
 }
 
-.tippy-box[data-theme~='warning'][data-placement^='top'] > .tippy-arrow::before { border-top-color: #fff8e6; }
-.tippy-box[data-theme~='warning'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: #fff8e6; }
+.tippy-box[data-theme~='warning'][data-placement^='top'] > .tippy-arrow::before { border-top-color: var(--sbs-tooltip-warning-bg); }
+.tippy-box[data-theme~='warning'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--sbs-tooltip-warning-bg); }
 
 .tippy-box[data-theme~='error'] {
-  background-color: #fff0f0;
-  color: black;
-  border: 2px solid #d9534f;
+  background-color: var(--sbs-tooltip-error-bg);
+  color: var(--sbs-tooltip-error-text);
+  border: 2px solid var(--sbs-tooltip-error-border);
   border-radius: 4px;
 }
 
-.tippy-box[data-theme~='error'][data-placement^='top'] > .tippy-arrow::before { border-top-color: #fff0f0; }
-.tippy-box[data-theme~='error'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: #fff0f0; }
+.tippy-box[data-theme~='error'][data-placement^='top'] > .tippy-arrow::before { border-top-color: var(--sbs-tooltip-error-bg); }
+.tippy-box[data-theme~='error'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--sbs-tooltip-error-bg); }
 
 .tippy-box[data-theme~='info'] {
-  background-color: #f0f8ff;
-  color: black;
-  border: 2px solid #5bc0de;
+  background-color: var(--sbs-tooltip-info-bg);
+  color: var(--sbs-tooltip-info-text);
+  border: 2px solid var(--sbs-tooltip-info-border);
   border-radius: 4px;
 }
 
-.tippy-box[data-theme~='info'][data-placement^='top'] > .tippy-arrow::before { border-top-color: #f0f8ff; }
-.tippy-box[data-theme~='info'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: #f0f8ff; }
+.tippy-box[data-theme~='info'][data-placement^='top'] > .tippy-arrow::before { border-top-color: var(--sbs-tooltip-info-bg); }
+.tippy-box[data-theme~='info'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--sbs-tooltip-info-bg); }
 
 .tippy-box[data-theme~='tactic'] {
   background-color: var(--sbs-bg-surface);
@@ -436,4 +626,180 @@
 
 .hl.lean .conclusion .type {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ---------------------------------------------
+   7. Dark Mode Toggle
+   --------------------------------------------- */
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  color: #fff;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.theme-toggle:hover {
+  background-color: var(--sbs-accent);
+}
+
+.theme-toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  transition: background-color 0.2s;
+}
+
+.theme-toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+html[data-theme="dark"] .theme-toggle-switch {
+  background: var(--sbs-link);
+}
+
+html[data-theme="dark"] .theme-toggle-switch::after {
+  transform: translateX(20px);
+}
+
+.theme-toggle-icon {
+  font-size: 1rem;
+}
+
+.theme-toggle-icon.sun { display: inline; }
+.theme-toggle-icon.moon { display: none; }
+
+html[data-theme="dark"] .theme-toggle-icon.sun { display: none; }
+html[data-theme="dark"] .theme-toggle-icon.moon { display: inline; }
+
+/* ---------------------------------------------
+   8. Dark Mode Graph Edge Override
+   --------------------------------------------- */
+
+/* Override SVG edge colors in dark mode */
+html[data-theme="dark"] .dep-graph-container svg path,
+html[data-theme="dark"] .dep-graph-svg svg path {
+  stroke: var(--sbs-graph-edge) !important;
+}
+
+html[data-theme="dark"] .dep-graph-container svg path:hover,
+html[data-theme="dark"] .dep-graph-svg svg path:hover {
+  stroke: var(--sbs-graph-edge-hover) !important;
+}
+
+/* Also override marker (arrow) colors */
+html[data-theme="dark"] .dep-graph-container svg marker path,
+html[data-theme="dark"] .dep-graph-svg svg marker path {
+  fill: var(--sbs-graph-edge) !important;
+}
+
+/* SVG text in dark mode */
+html[data-theme="dark"] .dep-graph-container svg text,
+html[data-theme="dark"] .dep-graph-svg svg text {
+  fill: var(--sbs-text) !important;
+}
+
+/* ---------------------------------------------
+   9. Dark Mode Lean Syntax Highlighting
+   --------------------------------------------- */
+
+/* Adjust syntax colors for dark mode readability */
+html[data-theme="dark"] .lean-keyword,
+html[data-theme="dark"] .hl.lean .keyword,
+html[data-theme="dark"] .keyword.token {
+  color: #569cd6;
+}
+
+html[data-theme="dark"] .lean-const,
+html[data-theme="dark"] .hl.lean .const,
+html[data-theme="dark"] .const.token {
+  color: #dcdcaa;
+}
+
+html[data-theme="dark"] .lean-var,
+html[data-theme="dark"] .hl.lean .var,
+html[data-theme="dark"] .var.token {
+  color: #9cdcfe;
+}
+
+html[data-theme="dark"] .lean-string,
+html[data-theme="dark"] .hl.lean .literal.string,
+html[data-theme="dark"] .literal.string.token {
+  color: #ce9178;
+}
+
+html[data-theme="dark"] .lean-option,
+html[data-theme="dark"] .hl.lean .option,
+html[data-theme="dark"] .option.token {
+  color: #d7ba7d;
+}
+
+html[data-theme="dark"] .lean-docstring,
+html[data-theme="dark"] .hl.lean .doc-comment,
+html[data-theme="dark"] .doc-comment.token {
+  color: #6a9955;
+}
+
+html[data-theme="dark"] .lean-sort,
+html[data-theme="dark"] .hl.lean .sort,
+html[data-theme="dark"] .sort.token {
+  color: #4ec9b0;
+}
+
+html[data-theme="dark"] .lean-number {
+  color: #b5cea8;
+}
+
+html[data-theme="dark"] .lean-operator {
+  color: #d4d4d4;
+}
+
+html[data-theme="dark"] .lean-comment {
+  color: #6a9955;
+}
+
+html[data-theme="dark"] .lean-sorry,
+html[data-theme="dark"] .sorry.token {
+  color: #ff6b6b;
+  background-color: #4a1515;
+}
+
+/* Rainbow brackets - brighter for dark mode */
+html[data-theme="dark"] .lean-bracket-1 { color: #ff79c6; }
+html[data-theme="dark"] .lean-bracket-2 { color: #bd93f9; }
+html[data-theme="dark"] .lean-bracket-3 { color: #8be9fd; }
+html[data-theme="dark"] .lean-bracket-4 { color: #50fa7b; }
+html[data-theme="dark"] .lean-bracket-5 { color: #ffb86c; }
+html[data-theme="dark"] .lean-bracket-6 { color: #ff5555; }
+
+/* Hypothesis names in dark mode */
+html[data-theme="dark"] .hl.lean .hypotheses .name {
+  color: #ff7b72;
+}
+
+/* Token binding highlight - darker yellow for dark mode */
+html[data-theme="dark"] .hl.lean .token.binding-hl {
+  background-color: rgba(255, 255, 0, 0.15);
+}
+
+/* Docstring code blocks in dark mode */
+html[data-theme="dark"] .hl.lean .docstring code {
+  background-color: rgba(255, 255, 255, 0.1);
 }
