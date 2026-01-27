@@ -672,11 +672,12 @@ nav.toc li.active a {
   align-items: flex-start;
   gap: 1rem;
   padding: 0.75rem;
-  background: var(--bp-bg);
-  border: 1px solid var(--bp-border);
+  background: #f4f4f4;
+  border: 1px solid #e5e7eb;
   border-radius: 4px;
   font-size: 0.875rem;
   width: fit-content;
+  color: #1f2937;
 }
 
 .stats-pie {
