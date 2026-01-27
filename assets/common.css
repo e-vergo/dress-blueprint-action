@@ -698,6 +698,12 @@ html[data-theme="dark"] .theme-toggle-icon.moon { display: inline; }
   .dep-graph-svg svg text {
     fill: var(--sbs-text) !important;
   }
+
+  /* Override SVG background rect */
+  .dep-graph-container svg > rect:first-child,
+  .dep-graph-svg svg > rect:first-child {
+    fill: var(--sbs-graph-bg) !important;
+  }
 }
 
 /* Override SVG edge colors in dark mode (manual toggle) */
@@ -721,6 +727,12 @@ html[data-theme="dark"] .dep-graph-svg svg marker path {
 html[data-theme="dark"] .dep-graph-container svg text,
 html[data-theme="dark"] .dep-graph-svg svg text {
   fill: var(--sbs-text) !important;
+}
+
+/* SVG background rect in dark mode */
+html[data-theme="dark"] .dep-graph-container svg > rect:first-child,
+html[data-theme="dark"] .dep-graph-svg svg > rect:first-child {
+  fill: var(--sbs-graph-bg) !important;
 }
 
 /* ---------------------------------------------
