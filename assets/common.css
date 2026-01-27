@@ -107,67 +107,7 @@
   --sbs-info: #0dcaf0;
 }
 
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Backgrounds */
-    --sbs-bg-page: #1a1a1a;
-    --sbs-bg-surface: #1a1a1a;
-
-    /* Text */
-    --sbs-text: var(--sbs-white);
-    --sbs-text-muted: #cccccc;
-
-    /* Borders */
-    --sbs-border: #cccccc;
-
-    /* Links */
-    --sbs-link: #60a5fa;
-    --sbs-link-hover: #93c5fd;
-
-    /* Accent (Sidebar/Header) */
-    --sbs-accent: var(--sbs-blue-bright);
-
-    /* Headings */
-    --sbs-heading: var(--sbs-white);
-
-    /* Selection */
-    --sbs-selection-bg: #60a5fa;
-    --sbs-selection-text: var(--sbs-black);
-
-    /* Tooltip Themes - dark versions */
-    --sbs-tooltip-warning-bg: #422006;
-    --sbs-tooltip-warning-text: #fef3c7;
-    --sbs-tooltip-warning-border: #f59e0b;
-    --sbs-tooltip-error-bg: #450a0a;
-    --sbs-tooltip-error-text: #fecaca;
-    --sbs-tooltip-error-border: #ef4444;
-    --sbs-tooltip-info-bg: #0c2744;
-    --sbs-tooltip-info-text: #bfdbfe;
-    --sbs-tooltip-info-border: #3b82f6;
-
-    /* Graph & Legend */
-    --sbs-graph-bg: #1a1a1a;
-    --sbs-graph-edge: #9ca3af;
-    --sbs-graph-edge-hover: #e5e7eb;
-    --sbs-legend-bg: #1f2937;
-    --sbs-legend-text: #e5e7eb;
-    --sbs-legend-separator: #4b5563;
-    --sbs-legend-shape-border: #9ca3af;
-    --sbs-legend-shape-bg: #374151;
-    --sbs-graph-card-hover: #374151;
-
-    /* Verification Badges - dark versions */
-    --sbs-badge-verified-bg: #064e3b;
-    --sbs-badge-verified-text: #a7f3d0;
-    --sbs-badge-verified-border: #059669;
-    --sbs-badge-progress-bg: #451a03;
-    --sbs-badge-progress-text: #fde68a;
-    --sbs-badge-progress-border: #d97706;
-  }
-}
-
-/* Manual Dark Mode Override (JavaScript-controlled) */
+/* Dark Mode (JavaScript-controlled via toggle) */
 html[data-theme="dark"] {
   /* Backgrounds */
   --sbs-bg-page: #1a1a1a;
@@ -677,36 +617,7 @@ html[data-theme="dark"] .theme-toggle-icon.moon { display: inline; }
    8. Dark Mode Graph Edge Override
    --------------------------------------------- */
 
-/* Override SVG edge colors in dark mode (system preference) */
-@media (prefers-color-scheme: dark) {
-  .dep-graph-container svg path,
-  .dep-graph-svg svg path {
-    stroke: var(--sbs-graph-edge) !important;
-  }
-
-  .dep-graph-container svg path:hover,
-  .dep-graph-svg svg path:hover {
-    stroke: var(--sbs-graph-edge-hover) !important;
-  }
-
-  .dep-graph-container svg marker path,
-  .dep-graph-svg svg marker path {
-    fill: var(--sbs-graph-edge) !important;
-  }
-
-  .dep-graph-container svg text,
-  .dep-graph-svg svg text {
-    fill: var(--sbs-text) !important;
-  }
-
-  /* Override SVG background rect */
-  .dep-graph-container svg > rect:first-child,
-  .dep-graph-svg svg > rect:first-child {
-    fill: var(--sbs-graph-bg) !important;
-  }
-}
-
-/* Override SVG edge colors in dark mode (manual toggle) */
+/* SVG edge colors in dark mode */
 html[data-theme="dark"] .dep-graph-container svg path,
 html[data-theme="dark"] .dep-graph-svg svg path {
   stroke: var(--sbs-graph-edge) !important;
@@ -739,31 +650,7 @@ html[data-theme="dark"] .dep-graph-svg svg > rect:first-child {
    9. Dark Mode Lean Syntax Highlighting
    --------------------------------------------- */
 
-/* Adjust syntax colors for dark mode (system preference) */
-@media (prefers-color-scheme: dark) {
-  .lean-keyword, .hl.lean .keyword, .keyword.token { color: #569cd6; }
-  .lean-const, .hl.lean .const, .const.token { color: #dcdcaa; }
-  .lean-var, .hl.lean .var, .var.token { color: #9cdcfe; }
-  .lean-string, .hl.lean .literal.string, .literal.string.token { color: #ce9178; }
-  .lean-option, .hl.lean .option, .option.token { color: #d7ba7d; }
-  .lean-docstring, .hl.lean .doc-comment, .doc-comment.token { color: #6a9955; }
-  .lean-sort, .hl.lean .sort, .sort.token { color: #4ec9b0; }
-  .lean-number { color: #b5cea8; }
-  .lean-operator { color: #d4d4d4; }
-  .lean-comment { color: #6a9955; }
-  .lean-sorry, .sorry.token { color: #ff6b6b; background-color: #4a1515; }
-  .lean-bracket-1 { color: #ff79c6; }
-  .lean-bracket-2 { color: #bd93f9; }
-  .lean-bracket-3 { color: #8be9fd; }
-  .lean-bracket-4 { color: #50fa7b; }
-  .lean-bracket-5 { color: #ffb86c; }
-  .lean-bracket-6 { color: #ff5555; }
-  .hl.lean .hypotheses .name { color: #ff7b72; }
-  .hl.lean .token.binding-hl { background-color: rgba(255, 255, 0, 0.15); }
-  .hl.lean .docstring code { background-color: rgba(255, 255, 255, 0.1); }
-}
-
-/* Adjust syntax colors for dark mode (manual toggle) */
+/* Lean syntax colors for dark mode (manual toggle only) */
 html[data-theme="dark"] .lean-keyword,
 html[data-theme="dark"] .hl.lean .keyword,
 html[data-theme="dark"] .keyword.token {
