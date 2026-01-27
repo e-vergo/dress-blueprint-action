@@ -913,6 +913,193 @@ nav.toc li.active a {
   }
 }
 
+/* ===================== */
+/* Dashboard Phase 2 CSS */
+/* ===================== */
+
+/* Double progress panel width */
+.progress-cell {
+  min-width: 400px;
+}
+
+/* Health metrics badges */
+.project-health {
+  margin-top: 1rem;
+}
+
+.health-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.health-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.health-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.health-blocked {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.health-high {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.health-issues {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.health-notes {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.badge-count {
+  font-weight: 700;
+}
+
+/* Key theorem previews */
+.key-theorems-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.key-theorem-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.key-theorem-item:last-child {
+  border-bottom: none;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+}
+
+.key-theorem-link {
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+}
+
+.key-theorem-link:hover {
+  background: #f8f9fa;
+}
+
+.key-theorem-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.kt-latex,
+.kt-lean {
+  overflow: hidden;
+  max-height: 80px;
+}
+
+.kt-env {
+  font-weight: 600;
+  color: #495057;
+}
+
+.kt-label {
+  color: #6c757d;
+}
+
+.kt-statement {
+  margin-top: 0.25rem;
+  color: #333;
+}
+
+.kt-lean code {
+  font-size: 0.75rem;
+  background: #f8f9fa;
+  padding: 0.25rem;
+  border-radius: 3px;
+  display: block;
+  overflow: hidden;
+}
+
+/* Project notes colored borders */
+.note-section {
+  padding-left: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.note-section h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.note-section.priority-high {
+  border-left: 3px solid #dc3545;
+}
+
+.note-section.priority-medium {
+  border-left: 3px solid #ffc107;
+}
+
+.note-section.priority-low {
+  border-left: 3px solid #28a745;
+}
+
+.note-section.blocked {
+  border-left: 3px solid #fd7e14;
+}
+
+.note-section.issues {
+  border-left: 3px solid #ffc107;
+}
+
+.note-section.tech-debt {
+  border-left: 3px solid #6c757d;
+}
+
+.note-section.misc {
+  border-left: 3px solid #17a2b8;
+}
+
+.note-section .dashboard-list {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.note-section .dashboard-list li {
+  margin-bottom: 0.25rem;
+}
+
+.note-text {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
 /* Legacy progress bar styles (kept for backwards compatibility) */
 .progress-bar {
   height: 8px;
