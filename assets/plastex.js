@@ -1,15 +1,12 @@
 // Dark mode toggle functionality
 (function() {
-  // Check for saved theme preference or system preference
+  // Check for saved theme preference, default to light
   function getPreferredTheme() {
     const savedTheme = localStorage.getItem('sbs-theme');
     if (savedTheme) {
       return savedTheme;
     }
-    // Check system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
+    // Default to light mode
     return 'light';
   }
 
@@ -33,15 +30,8 @@
   // Apply theme immediately on page load (before DOM ready)
   applyTheme(getPreferredTheme());
 
-  // Listen for system preference changes
-  if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-      // Only apply system preference if user hasn't set a manual preference
-      if (!localStorage.getItem('sbs-theme')) {
-        applyTheme(e.matches ? 'dark' : 'light');
-      }
-    });
-  }
+  // System preference listener disabled - default is always light
+  // User must manually toggle to dark mode
 
   // Expose toggle function globally
   window.toggleSbsTheme = toggleTheme;
