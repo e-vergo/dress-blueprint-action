@@ -380,8 +380,6 @@ nav.toc li.active a {
   --bp-spacing: 1.5rem;
 }
 
-/* Dark mode handled by common.css :root overrides */
-
 /* Progress Section */
 .progress-section {
   margin: 2rem 0;

@@ -51,26 +51,6 @@
   --sbs-info: #0dcaf0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --sbs-bg-page: #1a1a2e;
-    --sbs-bg-surface: #16213e;
-    --sbs-bg-raised: #0f3460;
-    --sbs-bg-sbs: #1a2744;
-
-    --sbs-border: #374151;
-    --sbs-border-light: #4b5563;
-    --sbs-border-dark: #1f2937;
-
-    --sbs-text: #f8f9fa;
-    --sbs-text-muted: #9ca3af;
-    --sbs-text-light: #6b7280;
-
-    --sbs-link: #60a5fa;
-    --sbs-link-hover: #93c5fd;
-  }
-}
-
 /* ---------------------------------------------
    1. Side-by-Side Layout
    --------------------------------------------- */
