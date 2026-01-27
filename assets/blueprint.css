@@ -768,18 +768,38 @@ nav.toc li.active a {
 /* Dashboard Grid Layout */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 340px 1fr;  /* Fixed width for stats, flexible for key theorems */
+  grid-template-rows: auto auto;     /* Two rows */
   gap: 1rem;
   margin-bottom: 2rem;
   max-width: 900px;
 }
 
-.dashboard-row {
+/* Top row: Progress (col 1) + Key Theorems (col 2) */
+.dashboard-row.top-row {
   display: contents;
+}
+
+/* Bottom row: Messages + Project Notes spanning both columns, equal width */
+.dashboard-row.bottom-row {
+  display: grid;
+  grid-column: 1 / -1;  /* Span all columns */
+  grid-template-columns: 1fr 1fr;  /* Equal width columns */
+  gap: 1rem;
 }
 
 .dashboard-cell {
   min-height: 200px;
+}
+
+/* Progress stats box - fixed size, don't stretch */
+.dashboard-cell.progress-cell {
+  width: 340px;
+}
+
+/* Key theorems fills remaining space */
+.dashboard-cell.key-theorems-cell {
+  min-width: 0;  /* Allow shrinking */
 }
 
 /* Make all stats boxes in dashboard have same styling */
@@ -788,12 +808,17 @@ nav.toc li.active a {
 .stats-box.project-notes {
   background: #f4f4f4;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 8px;  /* Rounded corners */
   font-size: 0.875rem;
   color: #333;
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+/* Ensure the main stats-box also has rounded corners */
+.stats-box {
+  border-radius: 8px;
 }
 
 /* Dashboard list styling */
