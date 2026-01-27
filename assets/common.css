@@ -77,11 +77,6 @@
   display: none;
 }
 
-/* QED symbol */
-.proof_content p:last-child::after {
-  content: " \25A1";
-  float: right;
-}
 
 /* ---------------------------------------------
    3. Lean Syntax Highlighting
