@@ -3,6 +3,74 @@
    Used by: blueprint pages, paper page, dependency graph modals
    ============================================ */
 
+/* ============================================
+   Side-by-Side Blueprint Design System
+   Unified color variables for consistent appearance
+   ============================================ */
+
+:root {
+  /* Page & Surface Backgrounds */
+  --sbs-bg-page: #f8f9fa;           /* Unified page background */
+  --sbs-bg-surface: #ffffff;        /* Cards, panels, modals */
+  --sbs-bg-raised: #f1f3f5;         /* Slightly elevated surfaces */
+  --sbs-bg-sbs: #e8f4fc;            /* Side-by-side container */
+
+  /* Borders */
+  --sbs-border: #dee2e6;            /* Primary border */
+  --sbs-border-light: #e9ecef;      /* Subtle borders */
+  --sbs-border-dark: #ced4da;       /* Emphasized borders */
+
+  /* Text */
+  --sbs-text: #212529;              /* Primary text */
+  --sbs-text-muted: #6c757d;        /* Secondary text */
+  --sbs-text-light: #adb5bd;        /* Tertiary text */
+
+  /* Links */
+  --sbs-link: #0066cc;              /* All links */
+  --sbs-link-hover: #004c99;        /* Link hover */
+
+  /* Accent (Sidebar/Header) */
+  --sbs-accent: #396282;            /* Primary accent */
+  --sbs-accent-light: #6696bb;      /* Lighter accent */
+  --sbs-accent-dark: #2d4f68;       /* Darker accent */
+
+  /* Status Colors (8-status model) */
+  --sbs-status-not-ready: #F4A460;
+  --sbs-status-stated: #FFD700;
+  --sbs-status-ready: #20B2AA;
+  --sbs-status-sorry: #8B0000;
+  --sbs-status-proven: #90EE90;
+  --sbs-status-fully-proven: #228B22;
+  --sbs-status-mathlib-ready: #4169E1;
+  --sbs-status-in-mathlib: #191970;
+
+  /* Semantic Colors */
+  --sbs-success: #198754;
+  --sbs-warning: #ffc107;
+  --sbs-danger: #dc3545;
+  --sbs-info: #0dcaf0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sbs-bg-page: #1a1a2e;
+    --sbs-bg-surface: #16213e;
+    --sbs-bg-raised: #0f3460;
+    --sbs-bg-sbs: #1a2744;
+
+    --sbs-border: #374151;
+    --sbs-border-light: #4b5563;
+    --sbs-border-dark: #1f2937;
+
+    --sbs-text: #f8f9fa;
+    --sbs-text-muted: #9ca3af;
+    --sbs-text-light: #6b7280;
+
+    --sbs-link: #60a5fa;
+    --sbs-link-hover: #93c5fd;
+  }
+}
+
 /* ---------------------------------------------
    1. Side-by-Side Layout
    --------------------------------------------- */
@@ -12,7 +80,7 @@
   grid-template-columns: 100ch 100ch;
   gap: 1rem;
   align-items: start;
-  background: #e8f4fc;
+  background: var(--sbs-bg-sbs);
   padding: 1rem;
   border-radius: 4px;
 }
@@ -53,7 +121,7 @@
 
 .expand-proof {
   font-size: 0.75rem;
-  color: #0066cc;
+  color: var(--sbs-link);
   font-weight: normal;
 }
 
@@ -140,12 +208,12 @@
 .hl.lean .sep {
   display: block;
   height: 1px;
-  background-color: #ccc;
+  background-color: var(--sbs-border);
   margin: 8px 0;
 }
 
 .hl.lean .docstring {
-  color: #666;
+  color: var(--sbs-text-muted);
   font-style: italic;
   margin-top: 8px;
 }
@@ -164,7 +232,7 @@
   margin-left: 0;
   padding: 0;
   margin-top: 8px;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--sbs-border);
   padding-top: 8px;
 }
 
@@ -174,7 +242,7 @@
   content: '|';
   display: inline-block;
   margin: 0 0.25em;
-  color: #999;
+  color: var(--sbs-text-light);
 }
 
 /* ---------------------------------------------
@@ -189,9 +257,9 @@
 }
 
 .tippy-box[data-theme~='lean'] {
-  background-color: #f5f5f5;
-  color: black;
-  border: 1px solid #333;
+  background-color: var(--sbs-bg-raised);
+  color: var(--sbs-text);
+  border: 1px solid var(--sbs-border-dark);
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
@@ -202,10 +270,10 @@
   font-size: 0.85em;
 }
 
-.tippy-box[data-theme~='lean'][data-placement^='top'] > .tippy-arrow::before { border-top-color: #f5f5f5; }
-.tippy-box[data-theme~='lean'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: #f5f5f5; }
-.tippy-box[data-theme~='lean'][data-placement^='left'] > .tippy-arrow::before { border-left-color: #f5f5f5; }
-.tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before { border-right-color: #f5f5f5; }
+.tippy-box[data-theme~='lean'][data-placement^='top'] > .tippy-arrow::before { border-top-color: var(--sbs-bg-raised); }
+.tippy-box[data-theme~='lean'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--sbs-bg-raised); }
+.tippy-box[data-theme~='lean'][data-placement^='left'] > .tippy-arrow::before { border-left-color: var(--sbs-bg-raised); }
+.tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before { border-right-color: var(--sbs-bg-raised); }
 
 .tippy-box[data-theme~='warning'] {
   background-color: #fff8e6;
@@ -238,19 +306,19 @@
 .tippy-box[data-theme~='info'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: #f0f8ff; }
 
 .tippy-box[data-theme~='tactic'] {
-  background-color: white;
-  color: black;
-  border: 1px solid #333;
+  background-color: var(--sbs-bg-surface);
+  color: var(--sbs-text);
+  border: 1px solid var(--sbs-border-dark);
   border-radius: 4px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 
 .tippy-box[data-theme~='tactic'] .tippy-content { padding: 12px; }
 
-.tippy-box[data-theme~='tactic'][data-placement^='top'] > .tippy-arrow::before { border-top-color: white; }
-.tippy-box[data-theme~='tactic'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: white; }
-.tippy-box[data-theme~='tactic'][data-placement^='left'] > .tippy-arrow::before { border-left-color: white; }
-.tippy-box[data-theme~='tactic'][data-placement^='right'] > .tippy-arrow::before { border-right-color: white; }
+.tippy-box[data-theme~='tactic'][data-placement^='top'] > .tippy-arrow::before { border-top-color: var(--sbs-bg-surface); }
+.tippy-box[data-theme~='tactic'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--sbs-bg-surface); }
+.tippy-box[data-theme~='tactic'][data-placement^='left'] > .tippy-arrow::before { border-left-color: var(--sbs-bg-surface); }
+.tippy-box[data-theme~='tactic'][data-placement^='right'] > .tippy-arrow::before { border-right-color: var(--sbs-bg-surface); }
 
 /* ---------------------------------------------
    5. Modal Base Styles
@@ -270,7 +338,7 @@
 }
 
 .dep-modal-content {
-  background: white;
+  background: var(--sbs-bg-surface);
   padding: 20px;
   border-radius: 8px;
   max-width: 90%;
@@ -286,11 +354,11 @@
   right: 15px;
   font-size: 24px;
   cursor: pointer;
-  color: #666;
+  color: var(--sbs-text-muted);
 }
 
 .dep-closebtn:hover {
-  color: #333;
+  color: var(--sbs-text);
 }
 
 /* ---------------------------------------------
@@ -308,8 +376,8 @@
   transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out;
   margin-top: 0;
   padding: 0 8px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
+  background-color: var(--sbs-bg-raised);
+  border: 1px solid var(--sbs-border);
   border-radius: 4px;
 }
 
@@ -337,7 +405,7 @@
 .hl.lean .goal {
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--sbs-border-light);
 }
 
 .hl.lean .goal:last-child {
@@ -347,7 +415,7 @@
 }
 
 .hl.lean .goal-name {
-  color: #666;
+  color: var(--sbs-text-muted);
   font-style: italic;
   margin-bottom: 4px;
 }
@@ -371,7 +439,7 @@
 .hl.lean .hypotheses .colon {
   display: table-cell;
   padding-right: 8px;
-  color: #666;
+  color: var(--sbs-text-muted);
 }
 
 .hl.lean .hypotheses .type {
@@ -382,7 +450,7 @@
 .hl.lean .conclusion { margin-top: 8px; }
 
 .hl.lean .conclusion .goal-prefix {
-  color: #666;
+  color: var(--sbs-text-muted);
   margin-right: 4px;
 }
 

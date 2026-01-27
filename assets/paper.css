@@ -1,6 +1,6 @@
 /* ar5iv-style academic paper styling */
 /* Note: This file depends on common.css being loaded first.
-   common.css provides: sbs layout, proof toggles, Lean syntax */
+   common.css provides: sbs layout, proof toggles, Lean syntax, CSS variables */
 
 /* ---------------------------------------------
    Paper Container
@@ -12,8 +12,8 @@
   max-width: 95%;
   margin: 0 auto;  /* Center horizontally */
   padding: 1.5rem 2rem;
-  background: #fff;
-  color: #333;
+  background: var(--sbs-bg-surface);
+  color: var(--sbs-text);
   line-height: 1.7;
 }
 
@@ -32,7 +32,7 @@
   text-align: center;
   margin-bottom: 2.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--sbs-border);
 }
 
 .paper-title {
@@ -43,7 +43,7 @@
 
 .paper-authors {
   font-size: 1.1rem;
-  color: #555;
+  color: var(--sbs-text-muted);
   margin-bottom: 1rem;
 }
 
@@ -52,8 +52,8 @@
   font-size: 0.95rem;
   margin: 1.5rem 2rem;
   padding: 1rem;
-  background: #f9f9f9;
-  border-left: 3px solid #ccc;
+  background: var(--sbs-bg-raised);
+  border-left: 3px solid var(--sbs-border-dark);
 }
 
 /* ---------------------------------------------
@@ -76,16 +76,16 @@
 .paper-theorem {
   margin: 1.5rem 0;
   padding: 0.75rem 1rem;
-  background: #fafafa;
+  background: var(--sbs-bg-raised);
   border-radius: 3px;
 }
 
 .paper-definition {
-  background: #f5f9ff;
+  background: #f5f9ff;  /* Keep distinctive tint for definitions */
 }
 
 .paper-lemma {
-  background: #fff9f5;
+  background: #fff9f5;  /* Keep distinctive tint for lemmas */
 }
 
 .paper-theorem-header {
@@ -124,10 +124,6 @@
   font-style: italic;
 }
 
-.paper-qed {
-  float: right;
-}
-
 /* ---------------------------------------------
    Verification Badges
    --------------------------------------------- */
@@ -157,9 +153,9 @@
 }
 
 .verification-badge.not-started {
-  background: #f8f9fa;
-  color: #6c757d;
-  border: 1px solid #dee2e6;
+  background: var(--sbs-bg-raised);
+  color: var(--sbs-text-muted);
+  border: 1px solid var(--sbs-border);
 }
 
 .badge-icon { font-size: 0.8em; }
@@ -171,7 +167,7 @@
 
 .blueprint-link {
   font-size: 0.75rem;
-  color: #0066cc;
+  color: var(--sbs-link);
   text-decoration: none;
   margin-left: 0.4rem;
   font-style: normal;
@@ -179,6 +175,7 @@
 
 .blueprint-link:hover {
   text-decoration: underline;
+  color: var(--sbs-link-hover);
 }
 
 /* ---------------------------------------------
@@ -201,19 +198,20 @@
 .paper-footer {
   margin-top: 3rem;
   padding-top: 1rem;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--sbs-border);
   font-size: 0.85rem;
-  color: #666;
+  color: var(--sbs-text-muted);
   text-align: center;
 }
 
 .paper-footer a {
-  color: #0066cc;
+  color: var(--sbs-link);
   text-decoration: none;
 }
 
 .paper-footer a:hover {
   text-decoration: underline;
+  color: var(--sbs-link-hover);
 }
 
 /* ---------------------------------------------
