@@ -26,7 +26,7 @@ table tr td{padding:7px}
 ::selection{color:#fff;background:#000}
 ::-moz-selection{color:#fff;background:#000}
 body{height:100vh;margin:0;flex-direction:column;color:#0a0a14;background-color:#e8e8e8}
-body::before{content:"";position:fixed;top:0;left:0;width:6px;height:100vh;background:linear-gradient(180deg,#6696bb 0,#396282);z-index:100}
+body::before{content:"";position:fixed;top:0;left:0;width:6px;height:100vh;background:#f4f4f4;z-index:100}
 body,div.wrapper{display:flex;overflow:hidden}
 div.wrapper{flex-grow:1}
 div.content-wrapper{max-width:1800px}
@@ -173,28 +173,28 @@ ul.quizz svg.icon{display:none;padding-right:.5rem;width:2rem;height:2rem}
 .local_toc ul{padding-left:1rem;list-style:none}
 .local_toc ul a{text-decoration:none;color:#0a0a14}
 .local_toc ul li{padding:.2rem 0}
-nav.toc{flex-shrink:0;display:none;width:100%;overflow-x:hidden;overflow-y:auto;flex-direction:column;margin-right:1rem;padding:0;padding-right:1rem;transition:left .5s ease;background-color:#f4f4f4;border-right:none}
+nav.toc{flex-shrink:0;display:none;width:100%;overflow-x:hidden;overflow-y:auto;flex-direction:column;margin-right:1rem;padding:0;padding-right:1rem;transition:left .5s ease;background-color:#6696bb;border-right:none}
 @media (min-width:1024px){nav.toc{display:flex;max-width:25ch}}
 nav.active{width:100%}
 .toc ul{min-width:100%;padding-left:0;list-style:none}
-.toc ul a{display:inline-block;max-width:90%;padding-top:.5rem;padding-right:.5rem;padding-bottom:.5rem;transition:all .1s ease;text-align:left;text-decoration:none;font-size:1.125rem;color:#333;flex-grow:1}
-.toc ul a:hover{transition:all .2s ease;background:#497da5;color:#fff}
+.toc ul a{display:inline-block;max-width:90%;padding-top:.5rem;padding-right:.5rem;padding-bottom:.5rem;transition:all .1s ease;text-align:left;text-decoration:none;font-size:1.125rem;color:#fff;flex-grow:1}
+.toc ul a:hover{transition:all .2s ease;background:#497da5}
 .toc .nav-separator {
   height: 1px;
-  background-color: #ccc;
+  background-color: rgba(255,255,255,0.3);
   margin: 0.5rem 0.75rem;
   list-style: none;
 }
-.toc ul li{display:flex;min-width:100%;align-items:center;flex-wrap:wrap;justify-content:space-between;background-color:#f4f4f4}
-.toc ul li.current{background-color:#e0e0e0;font-weight:400}
+.toc ul li{display:flex;min-width:100%;align-items:center;flex-wrap:wrap;justify-content:space-between;background-color:#6696bb}
+.toc ul li.current{background-color:#89aecb;font-weight:400}
 .sub-toc-0 a{padding-left:.8rem}
 .sub-toc-1 a{padding-left:1.6rem}
 .sub-toc-2 a{padding-left:2.4rem}
 .sub-toc-3 a{padding-left:3.2rem}
 .sub-toc-4 a{padding-left:4rem}
 ul.sub-toc-1,ul.sub-toc-2,ul.sub-toc-3,ul.sub-toc-4{display:none}
-span.expand-toc{min-width:.7rem;width:.8rem;height:.8rem;padding:0;padding-right:.5rem;font-size:125%;cursor:pointer;text-align:center;color:#333;background-color:Transparent}
-svg.close-toc{min-width:1.3rem;min-height:1.3rem;margin:.5rem;margin-left:auto;display:none;cursor:pointer;text-align:center;color:#333;background-color:Transparent}
+span.expand-toc{min-width:.7rem;width:.8rem;height:.8rem;padding:0;padding-right:.5rem;font-size:125%;cursor:pointer;text-align:center;color:#fff;background-color:Transparent}
+svg.close-toc{min-width:1.3rem;min-height:1.3rem;margin:.5rem;margin-left:auto;display:none;cursor:pointer;text-align:center;color:#fff;background-color:Transparent}
 nav.active svg.close-toc{display:inline-block}
 ul.active{display:block}
 code.verb{font-family:monospace;font-style:normal;font-weight:400}
