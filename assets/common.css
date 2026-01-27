@@ -9,9 +9,12 @@
 
 .sbs-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 100ch 100ch;
   gap: 1.5rem;
   align-items: start;
+  background: #e8f4fc;
+  padding: 1.5rem;
+  border-radius: 4px;
 }
 
 .sbs-latex-column {

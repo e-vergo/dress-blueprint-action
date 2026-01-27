@@ -204,18 +204,14 @@ a.github_link {
   color: inherit;
 }
 
+/* Note: .sbs-container grid layout is defined in common.css
+   This section only adds blueprint-specific spacing */
 .sbs-container {
-  display: grid;
-  grid-template-columns: minmax(75ch, 75ch) minmax(0, 1fr);
-  gap: 3rem;
-  align-items: start;
   margin-bottom: 3rem;
-  margin-left: 3rem;
 }
 
+/* Note: .sbs-latex-column sizing is defined in common.css */
 .sbs-latex-column {
-  width: 75ch;
-  max-width: 75ch;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }

@@ -100,15 +100,9 @@
 }
 
 /* ---------------------------------------------
-   Side-by-Side Display - Paper-Specific Override
-   Paper uses 1fr 1fr grid (common.css default works)
+   Side-by-Side Display
+   Uses standardized styles from common.css
    --------------------------------------------- */
-
-.paper-theorem .sbs-lean-column {
-  background: #f8f8f8;
-  border-radius: 4px;
-  padding: 0.5rem;
-}
 
 .paper-theorem .sbs-lean-column pre {
   margin: 0;
