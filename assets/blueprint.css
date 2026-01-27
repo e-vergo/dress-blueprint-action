@@ -89,9 +89,9 @@ big.huge,big.xhuge{font-size:xx-large}
 .bf,.tt{font-style:normal}
 .tt{font-family:monospace;font-weight:400}
 .underbar{text-decoration:underline}
-.fbox,.framebox{border:1px solid #000;padding:1px 3px}
+.fbox,.framebox{border:1px solid var(--sbs-text);padding:1px 3px}
 .quotation p,.quote p,.verse p{margin-top:0;margin-bottom:.5em}
-hr{color:#000}
+hr{color:var(--sbs-border)}
 dd{margin-left:3rem}
 dd p{padding:0;margin:0 0 1rem}
 ul.breadcrumbs{margin:0;padding:0;list-style:none;font-size:small}
@@ -171,7 +171,7 @@ ul.quizz svg.icon{display:none;padding-right:.5rem;width:2rem;height:2rem}
 .local_toc ul{padding-left:1rem;list-style:none}
 .local_toc ul a{text-decoration:none;color:var(--sbs-text)}
 .local_toc ul li{padding:.2rem 0}
-nav.toc{flex-shrink:0;display:none;width:100%;overflow-x:hidden;overflow-y:auto;flex-direction:column;margin-right:1rem;padding:0;padding-right:1rem;transition:left .5s ease;background-color:var(--sbs-accent-light);border-right:none}
+nav.toc{flex-shrink:0;display:none;width:100%;height:100%;overflow-x:hidden;overflow-y:auto;flex-direction:column;margin-right:1rem;padding:0;padding-right:1rem;transition:left .5s ease;background-color:var(--sbs-accent-light);border-right:none}
 @media (min-width:1024px){nav.toc{display:flex;max-width:25ch}}
 nav.active{width:100%}
 .toc ul{min-width:100%;padding-left:0;list-style:none}
@@ -1474,15 +1474,15 @@ pre.lean-code {
   border-radius: 3px;
 }
 
-/* 8 Status Colors */
-.dep-graph-legend .legend-swatch.not-ready { background-color: #F4A460; }
-.dep-graph-legend .legend-swatch.stated { background-color: #FFD700; }
-.dep-graph-legend .legend-swatch.ready { background-color: #20B2AA; }
-.dep-graph-legend .legend-swatch.sorry { background-color: #8B0000; }
-.dep-graph-legend .legend-swatch.proven { background-color: #90EE90; }
-.dep-graph-legend .legend-swatch.fully-proven { background-color: #228B22; }
-.dep-graph-legend .legend-swatch.mathlib-ready { background-color: #4169E1; }
-.dep-graph-legend .legend-swatch.in-mathlib { background-color: #191970; }
+/* 8 Status Colors - use unified CSS variables */
+.dep-graph-legend .legend-swatch.not-ready { background-color: var(--sbs-status-not-ready); }
+.dep-graph-legend .legend-swatch.stated { background-color: var(--sbs-status-stated); }
+.dep-graph-legend .legend-swatch.ready { background-color: var(--sbs-status-ready); }
+.dep-graph-legend .legend-swatch.sorry { background-color: var(--sbs-status-sorry); }
+.dep-graph-legend .legend-swatch.proven { background-color: var(--sbs-status-proven); }
+.dep-graph-legend .legend-swatch.fully-proven { background-color: var(--sbs-status-fully-proven); }
+.dep-graph-legend .legend-swatch.mathlib-ready { background-color: var(--sbs-status-mathlib-ready); }
+.dep-graph-legend .legend-swatch.in-mathlib { background-color: var(--sbs-status-in-mathlib); }
 
 /* Legend separator line between colors and shapes */
 .dep-graph-legend .legend-separator {

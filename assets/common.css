@@ -693,7 +693,30 @@ html[data-theme="dark"] .theme-toggle-icon.moon { display: inline; }
    8. Dark Mode Graph Edge Override
    --------------------------------------------- */
 
-/* Override SVG edge colors in dark mode */
+/* Override SVG edge colors in dark mode (system preference) */
+@media (prefers-color-scheme: dark) {
+  .dep-graph-container svg path,
+  .dep-graph-svg svg path {
+    stroke: var(--sbs-graph-edge) !important;
+  }
+
+  .dep-graph-container svg path:hover,
+  .dep-graph-svg svg path:hover {
+    stroke: var(--sbs-graph-edge-hover) !important;
+  }
+
+  .dep-graph-container svg marker path,
+  .dep-graph-svg svg marker path {
+    fill: var(--sbs-graph-edge) !important;
+  }
+
+  .dep-graph-container svg text,
+  .dep-graph-svg svg text {
+    fill: var(--sbs-text) !important;
+  }
+}
+
+/* Override SVG edge colors in dark mode (manual toggle) */
 html[data-theme="dark"] .dep-graph-container svg path,
 html[data-theme="dark"] .dep-graph-svg svg path {
   stroke: var(--sbs-graph-edge) !important;
@@ -720,7 +743,31 @@ html[data-theme="dark"] .dep-graph-svg svg text {
    9. Dark Mode Lean Syntax Highlighting
    --------------------------------------------- */
 
-/* Adjust syntax colors for dark mode readability */
+/* Adjust syntax colors for dark mode (system preference) */
+@media (prefers-color-scheme: dark) {
+  .lean-keyword, .hl.lean .keyword, .keyword.token { color: #569cd6; }
+  .lean-const, .hl.lean .const, .const.token { color: #dcdcaa; }
+  .lean-var, .hl.lean .var, .var.token { color: #9cdcfe; }
+  .lean-string, .hl.lean .literal.string, .literal.string.token { color: #ce9178; }
+  .lean-option, .hl.lean .option, .option.token { color: #d7ba7d; }
+  .lean-docstring, .hl.lean .doc-comment, .doc-comment.token { color: #6a9955; }
+  .lean-sort, .hl.lean .sort, .sort.token { color: #4ec9b0; }
+  .lean-number { color: #b5cea8; }
+  .lean-operator { color: #d4d4d4; }
+  .lean-comment { color: #6a9955; }
+  .lean-sorry, .sorry.token { color: #ff6b6b; background-color: #4a1515; }
+  .lean-bracket-1 { color: #ff79c6; }
+  .lean-bracket-2 { color: #bd93f9; }
+  .lean-bracket-3 { color: #8be9fd; }
+  .lean-bracket-4 { color: #50fa7b; }
+  .lean-bracket-5 { color: #ffb86c; }
+  .lean-bracket-6 { color: #ff5555; }
+  .hl.lean .hypotheses .name { color: #ff7b72; }
+  .hl.lean .token.binding-hl { background-color: rgba(255, 255, 0, 0.15); }
+  .hl.lean .docstring code { background-color: rgba(255, 255, 255, 0.1); }
+}
+
+/* Adjust syntax colors for dark mode (manual toggle) */
 html[data-theme="dark"] .lean-keyword,
 html[data-theme="dark"] .hl.lean .keyword,
 html[data-theme="dark"] .keyword.token {
