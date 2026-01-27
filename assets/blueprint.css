@@ -1363,44 +1363,9 @@ pre.lean-code {
 }
 
 /* ========== Dependency Graph Modal Styles ========== */
-.dep-modal-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dep-modal-content {
-  background: white;
-  padding: 20px;
-  width: 90%;
-  max-width: 90vw;
-  max-height: 90vh;
-  overflow-y: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-
-.dep-closebtn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 24px;
-  cursor: pointer;
-  color: #666;
-  line-height: 1;
-}
-
-.dep-closebtn:hover {
-  color: #000;
-}
+/* Note: Base .dep-modal-container, .dep-modal-content, .dep-closebtn
+   are defined in common.css. This section only adds blueprint-specific
+   modal styling extensions. */
 
 .dep-modal-body {
   padding-top: 10px;

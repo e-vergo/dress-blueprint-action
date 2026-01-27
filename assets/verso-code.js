@@ -393,13 +393,33 @@ function onModalOpen(modalElement) {
 
     // Initialize Tippy.js on hover elements within the modal
     if (typeof tippy !== 'undefined') {
+        // Simple tippy props for modal elements (self-contained, no external dependencies)
+        var modalTippyProps = {
+            maxWidth: "none",
+            appendTo: function() { return document.body; },
+            interactive: true,
+            delay: [100, null],
+            theme: 'lean',
+            content: function(tgt) {
+                var hoverInfo = tgt.querySelector(".hover-info");
+                if (hoverInfo) {
+                    var content = document.createElement("span");
+                    content.className = "hl lean";
+                    content.style.display = "block";
+                    content.appendChild(hoverInfo.cloneNode(true));
+                    return content;
+                }
+                return '';
+            }
+        };
+
         // Initialize on elements that haven't been initialized yet
-        var selector = '.dep-modal-content .const.token, .dep-modal-content .keyword.token, .dep-modal-content .literal.token, .dep-modal-content .option.token, .dep-modal-content .var.token, .dep-modal-content .typed.token, .dep-modal-content .has-info';
+        var selector = '.const.token, .keyword.token, .literal.token, .option.token, .var.token, .typed.token, .has-info';
         var elements = modalElement.querySelectorAll(selector);
         elements.forEach(function(el) {
             // Only initialize if not already done
             if (!el._tippy) {
-                tippy(el, defaultTippyProps);
+                tippy(el, modalTippyProps);
             }
         });
     }
