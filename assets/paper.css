@@ -1,4 +1,11 @@
-/* ar5iv-style academic paper */
+/* ar5iv-style academic paper styling */
+/* Note: This file depends on common.css being loaded first.
+   common.css provides: sbs layout, proof toggles, Lean syntax */
+
+/* ---------------------------------------------
+   Paper Container
+   --------------------------------------------- */
+
 .ar5iv-paper {
   font-family: "Computer Modern Serif", "Latin Modern Roman", Georgia, serif;
   width: 65%;
@@ -15,7 +22,10 @@
   margin: 0 auto;
 }
 
-/* Header */
+/* ---------------------------------------------
+   Paper Header
+   --------------------------------------------- */
+
 .paper-header {
   text-align: center;
   margin-bottom: 2.5rem;
@@ -44,7 +54,10 @@
   border-left: 3px solid #ccc;
 }
 
-/* Sections */
+/* ---------------------------------------------
+   Paper Content Sections
+   --------------------------------------------- */
+
 .paper-content h1 { font-size: 1.4rem; margin-top: 2rem; font-weight: bold; }
 .paper-content h2 { font-size: 1.2rem; margin-top: 1.5rem; font-weight: bold; }
 .paper-content h3 { font-size: 1.1rem; margin-top: 1.25rem; font-weight: bold; }
@@ -54,7 +67,10 @@
   text-align: justify;
 }
 
-/* Theorem environments */
+/* ---------------------------------------------
+   Theorem Environments
+   --------------------------------------------- */
+
 .paper-theorem {
   margin: 1.5rem 0;
   padding: 0.75rem 1rem;
@@ -83,20 +99,12 @@
   margin-left: 0.5rem;
 }
 
-/* Side-by-side display in paper - override blueprint.css styles */
-.paper-theorem.sbs-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  align-items: start;
-}
-
-.paper-theorem .sbs-latex-column {
-  min-width: 0;  /* Allow proper grid sizing */
-}
+/* ---------------------------------------------
+   Side-by-Side Display - Paper-Specific Override
+   Paper uses 1fr 1fr grid (common.css default works)
+   --------------------------------------------- */
 
 .paper-theorem .sbs-lean-column {
-  min-width: 0;  /* Allow proper grid sizing */
   background: #f8f8f8;
   border-radius: 4px;
   padding: 0.5rem;
@@ -108,52 +116,10 @@
   overflow-x: auto;
 }
 
-/* Proof toggle in paper - use same pattern as blueprint */
-.paper-theorem .proof_wrapper {
-  margin-top: 0.75rem;
-}
+/* ---------------------------------------------
+   Proofs (non-toggle, inline proofs)
+   --------------------------------------------- */
 
-.paper-theorem .proof_heading {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.paper-theorem .proof_caption {
-  font-style: italic;
-}
-
-.paper-theorem .expand-proof {
-  font-size: 0.8rem;
-  transition: transform 0.2s;
-}
-
-.paper-theorem .proof_content {
-  display: none;
-  margin-top: 0.5rem;
-  padding-left: 1rem;
-}
-
-.paper-theorem .proof_wrapper.expanded .proof_content {
-  display: block;
-}
-
-.paper-theorem .proof_wrapper.expanded .expand-proof {
-  transform: rotate(90deg);
-}
-
-/* Lean proof body visibility - synced with LaTeX proof toggle */
-.paper-theorem .lean-proof-body {
-  display: none;
-}
-
-/* Use :has() to detect expanded proof wrapper and show Lean proof body */
-.paper-theorem:has(.proof_wrapper.expanded) .lean-proof-body {
-  display: block;
-}
-
-/* Proofs */
 .paper-proof {
   margin: 0.75rem 0 1.5rem 0;
 }
@@ -166,7 +132,10 @@
   float: right;
 }
 
-/* Verification badges */
+/* ---------------------------------------------
+   Verification Badges
+   --------------------------------------------- */
+
 .verification-badge {
   display: inline-flex;
   align-items: center;
@@ -200,7 +169,10 @@
 .badge-icon { font-size: 0.8em; }
 .badge-text { font-size: 0.85em; }
 
-/* Blueprint link */
+/* ---------------------------------------------
+   Blueprint Link
+   --------------------------------------------- */
+
 .blueprint-link {
   font-size: 0.75rem;
   color: #0066cc;
@@ -213,18 +185,23 @@
   text-decoration: underline;
 }
 
-/* Math display */
+/* ---------------------------------------------
+   Math Display
+   --------------------------------------------- */
+
 .paper-content .MathJax {
   font-size: 1.1em;
 }
 
-/* Display math blocks */
 .paper-displaymath {
   margin: 1.5rem 0;
   text-align: center;
 }
 
-/* Footer */
+/* ---------------------------------------------
+   Footer
+   --------------------------------------------- */
+
 .paper-footer {
   margin-top: 3rem;
   padding-top: 1rem;
@@ -243,7 +220,10 @@
   text-decoration: underline;
 }
 
-/* Responsive */
+/* ---------------------------------------------
+   Responsive
+   --------------------------------------------- */
+
 @media (max-width: 1200px) {
   .ar5iv-paper {
     width: 85%;
@@ -273,7 +253,10 @@
   .paper-theorem { padding: 0.5rem; }
 }
 
-/* Print styles */
+/* ---------------------------------------------
+   Print Styles
+   --------------------------------------------- */
+
 @media print {
   .ar5iv-paper {
     max-width: none;

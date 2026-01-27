@@ -1,0 +1,396 @@
+/* ============================================
+   common.css - Shared styles for Side-by-Side Blueprint
+   Used by: blueprint pages, paper page, dependency graph modals
+   ============================================ */
+
+/* ---------------------------------------------
+   1. Side-by-Side Layout
+   --------------------------------------------- */
+
+.sbs-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.sbs-latex-column {
+  min-width: 0;
+}
+
+.sbs-lean-column {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.sbs-lean-column pre.lean-code {
+  margin: 0;
+  background: transparent;
+}
+
+/* ---------------------------------------------
+   2. Proof Toggle Mechanism
+   --------------------------------------------- */
+
+.proof_wrapper {
+  margin-top: 0.75rem;
+}
+
+.proof_heading {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+
+.proof_caption {
+  font-style: italic;
+}
+
+.expand-proof {
+  font-size: 0.8rem;
+  transition: transform 0.2s;
+}
+
+.proof_content {
+  display: none;
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+}
+
+.proof_wrapper.expanded .proof_content {
+  display: block;
+}
+
+.proof_wrapper.expanded .expand-proof {
+  transform: rotate(90deg);
+}
+
+/* Lean proof body - synced with LaTeX proof toggle */
+.lean-proof-body {
+  display: none;
+}
+
+/* Use :has() for CSS-based sync (modern browsers) */
+.sbs-container:has(.proof_wrapper.expanded) .lean-proof-body {
+  display: block;
+}
+
+/* QED symbol */
+.proof_content p:last-child::after {
+  content: " \25A1";
+  float: right;
+}
+
+/* ---------------------------------------------
+   3. Lean Syntax Highlighting
+   --------------------------------------------- */
+
+/* Base token styles */
+.lean-keyword, .hl.lean .keyword, .keyword.token { color: #0000ff; }
+.lean-const, .hl.lean .const, .const.token { color: #AF8700; }
+.lean-const.lean-def, .hl.lean .const[data-defining="true"], .const.token[data-defining="true"] {
+  font-weight: bold;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+.lean-var, .hl.lean .var, .var.token { color: #0070C1; }
+.lean-string, .hl.lean .literal.string, .literal.string.token { color: #a31515; }
+.lean-option, .hl.lean .option, .option.token { color: #795e26; }
+.lean-docstring, .hl.lean .doc-comment, .doc-comment.token { color: #008000; font-style: italic; }
+.lean-sort, .hl.lean .sort, .sort.token { color: #267f99; }
+.lean-level, .hl.lean .level-var, .hl.lean .level-const, .hl.lean .level-op,
+.level-var.token, .level-const.token, .level-op.token { color: #098658; }
+.lean-module, .hl.lean .module-name, .module-name.token { color: #795e26; }
+.lean-expr, .hl.lean .typed, .typed.token { color: inherit; }
+.lean-text, .hl.lean .unknown, .hl.lean .inter-text, .unknown.token, .inter-text { color: inherit; }
+.lean-sorry, .sorry.token { color: #ff0000; background-color: #ffeaea; font-weight: bold; }
+
+.lean-number { color: #098658; }
+.lean-operator { color: #000000; }
+.lean-comment { color: #008000; font-style: italic; }
+
+/* Rainbow brackets */
+.lean-bracket-1 { color: #d000ff; }
+.lean-bracket-2 { color: #5126ff; }
+.lean-bracket-3 { color: #0184BC; }
+.lean-bracket-4 { color: #4078F2; }
+.lean-bracket-5 { color: #50A14F; }
+.lean-bracket-6 { color: #E45649; }
+
+/* Message spans */
+.lean-span, .hl.lean .has-info { }
+.lean-error, .hl.lean .has-info.error { text-decoration: wavy underline #c82829; }
+.lean-warning, .hl.lean .has-info.warning { text-decoration: wavy underline #eab700; }
+.lean-info, .hl.lean .has-info.information { text-decoration: underline dotted #4271ae; }
+
+/* Token binding highlight */
+.hl.lean .token.binding-hl {
+  background-color: rgba(255, 255, 0, 0.3);
+  border-radius: 2px;
+}
+
+/* Hover info */
+.hl.lean .hover-info {
+  display: block;
+  padding: 8px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.9em;
+}
+
+.hl.lean .hover-info code { font-family: inherit; }
+
+.hl.lean .sep {
+  display: block;
+  height: 1px;
+  background-color: #ccc;
+  margin: 8px 0;
+}
+
+.hl.lean .docstring {
+  color: #666;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.hl.lean .docstring p { margin: 0.5em 0; }
+
+.hl.lean .docstring code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0 4px;
+  border-radius: 2px;
+}
+
+/* Extra doc links */
+.extra-doc-links {
+  list-style-type: none;
+  margin-left: 0;
+  padding: 0;
+  margin-top: 8px;
+  border-top: 1px solid #ccc;
+  padding-top: 8px;
+}
+
+.extra-doc-links > li { display: inline-block; }
+
+.extra-doc-links > li:not(:last-child)::after {
+  content: '|';
+  display: inline-block;
+  margin: 0 0.25em;
+  color: #999;
+}
+
+/* ---------------------------------------------
+   4. Tippy.js Tooltip Themes
+   --------------------------------------------- */
+
+[data-tippy-root] { z-index: 99999 !important; }
+
+.tippy-box {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.tippy-box[data-theme~='lean'] {
+  background-color: #f5f5f5;
+  color: black;
+  border: 1px solid #333;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tippy-box[data-theme~='lean'] .tippy-content {
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85em;
+}
+
+.tippy-box[data-theme~='lean'][data-placement^='top'] > .tippy-arrow::before { border-top-color: #f5f5f5; }
+.tippy-box[data-theme~='lean'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: #f5f5f5; }
+.tippy-box[data-theme~='lean'][data-placement^='left'] > .tippy-arrow::before { border-left-color: #f5f5f5; }
+.tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before { border-right-color: #f5f5f5; }
+
+.tippy-box[data-theme~='warning'] {
+  background-color: #fff8e6;
+  color: black;
+  border: 2px solid #f0ad4e;
+  border-radius: 4px;
+}
+
+.tippy-box[data-theme~='warning'][data-placement^='top'] > .tippy-arrow::before { border-top-color: #fff8e6; }
+.tippy-box[data-theme~='warning'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: #fff8e6; }
+
+.tippy-box[data-theme~='error'] {
+  background-color: #fff0f0;
+  color: black;
+  border: 2px solid #d9534f;
+  border-radius: 4px;
+}
+
+.tippy-box[data-theme~='error'][data-placement^='top'] > .tippy-arrow::before { border-top-color: #fff0f0; }
+.tippy-box[data-theme~='error'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: #fff0f0; }
+
+.tippy-box[data-theme~='info'] {
+  background-color: #f0f8ff;
+  color: black;
+  border: 2px solid #5bc0de;
+  border-radius: 4px;
+}
+
+.tippy-box[data-theme~='info'][data-placement^='top'] > .tippy-arrow::before { border-top-color: #f0f8ff; }
+.tippy-box[data-theme~='info'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: #f0f8ff; }
+
+.tippy-box[data-theme~='tactic'] {
+  background-color: white;
+  color: black;
+  border: 1px solid #333;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tippy-box[data-theme~='tactic'] .tippy-content { padding: 12px; }
+
+.tippy-box[data-theme~='tactic'][data-placement^='top'] > .tippy-arrow::before { border-top-color: white; }
+.tippy-box[data-theme~='tactic'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: white; }
+.tippy-box[data-theme~='tactic'][data-placement^='left'] > .tippy-arrow::before { border-left-color: white; }
+.tippy-box[data-theme~='tactic'][data-placement^='right'] > .tippy-arrow::before { border-right-color: white; }
+
+/* ---------------------------------------------
+   5. Modal Base Styles
+   --------------------------------------------- */
+
+.dep-modal-container {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.dep-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dep-closebtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.dep-closebtn:hover {
+  color: #333;
+}
+
+/* ---------------------------------------------
+   6. Tactic State Animation
+   --------------------------------------------- */
+
+/* Override Verso's display-based toggle with max-height animation */
+.hl.lean input.tactic-toggle { display: none; }
+
+.hl.lean .tactic-state {
+  display: block !important;  /* Override Verso's display:none */
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out;
+  margin-top: 0;
+  padding: 0 8px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.hl.lean input.tactic-toggle:checked ~ .tactic-state {
+  display: block !important;  /* Override Verso's display:inline-block */
+  max-height: 500px;
+  opacity: 1;
+  margin-top: 8px;
+  padding: 8px;
+}
+
+.hl.lean .tactic > label { cursor: pointer; }
+
+.hl.lean .tactic::before {
+  content: '\25CF';
+  color: #4271ae;
+  font-size: 0.6em;
+  vertical-align: super;
+  margin-right: 2px;
+  opacity: 0.5;
+}
+
+.hl.lean .tactic:hover::before { opacity: 1; }
+
+.hl.lean .goal {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.hl.lean .goal:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.hl.lean .goal-name {
+  color: #666;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.hl.lean .hypotheses {
+  display: table;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+}
+
+.hl.lean .hypotheses .hypothesis { display: table-row; }
+
+.hl.lean .hypotheses .name {
+  display: table-cell;
+  padding-right: 8px;
+  text-align: right;
+  color: #c82829;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.hl.lean .hypotheses .colon {
+  display: table-cell;
+  padding-right: 8px;
+  color: #666;
+}
+
+.hl.lean .hypotheses .type {
+  display: table-cell;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.hl.lean .conclusion { margin-top: 8px; }
+
+.hl.lean .conclusion .goal-prefix {
+  color: #666;
+  margin-right: 4px;
+}
+
+.hl.lean .conclusion .type {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
