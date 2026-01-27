@@ -683,7 +683,8 @@ nav.toc li.active a {
 }
 
 .stats-separator {
-  width: 100%;
+  width: calc(100% - 1.5rem);  /* Leave 0.75rem gap on each side */
+  margin: 0 auto;  /* Center it */
   height: 1px;
   background-color: #ccc;
 }
