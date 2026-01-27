@@ -666,28 +666,56 @@ nav.toc li.active a {
   padding: 1rem 0;
 }
 
-/* Compact Stats with Pie Chart */
-.stats-compact {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 0.75rem;
+/* Stats Box - matches dep-graph-legend styling */
+.stats-box {
   background: #f4f4f4;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #ccc;
   border-radius: 4px;
+  width: 340px;
   font-size: 0.875rem;
-  width: fit-content;
-  color: #1f2937;
+  color: #333;
+}
+
+.stats-title {
+  font-weight: bold;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.stats-separator {
+  width: 100%;
+  height: 1px;
+  background-color: #ccc;
+}
+
+.stats-main {
+  display: flex;
+  align-items: stretch;
+  padding: 0.75rem;
+  gap: 0.75rem;
+}
+
+.stats-pie-container {
+  flex-shrink: 0;
 }
 
 .stats-pie {
-  flex-shrink: 0;
+  width: 150px;
+  height: 150px;
+}
+
+.stats-legend-separator {
+  width: 1px;
+  background-color: #ccc;
+  align-self: stretch;
 }
 
 .stats-legend {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 0.25rem;
+  flex-grow: 1;
 }
 
 .stats-legend .legend-item {
@@ -703,7 +731,7 @@ nav.toc li.active a {
   flex-shrink: 0;
 }
 
-/* Status colors matching dep-graph-legend */
+/* Color classes for stats legend */
 .stats-legend .legend-swatch.not-ready { background-color: #F4A460; }
 .stats-legend .legend-swatch.stated { background-color: #FFD700; }
 .stats-legend .legend-swatch.ready { background-color: #20B2AA; }
@@ -712,6 +740,25 @@ nav.toc li.active a {
 .stats-legend .legend-swatch.fully-proven { background-color: #228B22; }
 .stats-legend .legend-swatch.mathlib-ready { background-color: #4169E1; }
 .stats-legend .legend-swatch.in-mathlib { background-color: #191970; }
+
+.stats-summary {
+  padding: 0.75rem;
+  text-align: center;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stats-total {
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.stats-percentages {
+  color: #666;
+}
 
 /* Legacy progress bar styles (kept for backwards compatibility) */
 .progress-bar {
