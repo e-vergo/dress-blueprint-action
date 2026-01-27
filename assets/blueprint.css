@@ -783,8 +783,21 @@ nav.toc li.active a {
 
 /* Bottom row: Project Notes spanning full width */
 .dashboard-row.bottom-row {
-  display: block;
+  display: flex;
   width: 100%;
+  min-height: 200px;  /* Match approximate top row height */
+}
+
+/* Ensure notes cell fills available height */
+.dashboard-row.bottom-row .dashboard-cell.notes-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-row.bottom-row .stats-box.project-notes {
+  flex: 1;
+  min-height: 200px;
 }
 
 .dashboard-cell {
@@ -930,63 +943,12 @@ nav.toc li.active a {
   min-width: 400px;
 }
 
-/* Health metrics badges */
-.project-health {
-  margin: 0.75rem;
-  padding-top: 0.5rem;
-}
-
-.health-title {
-  font-weight: 600;
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
-  color: #333;
-}
-
-.health-metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.health-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.health-blocked {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.health-high {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.health-issues {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.health-notes {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
-.badge-count {
-  font-weight: 700;
-}
-
 /* Key theorem previews */
 .key-theorems-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  align-items: center;  /* Center content horizontally */
 }
 
 .key-theorem-item {
@@ -995,6 +957,9 @@ nav.toc li.active a {
   gap: 0.5rem;
   padding: 0.5rem;
   border-bottom: 1px solid #eee;
+  justify-content: center;  /* Center content horizontally */
+  width: 100%;
+  max-width: 600px;  /* Reasonable max width for centered content */
 }
 
 .key-theorem-item:last-child {
@@ -1071,43 +1036,94 @@ nav.toc li.active a {
   padding: 0;
 }
 
-/* Project notes colored borders */
-.note-section.priority-high,
-.note-section.priority-medium,
-.note-section.priority-low,
-.note-section.blocked,
-.note-section.issues,
-.note-section.tech-debt,
-.note-section.misc {
-  padding-left: 0.75rem;
+/* Stats details structured layout */
+.stats-details {
+  padding: 0.75rem;
 }
 
-.note-section.priority-high {
-  border-left: 3px solid #dc3545;
+.stats-details .stats-total {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #333;
 }
 
-.note-section.priority-medium {
-  border-left: 3px solid #ffc107;
+.stats-details .stats-columns {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  justify-content: center;
 }
 
-.note-section.priority-low {
-  border-left: 3px solid #28a745;
+.stats-details .stats-column {
+  flex: 1;
+  min-width: 120px;
 }
 
-.note-section.blocked {
-  border-left: 3px solid #fd7e14;
+.stats-details .stats-column-header {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.25rem;
 }
 
-.note-section.issues {
-  border-left: 3px solid #ffc107;
+.stats-details .stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.2rem 0;
+  font-size: 0.85rem;
 }
 
-.note-section.tech-debt {
-  border-left: 3px solid #6c757d;
+.stats-details .stats-value {
+  font-weight: 700;
+  color: #333;
 }
 
-.note-section.misc {
-  border-left: 3px solid #17a2b8;
+.stats-details .stats-label {
+  color: #666;
+}
+
+/* Project Notes two-column layout */
+.notes-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  padding: 0.75rem;
+}
+
+.notes-messages,
+.notes-other {
+  flex: 1;
+  min-width: 0;
+}
+
+.notes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notes-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.note-content {
+  color: #333;
+  font-size: 0.875rem;
+}
+
+.notes-empty {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem;
 }
 
 .note-section .dashboard-list {
