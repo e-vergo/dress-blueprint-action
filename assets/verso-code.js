@@ -265,21 +265,21 @@ document.addEventListener('DOMContentLoaded', function() {
         var viewportWidth = viewport.clientWidth;
         var viewportHeight = viewport.clientHeight;
 
-        // Use SVG's declared dimensions (includes padding on all sides)
-        var svgWidth = parseFloat(svg.getAttribute('width')) || svg.getBBox().width;
-        var svgHeight = parseFloat(svg.getAttribute('height')) || svg.getBBox().height;
+        // Get actual content bounding box
+        var bbox = svg.getBBox();
 
-        // Scale to fit the full SVG in viewport
-        var scaleX = (viewportWidth - 40) / svgWidth;
-        var scaleY = (viewportHeight - 40) / svgHeight;
+        // Use bbox dimensions for scaling
+        var scaleX = (viewportWidth - 40) / bbox.width;
+        var scaleY = (viewportHeight - 40) / bbox.height;
         scale = Math.min(scaleX, scaleY, 1);  // Don't scale up, only down
 
-        // Center the full SVG (from 0,0 to svgWidth,svgHeight)
-        var svgCenterX = svgWidth / 2;
-        var svgCenterY = svgHeight / 2;
+        // Calculate center of actual content (accounting for bbox.x and bbox.y offset)
+        var contentCenterX = bbox.x + bbox.width / 2;
+        var contentCenterY = bbox.y + bbox.height / 2;
 
-        translateX = viewportWidth / 2 - svgCenterX * scale;
-        translateY = viewportHeight / 2 - svgCenterY * scale;
+        // Center the content in the viewport
+        translateX = viewportWidth / 2 - contentCenterX * scale;
+        translateY = viewportHeight / 2 - contentCenterY * scale;
 
         updateTransform();
     }
