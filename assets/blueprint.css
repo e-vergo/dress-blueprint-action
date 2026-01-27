@@ -771,7 +771,7 @@ nav.toc li.active a {
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 2rem;
-  max-width: 900px;
+  width: 100%;
 }
 
 /* Top row: Progress (fixed width) + Key Theorems (fills remaining space) */
