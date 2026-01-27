@@ -1518,16 +1518,19 @@ pre.lean-code {
 /* ========== SBS Container in Modal ========== */
 /* Ensure sbs-container displays properly in modal */
 .dep-modal-content .sbs-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* Flexible 50/50 instead of fixed 100ch */
   gap: 1.5rem;
   margin-left: 0;  /* Override the normal 3rem margin */
   margin-bottom: 1rem;
+  max-width: 100%;  /* Prevent growing beyond modal */
+  overflow: hidden;  /* Prevent content from pushing modal wider */
 }
 
 .dep-modal-content .sbs-latex-column,
 .dep-modal-content .sbs-lean-column {
-  flex: 1;
   min-width: 0;  /* Allow shrinking below content size */
+  overflow: hidden;  /* Prevent content overflow */
 }
 
 /* LaTeX proof toggle in modal */
