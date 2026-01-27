@@ -958,8 +958,8 @@ nav.toc li.active a {
   padding: 0.5rem;
   border-bottom: 1px solid #eee;
   justify-content: center;  /* Center content horizontally */
-  width: 100%;
-  max-width: 600px;  /* Reasonable max width for centered content */
+  width: 80%;
+  max-width: none;  /* Remove the 600px fixed limit */
 }
 
 .key-theorem-item:last-child {
@@ -1051,42 +1051,39 @@ nav.toc li.active a {
 
 .stats-details .stats-columns {
   display: flex;
-  flex-direction: row;
-  gap: 1.5rem;
-  justify-content: center;
+  justify-content: center;  /* Center columns in panel */
+  gap: 2rem;  /* Space between columns */
 }
 
 .stats-details .stats-column {
-  flex: 1;
-  min-width: 120px;
+  width: 120px;  /* Reduced from ~160px (25% reduction) */
 }
 
 .stats-details .stats-column-header {
+  text-align: center;  /* Center header over content */
   font-weight: 600;
-  font-size: 0.8rem;
-  color: #666;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 0.75rem;
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.25rem;
+  color: #666;
 }
 
 .stats-details .stats-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.2rem 0;
+  justify-content: space-between;  /* Push value right, label left */
   font-size: 0.85rem;
+  padding: 0.15rem 0;
 }
 
 .stats-details .stats-value {
-  font-weight: 700;
-  color: #333;
+  text-align: right;
+  min-width: 30px;
+  font-weight: 600;
 }
 
 .stats-details .stats-label {
-  color: #666;
+  text-align: left;
+  color: #555;
 }
 
 /* Project Notes two-column layout */
