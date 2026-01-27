@@ -767,25 +767,24 @@ nav.toc li.active a {
 
 /* Dashboard Grid Layout */
 .dashboard-grid {
-  display: grid;
-  grid-template-columns: 340px 1fr;  /* Fixed width for stats, flexible for key theorems */
-  grid-template-rows: auto auto;     /* Two rows */
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
   margin-bottom: 2rem;
   max-width: 900px;
 }
 
-/* Top row: Progress (col 1) + Key Theorems (col 2) */
+/* Top row: Progress (fixed width) + Key Theorems (fills remaining space) */
 .dashboard-row.top-row {
-  display: contents;
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
 }
 
-/* Bottom row: Messages + Project Notes spanning both columns, equal width */
+/* Bottom row: Project Notes spanning full width */
 .dashboard-row.bottom-row {
-  display: grid;
-  grid-column: 1 / -1;  /* Span all columns */
-  grid-template-columns: 1fr 1fr;  /* Equal width columns */
-  gap: 1rem;
+  display: block;
+  width: 100%;
 }
 
 .dashboard-cell {
@@ -794,17 +793,23 @@ nav.toc li.active a {
 
 /* Progress stats box - fixed size, don't stretch */
 .dashboard-cell.progress-cell {
+  flex-shrink: 0;
   width: 340px;
 }
 
 /* Key theorems fills remaining space */
 .dashboard-cell.key-theorems-cell {
+  flex: 1;
   min-width: 0;  /* Allow shrinking */
+}
+
+/* Notes cell spans full width */
+.dashboard-cell.notes-cell {
+  width: 100%;
 }
 
 /* Make all stats boxes in dashboard have same styling */
 .stats-box.key-theorems,
-.stats-box.messages,
 .stats-box.project-notes {
   background: #f4f4f4;
   border: 1px solid #ccc;
@@ -814,6 +819,7 @@ nav.toc li.active a {
   height: 100%;
   display: flex;
   flex-direction: column;
+  width: auto;  /* Override fixed width from base stats-box */
 }
 
 /* Ensure the main stats-box also has rounded corners */
@@ -894,8 +900,12 @@ nav.toc li.active a {
 
 /* Responsive: stack on mobile */
 @media (max-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
+  .dashboard-row.top-row {
+    flex-direction: column;
+  }
+
+  .dashboard-cell.progress-cell {
+    width: 100%;
   }
 
   .dashboard-cell {
