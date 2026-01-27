@@ -8,7 +8,8 @@
 
 .ar5iv-paper {
   font-family: "Computer Modern Serif", "Latin Modern Roman", Georgia, serif;
-  width: 65%;
+  width: calc(200ch + 5rem);  /* 100ch + 100ch + gap + padding */
+  max-width: 95%;
   margin: 0 auto;  /* Center horizontally */
   padding: 1.5rem 2rem;
   background: #fff;
@@ -18,7 +19,8 @@
 
 /* When inside sidebar layout, center within content area */
 .content .ar5iv-paper {
-  width: 65%;
+  width: calc(200ch + 5rem);
+  max-width: 95%;
   margin: 0 auto;
 }
 

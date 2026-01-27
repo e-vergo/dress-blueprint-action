@@ -10,10 +10,10 @@
 .sbs-container {
   display: grid;
   grid-template-columns: 100ch 100ch;
-  gap: 1.5rem;
+  gap: 1rem;
   align-items: start;
   background: #e8f4fc;
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 4px;
 }
 
