@@ -1,12 +1,18 @@
 /* ar5iv-style academic paper */
 .ar5iv-paper {
   font-family: "Computer Modern Serif", "Latin Modern Roman", Georgia, serif;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: 900px;  /* Slightly narrower to fit sidebar layout */
+  margin: 0;  /* No auto margin - let sidebar layout handle positioning */
+  padding: 1.5rem 2rem;
   background: #fff;
   color: #333;
   line-height: 1.7;
+}
+
+/* When inside sidebar layout, ensure paper fills available width nicely */
+.content .ar5iv-paper {
+  max-width: 100%;
+  width: 100%;
 }
 
 /* Header */
