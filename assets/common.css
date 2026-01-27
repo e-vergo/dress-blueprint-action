@@ -71,14 +71,10 @@
   display: block;
 }
 
-/* Lean proof body - synced with LaTeX proof toggle */
+/* Lean proof body - synced with LaTeX proof toggle via JavaScript (plastex.js)
+   Initial state is hidden; slideUp/slideDown handles animation */
 .lean-proof-body {
   display: none;
-}
-
-/* Use :has() for CSS-based sync (modern browsers) */
-.sbs-container:has(.proof_wrapper.expanded) .lean-proof-body {
-  display: block;
 }
 
 /* QED symbol */
