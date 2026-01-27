@@ -37,6 +37,8 @@ div.content-wrapper{max-width:1800px}
 @media (min-width:1024px){div.content-wrapper{margin-left:auto;margin-right:auto}}
 div.content{flex-grow:1;display:flex;flex-direction:column;overflow:auto;padding:.5rem;margin-bottom:2.5rem}
 @media (min-width:1024px){div.content{padding:1rem;margin-bottom:0}}
+/* Blueprint content area sizing - matches paper page (200ch = 100ch + 100ch doublet) */
+div.content{width:calc(200ch + 5rem);max-width:95%;margin-left:auto;margin-right:auto;padding:1.5rem 2rem}
 div.centered{display:flex;flex-direction:column;flex-wrap:wrap;align-items:center;justify-content:space-around;min-width:100%;margin:0 auto}
 div.flushleft,div.raggedright{display:flex;justify-content:flex-start}
 div.flushright,div.raggedbottom,div.raggedleft{display:flex;justify-content:flex-end}

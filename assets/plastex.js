@@ -22,8 +22,6 @@ $(document).ready(function() {
       };
     })
 
-  $("div.proof_content p:last").append('<span class="qed">□</span>')
-
   $("div.proof_heading").click(
     function() {
       var expand_span = $(this).children('span.expand-proof');
