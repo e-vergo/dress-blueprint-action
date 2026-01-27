@@ -9,40 +9,56 @@
    ============================================ */
 
 :root {
-  /* Page & Surface Backgrounds */
-  --sbs-bg-page: #f8f9fa;           /* Unified page background */
-  --sbs-bg-surface: #ffffff;        /* Cards, panels, modals */
-  --sbs-bg-raised: #f1f3f5;         /* Slightly elevated surfaces */
-  --sbs-bg-sbs: #e8f4fc;            /* Side-by-side container */
+  /* ======================
+     Simplified Color Palette
+     ====================== */
 
-  /* Borders */
-  --sbs-border: #dee2e6;            /* Primary border */
-  --sbs-border-light: #e9ecef;      /* Subtle borders */
-  --sbs-border-dark: #ced4da;       /* Emphasized borders */
+  /* Grayscale (4 colors) */
+  --sbs-black: #000000;
+  --sbs-white: #ffffff;
+  --sbs-gray-light: #f8f8f8;
+  --sbs-gray-dark: #333333;
+
+  /* Blues (sidebar/topper) */
+  --sbs-blue-steel: #396282;
+  --sbs-blue-bright: #4a7a9e;
+
+  /* Accents */
+  --sbs-accent-blue: #0066cc;
+  --sbs-accent-gold: #d4a000;
+
+  /* ======================
+     Semantic Mappings
+     ====================== */
+
+  /* Backgrounds */
+  --sbs-bg-page: var(--sbs-gray-light);
+  --sbs-bg-surface: var(--sbs-white);
 
   /* Text */
-  --sbs-text: #212529;              /* Primary text */
-  --sbs-text-muted: #6c757d;        /* Secondary text */
-  --sbs-text-light: #adb5bd;        /* Tertiary text */
+  --sbs-text: var(--sbs-black);
+  --sbs-text-muted: var(--sbs-gray-dark);
+
+  /* Borders */
+  --sbs-border: var(--sbs-gray-dark);
 
   /* Links */
-  --sbs-link: #0066cc;              /* All links */
-  --sbs-link-hover: #004c99;        /* Link hover */
+  --sbs-link: var(--sbs-accent-blue);
+  --sbs-link-hover: #004c99;
 
   /* Accent (Sidebar/Header) */
-  --sbs-accent: #396282;            /* Primary accent */
-  --sbs-accent-light: #6696bb;      /* Lighter accent */
-  --sbs-accent-dark: #2d4f68;       /* Darker accent */
+  --sbs-accent: var(--sbs-blue-steel);
 
   /* Headings */
-  --sbs-heading: #0f2f48;           /* Primary heading color */
+  --sbs-heading: var(--sbs-black);
 
-  /* Sidebar Navigation */
-  --sbs-nav-current: #89aecb;       /* Current item highlight */
+  /* Selection */
+  --sbs-selection-bg: var(--sbs-black);
+  --sbs-selection-text: var(--sbs-white);
 
-  /* Theorem Environments */
-  --sbs-def-bg: #f5f9ff;            /* Definition background */
-  --sbs-lemma-bg: #fff9f5;          /* Lemma background */
+  /* ======================
+     Unchanged: Tooltips, Graph, Status, Badges, Semantic
+     ====================== */
 
   /* Tooltip Themes */
   --sbs-tooltip-warning-bg: #fff8e6;
@@ -56,13 +72,13 @@
   --sbs-tooltip-info-border: #5bc0de;
 
   /* Graph & Legend */
-  --sbs-graph-bg: #ffffff;
+  --sbs-graph-bg: var(--sbs-white);
   --sbs-graph-edge: #666666;
-  --sbs-graph-edge-hover: #333333;
-  --sbs-legend-bg: #ffffff;
-  --sbs-legend-text: #333333;
+  --sbs-graph-edge-hover: var(--sbs-gray-dark);
+  --sbs-legend-bg: var(--sbs-white);
+  --sbs-legend-text: var(--sbs-gray-dark);
   --sbs-legend-separator: #cccccc;
-  --sbs-legend-shape-border: #333333;
+  --sbs-legend-shape-border: var(--sbs-gray-dark);
   --sbs-legend-shape-bg: #f0f0f0;
   --sbs-graph-card-hover: #f0f4f8;
 
@@ -89,49 +105,35 @@
   --sbs-warning: #ffc107;
   --sbs-danger: #dc3545;
   --sbs-info: #0dcaf0;
-
-  /* Selection */
-  --sbs-selection-bg: #000000;
-  --sbs-selection-text: #ffffff;
 }
 
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Page & Surface Backgrounds */
-    --sbs-bg-page: #1a1a2e;
-    --sbs-bg-surface: #16213e;
-    --sbs-bg-raised: #1f2937;
-    --sbs-bg-sbs: #1a2744;
-
-    /* Borders - LIGHT borders for dark mode */
-    --sbs-border: #4b5563;
-    --sbs-border-light: #374151;
-    --sbs-border-dark: #6b7280;
+    /* Backgrounds */
+    --sbs-bg-page: #1a1a1a;
+    --sbs-bg-surface: #1a1a1a;
 
     /* Text */
-    --sbs-text: #f8f9fa;
-    --sbs-text-muted: #9ca3af;
-    --sbs-text-light: #6b7280;
+    --sbs-text: var(--sbs-white);
+    --sbs-text-muted: #cccccc;
+
+    /* Borders */
+    --sbs-border: #cccccc;
 
     /* Links */
     --sbs-link: #60a5fa;
     --sbs-link-hover: #93c5fd;
 
-    /* Accent (Sidebar/Header) - slightly brighter for dark */
-    --sbs-accent: #4a7a9e;
-    --sbs-accent-light: #5a8ab0;
-    --sbs-accent-dark: #3a6a8e;
+    /* Accent (Sidebar/Header) */
+    --sbs-accent: var(--sbs-blue-bright);
 
     /* Headings */
-    --sbs-heading: #e2e8f0;
+    --sbs-heading: var(--sbs-white);
 
-    /* Sidebar Navigation */
-    --sbs-nav-current: #3a5a7a;
-
-    /* Theorem Environments - darker versions */
-    --sbs-def-bg: #1e293b;
-    --sbs-lemma-bg: #27272a;
+    /* Selection */
+    --sbs-selection-bg: #60a5fa;
+    --sbs-selection-text: var(--sbs-black);
 
     /* Tooltip Themes - dark versions */
     --sbs-tooltip-warning-bg: #422006;
@@ -145,7 +147,7 @@
     --sbs-tooltip-info-border: #3b82f6;
 
     /* Graph & Legend */
-    --sbs-graph-bg: #1a1a2e;
+    --sbs-graph-bg: #1a1a1a;
     --sbs-graph-edge: #9ca3af;
     --sbs-graph-edge-hover: #e5e7eb;
     --sbs-legend-bg: #1f2937;
@@ -162,49 +164,35 @@
     --sbs-badge-progress-bg: #451a03;
     --sbs-badge-progress-text: #fde68a;
     --sbs-badge-progress-border: #d97706;
-
-    /* Selection */
-    --sbs-selection-bg: #60a5fa;
-    --sbs-selection-text: #000000;
   }
 }
 
 /* Manual Dark Mode Override (JavaScript-controlled) */
 html[data-theme="dark"] {
-  /* Page & Surface Backgrounds */
-  --sbs-bg-page: #1a1a2e;
-  --sbs-bg-surface: #16213e;
-  --sbs-bg-raised: #1f2937;
-  --sbs-bg-sbs: #1a2744;
-
-  /* Borders - LIGHT borders for dark mode */
-  --sbs-border: #4b5563;
-  --sbs-border-light: #374151;
-  --sbs-border-dark: #6b7280;
+  /* Backgrounds */
+  --sbs-bg-page: #1a1a1a;
+  --sbs-bg-surface: #1a1a1a;
 
   /* Text */
-  --sbs-text: #f8f9fa;
-  --sbs-text-muted: #9ca3af;
-  --sbs-text-light: #6b7280;
+  --sbs-text: var(--sbs-white);
+  --sbs-text-muted: #cccccc;
+
+  /* Borders */
+  --sbs-border: #cccccc;
 
   /* Links */
   --sbs-link: #60a5fa;
   --sbs-link-hover: #93c5fd;
 
-  /* Accent (Sidebar/Header) - slightly brighter for dark */
-  --sbs-accent: #4a7a9e;
-  --sbs-accent-light: #5a8ab0;
-  --sbs-accent-dark: #3a6a8e;
+  /* Accent (Sidebar/Header) */
+  --sbs-accent: var(--sbs-blue-bright);
 
   /* Headings */
-  --sbs-heading: #e2e8f0;
+  --sbs-heading: var(--sbs-white);
 
-  /* Sidebar Navigation */
-  --sbs-nav-current: #3a5a7a;
-
-  /* Theorem Environments - darker versions */
-  --sbs-def-bg: #1e293b;
-  --sbs-lemma-bg: #27272a;
+  /* Selection */
+  --sbs-selection-bg: #60a5fa;
+  --sbs-selection-text: var(--sbs-black);
 
   /* Tooltip Themes - dark versions */
   --sbs-tooltip-warning-bg: #422006;
@@ -218,7 +206,7 @@ html[data-theme="dark"] {
   --sbs-tooltip-info-border: #3b82f6;
 
   /* Graph & Legend */
-  --sbs-graph-bg: #1a1a2e;
+  --sbs-graph-bg: #1a1a1a;
   --sbs-graph-edge: #9ca3af;
   --sbs-graph-edge-hover: #e5e7eb;
   --sbs-legend-bg: #1f2937;
@@ -235,10 +223,6 @@ html[data-theme="dark"] {
   --sbs-badge-progress-bg: #451a03;
   --sbs-badge-progress-text: #fde68a;
   --sbs-badge-progress-border: #d97706;
-
-  /* Selection */
-  --sbs-selection-bg: #60a5fa;
-  --sbs-selection-text: #000000;
 }
 
 /* ---------------------------------------------
@@ -250,7 +234,7 @@ html[data-theme="dark"] {
   grid-template-columns: 100ch 100ch;
   gap: 1rem;
   align-items: start;
-  background: var(--sbs-bg-sbs);
+  background: var(--sbs-bg-surface);
   padding: 1rem;
   border-radius: 4px;
 }
@@ -412,7 +396,7 @@ html[data-theme="dark"] {
   content: '|';
   display: inline-block;
   margin: 0 0.25em;
-  color: var(--sbs-text-light);
+  color: var(--sbs-text-muted);
 }
 
 /* ---------------------------------------------
@@ -427,9 +411,9 @@ html[data-theme="dark"] {
 }
 
 .tippy-box[data-theme~='lean'] {
-  background-color: var(--sbs-bg-raised);
+  background-color: var(--sbs-bg-surface);
   color: var(--sbs-text);
-  border: 1px solid var(--sbs-border-dark);
+  border: 1px solid var(--sbs-border);
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
@@ -440,10 +424,10 @@ html[data-theme="dark"] {
   font-size: 0.85em;
 }
 
-.tippy-box[data-theme~='lean'][data-placement^='top'] > .tippy-arrow::before { border-top-color: var(--sbs-bg-raised); }
-.tippy-box[data-theme~='lean'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--sbs-bg-raised); }
-.tippy-box[data-theme~='lean'][data-placement^='left'] > .tippy-arrow::before { border-left-color: var(--sbs-bg-raised); }
-.tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before { border-right-color: var(--sbs-bg-raised); }
+.tippy-box[data-theme~='lean'][data-placement^='top'] > .tippy-arrow::before { border-top-color: var(--sbs-bg-surface); }
+.tippy-box[data-theme~='lean'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--sbs-bg-surface); }
+.tippy-box[data-theme~='lean'][data-placement^='left'] > .tippy-arrow::before { border-left-color: var(--sbs-bg-surface); }
+.tippy-box[data-theme~='lean'][data-placement^='right'] > .tippy-arrow::before { border-right-color: var(--sbs-bg-surface); }
 
 .tippy-box[data-theme~='warning'] {
   background-color: var(--sbs-tooltip-warning-bg);
@@ -478,7 +462,7 @@ html[data-theme="dark"] {
 .tippy-box[data-theme~='tactic'] {
   background-color: var(--sbs-bg-surface);
   color: var(--sbs-text);
-  border: 1px solid var(--sbs-border-dark);
+  border: 1px solid var(--sbs-border);
   border-radius: 4px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
@@ -546,7 +530,7 @@ html[data-theme="dark"] {
   transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out;
   margin-top: 0;
   padding: 0 8px;
-  background-color: var(--sbs-bg-raised);
+  background-color: var(--sbs-bg-surface);
   border: 1px solid var(--sbs-border);
   border-radius: 4px;
 }
@@ -575,7 +559,7 @@ html[data-theme="dark"] {
 .hl.lean .goal {
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--sbs-border-light);
+  border-bottom: 1px solid var(--sbs-border);
 }
 
 .hl.lean .goal:last-child {

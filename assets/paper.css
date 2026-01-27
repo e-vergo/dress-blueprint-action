@@ -52,8 +52,8 @@
   font-size: 0.95rem;
   margin: 1.5rem 2rem;
   padding: 1rem;
-  background: var(--sbs-bg-raised);
-  border-left: 3px solid var(--sbs-border-dark);
+  background: var(--sbs-bg-surface);
+  border-left: 3px solid var(--sbs-border);
 }
 
 /* ---------------------------------------------
@@ -76,16 +76,16 @@
 .paper-theorem {
   margin: 1.5rem 0;
   padding: 0.75rem 1rem;
-  background: var(--sbs-bg-raised);
+  background: var(--sbs-bg-surface);
   border-radius: 3px;
 }
 
 .paper-definition {
-  background: var(--sbs-def-bg);
+  background: var(--sbs-bg-surface);
 }
 
 .paper-lemma {
-  background: var(--sbs-lemma-bg);
+  background: var(--sbs-bg-surface);
 }
 
 .paper-theorem-header {
@@ -153,7 +153,7 @@
 }
 
 .verification-badge.not-started {
-  background: var(--sbs-bg-raised);
+  background: var(--sbs-bg-surface);
   color: var(--sbs-text-muted);
   border: 1px solid var(--sbs-border);
 }

@@ -114,7 +114,7 @@ footer#footnotes h1{font-size:1.5rem;margin:0;margin-bottom:.5rem;color:var(--sb
 a.footnote{text-decoration:none}
 a.footnote sup:after{content:"]"}
 a.footnote sup:before{content:"["}
-body>header{background:linear-gradient(180deg,var(--sbs-accent-light) 0,var(--sbs-accent));color:#fff;display:flex;align-items:center;padding:.5rem}
+body>header{background:linear-gradient(180deg,var(--sbs-accent) 0,var(--sbs-accent));color:#fff;display:flex;align-items:center;padding:.5rem}
 #toc-toggle{font-size:1.75rem;margin-right:1rem;cursor:pointer;color:#fff;display:none}
 @media (max-width:1023px){#toc-toggle{display:inline-block}}
 h1#doc_title{color:#fff;font-size:1.5rem;margin:auto}
@@ -134,7 +134,7 @@ table.list td{padding-right:5px}
 div.displaymath{overflow:auto}
 a.eqref:before{content:"("}
 a.eqref:after{content:")"}
-nav.prev_up_next{position:fixed;z-index:1;right:0;bottom:0;display:flex;height:2.5rem;background:linear-gradient(180deg,var(--sbs-accent-light) 0,var(--sbs-accent))}
+nav.prev_up_next{position:fixed;z-index:1;right:0;bottom:0;display:flex;height:2.5rem;background:linear-gradient(180deg,var(--sbs-accent) 0,var(--sbs-accent))}
 nav.prev_up_next a{font-size:150%;margin:auto;padding:.5rem 1rem;text-decoration:none;color:#fff;text-shadow:1px 2px 0 rgba(0,0,0,.8)}
 hspace,vspace{margin:0;padding:0}
 div.bigskip{margin-bottom:4rem}
@@ -144,7 +144,7 @@ div.bigskip{margin:0;padding:0;margin-bottom:1rem}
 .tabular td,.tabular th{vertical-align:baseline;text-align:left;padding:.3em .6em;empty-cells:show}
 td p:first-child,th p:first-child{margin-top:0;margin-bottom:0}
 td p,th p{margin-top:1em;margin-bottom:0}
-@keyframes a{0%{background-color:var(--sbs-border-dark)}to{background-color:var(--sbs-bg-page)}}
+@keyframes a{0%{background-color:var(--sbs-border)}to{background-color:var(--sbs-bg-page)}}
 div[class$=_thmwrapper]{margin-top:1rem}
 div[class$=_thmwrapper]:target{animation:a 1s ease}
 div[class$=_thmheading]{display:flex;font-weight:700;line-height:150%}
@@ -171,7 +171,7 @@ ul.quizz svg.icon{display:none;padding-right:.5rem;width:2rem;height:2rem}
 .local_toc ul{padding-left:1rem;list-style:none}
 .local_toc ul a{text-decoration:none;color:var(--sbs-text)}
 .local_toc ul li{padding:.2rem 0}
-nav.toc{flex-shrink:0;display:none;width:100%;height:100%;overflow-x:hidden;overflow-y:auto;flex-direction:column;margin-right:1rem;padding:0;padding-right:1rem;transition:left .5s ease;background-color:var(--sbs-accent-light);border-right:none}
+nav.toc{flex-shrink:0;display:none;width:100%;height:100%;overflow-x:hidden;overflow-y:auto;flex-direction:column;margin-right:1rem;padding:0;padding-right:1rem;transition:left .5s ease;background-color:var(--sbs-accent);border-right:none}
 @media (min-width:1024px){nav.toc{display:flex;max-width:25ch}}
 nav.active{width:100%}
 .toc ul{min-width:100%;padding-left:0;list-style:none}
@@ -183,8 +183,8 @@ nav.active{width:100%}
   margin: 0.5rem 0.75rem;
   list-style: none;
 }
-.toc ul li{display:flex;min-width:100%;align-items:center;flex-wrap:wrap;justify-content:space-between;background-color:var(--sbs-accent-light)}
-.toc ul li.current{background-color:var(--sbs-nav-current);font-weight:400}
+.toc ul li{display:flex;min-width:100%;align-items:center;flex-wrap:wrap;justify-content:space-between;background-color:var(--sbs-accent)}
+.toc ul li.current{background-color:rgba(255, 255, 255, 0.2);font-weight:400}
 .sub-toc-0 a{padding-left:.8rem}
 .sub-toc-1 a{padding-left:1.6rem}
 .sub-toc-2 a{padding-left:2.4rem}
@@ -196,7 +196,7 @@ svg.close-toc{min-width:1.3rem;min-height:1.3rem;margin:.5rem;margin-left:auto;d
 nav.active svg.close-toc{display:inline-block}
 ul.active{display:block}
 code.verb{font-family:monospace;font-style:normal;font-weight:400}
-pre.verbatim{margin:1rem 2rem;background-color:var(--sbs-bg-raised);padding:.5rem}
+pre.verbatim{margin:1rem 2rem;background-color:var(--sbs-bg-surface);padding:.5rem}
 
 /* ========== Side-by-side Layout (from leanblueprint) ========== */
 a.github_link {
@@ -291,7 +291,7 @@ a.github_link {
 }
 
 .prev-next-nav a:hover {
-  background-color: var(--sbs-bg-raised);
+  background-color: var(--sbs-bg-surface);
 }
 
 .prev-next-nav a.prev {
@@ -370,7 +370,7 @@ nav.toc li.active a {
   --bp-danger: var(--sbs-danger);
   --bp-muted: var(--sbs-text-muted);
   --bp-bg: var(--sbs-bg-surface);
-  --bp-bg-alt: var(--sbs-bg-raised);
+  --bp-bg-alt: var(--sbs-bg-surface);
   --bp-border: var(--sbs-border);
   --bp-text: var(--sbs-text);
   --bp-text-muted: var(--sbs-text-muted);
@@ -388,7 +388,7 @@ nav.toc li.active a {
 
 /* Stats Box - matches dep-graph-legend styling */
 .stats-box {
-  background: var(--sbs-bg-raised);
+  background: var(--sbs-bg-surface);
   border: 1px solid var(--sbs-border);
   border-radius: 4px;
   min-width: 340px;
@@ -545,7 +545,7 @@ nav.toc li.active a {
 /* Make all stats boxes in dashboard have same styling */
 .stats-box.key-theorems,
 .stats-box.project-notes {
-  background: var(--sbs-bg-raised);
+  background: var(--sbs-bg-surface);
   border: 1px solid var(--sbs-border);
   border-radius: 8px;  /* Rounded corners */
   font-size: 0.875rem;
@@ -594,7 +594,7 @@ nav.toc li.active a {
 /* Empty state */
 .stats-empty {
   padding: 0.75rem;
-  color: var(--sbs-text-light);
+  color: var(--sbs-text-muted);
   font-style: italic;
   text-align: center;
   flex-grow: 1;
@@ -676,7 +676,7 @@ nav.toc li.active a {
   align-items: flex-start;
   gap: 0.5rem;
   padding: 0.5rem;
-  border-bottom: 1px solid var(--sbs-border-light);
+  border-bottom: 1px solid var(--sbs-border);
   justify-content: center;  /* Center content horizontally */
   width: 80%;
   max-width: none;  /* Remove the 600px fixed limit */
@@ -837,7 +837,7 @@ nav.toc li.active a {
 }
 
 .notes-empty {
-  color: var(--sbs-text-light);
+  color: var(--sbs-text-muted);
   font-style: italic;
   text-align: center;
   padding: 1rem;
