@@ -671,7 +671,7 @@ nav.toc li.active a {
   background: #f4f4f4;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 340px;
+  min-width: 340px;
   font-size: 0.875rem;
   color: #333;
 }
@@ -794,7 +794,8 @@ nav.toc li.active a {
 /* Progress stats box - fixed size, don't stretch */
 .dashboard-cell.progress-cell {
   flex-shrink: 0;
-  width: 340px;
+  min-width: 400px;
+  width: auto;
 }
 
 /* Key theorems fills remaining space */
@@ -869,15 +870,22 @@ nav.toc li.active a {
   justify-content: center;
 }
 
-/* Notes content */
+/* Notes content - multi-column layout */
 .notes-content {
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem;
   overflow-y: auto;
   flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.75rem;
+  align-items: start;
 }
 
 .note-section {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 4px;
+  padding: 0.5rem;
 }
 
 .note-section:last-child {
@@ -924,7 +932,8 @@ nav.toc li.active a {
 
 /* Health metrics badges */
 .project-health {
-  margin-top: 1rem;
+  margin: 0.75rem;
+  padding-top: 0.5rem;
 }
 
 .health-title {
@@ -1046,16 +1055,31 @@ nav.toc li.active a {
   overflow: hidden;
 }
 
-/* Project notes colored borders */
-.note-section {
-  padding-left: 0.75rem;
-  margin-bottom: 1rem;
+.kt-lean pre.lean-code {
+  font-size: 0.75rem;
+  background: #f8f9fa;
+  padding: 0.25rem;
+  border-radius: 3px;
+  margin: 0;
+  overflow: hidden;
+  max-height: 60px;
 }
 
-.note-section h4 {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
-  font-weight: 600;
+.kt-lean pre.lean-code code {
+  font-size: inherit;
+  background: transparent;
+  padding: 0;
+}
+
+/* Project notes colored borders */
+.note-section.priority-high,
+.note-section.priority-medium,
+.note-section.priority-low,
+.note-section.blocked,
+.note-section.issues,
+.note-section.tech-debt,
+.note-section.misc {
+  padding-left: 0.75rem;
 }
 
 .note-section.priority-high {
