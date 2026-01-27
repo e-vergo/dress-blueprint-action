@@ -202,6 +202,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // Sync Lean proof body visibility with LaTeX proof toggle using jQuery animations
+// Note: plastex.js now uses [show]/[hide] text instead of arrow symbols
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.sbs-container').forEach(function(container) {
         var proofHeading = container.querySelector('.proof_heading');
@@ -211,10 +212,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Listen for clicks on the proof heading
         proofHeading.addEventListener('click', function() {
-            // Read icon state after plastex.js has toggled it (setTimeout for timing)
+            // Read toggle state after plastex.js has toggled it (setTimeout for timing)
             setTimeout(function() {
                 var icon = container.querySelector('.expand-proof');
-                var isCollapsed = icon && icon.textContent.trim() === '▶';
+                // plastex.js uses [show] when collapsed, [hide] when expanded
+                var isCollapsed = icon && icon.textContent.trim() === '[show]';
                 // Use jQuery slideUp/slideDown to match LaTeX proof animation
                 if (isCollapsed) {
                     $(leanProofBody).slideUp(300);
@@ -455,6 +457,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show the corresponding modal (use normalized ID)
             var modal = document.getElementById(normalizedId + '_modal');
             if (modal) {
+                // The modals are inside #statements container which starts hidden
+                var statements = document.getElementById('statements');
+                if (statements) {
+                    statements.style.display = 'block';
+                }
                 modal.style.display = 'flex';
                 onModalOpen(modal);
             }
