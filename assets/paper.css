@@ -148,8 +148,8 @@
   display: none;
 }
 
-.paper-theorem .proof_wrapper.expanded ~ .sbs-lean-column .lean-proof-body,
-.paper-theorem.proof-expanded .lean-proof-body {
+/* Use :has() to detect expanded proof wrapper and show Lean proof body */
+.paper-theorem:has(.proof_wrapper.expanded) .lean-proof-body {
   display: block;
 }
 
