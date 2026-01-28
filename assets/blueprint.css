@@ -553,7 +553,7 @@ nav.toc li.active a {
 }
 
 /* Key theorems fills remaining space */
-.dashboard-cell.key-theorems-cell {
+.dashboard-cell.key-declarations-cell {
   flex: 1;
   min-width: 0;  /* Allow shrinking */
 }
@@ -564,7 +564,7 @@ nav.toc li.active a {
 }
 
 /* Make all stats boxes in dashboard have same styling */
-.stats-box.key-theorems,
+.stats-box.key-declarations,
 .stats-box.project-notes {
   background: var(--sbs-bg-surface);
   border: 1px solid var(--sbs-border);
@@ -597,11 +597,12 @@ nav.toc li.active a {
 }
 
 .dashboard-list a {
-  color: var(--sbs-link);
+  color: var(--sbs-text-muted);
   text-decoration: none;
 }
 
 .dashboard-list a:hover {
+  color: var(--sbs-text);
   text-decoration: underline;
 }
 
@@ -684,15 +685,15 @@ nav.toc li.active a {
   min-width: 400px;
 }
 
-/* Key theorem previews */
-.key-theorems-list {
+/* Key declaration previews */
+.key-declarations-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   align-items: center;  /* Center content horizontally */
 }
 
-.key-theorem-item {
+.key-declaration-item {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
@@ -703,7 +704,7 @@ nav.toc li.active a {
   max-width: none;  /* Remove the 600px fixed limit */
 }
 
-.key-theorem-item:last-child {
+.key-declaration-item:last-child {
   border-bottom: none;
 }
 
@@ -715,44 +716,43 @@ nav.toc li.active a {
   margin-top: 0.5rem;
 }
 
-.key-theorem-link {
+.key-declaration-link {
   flex: 1;
   text-decoration: none;
   color: inherit;
 }
 
-.key-theorem-link:hover {
+.key-declaration-link:hover {
   background: var(--sbs-bg-page);
 }
 
-.key-theorem-preview {
+.key-declaration-preview {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
   font-size: 0.8rem;
 }
 
-.kt-latex,
-.kt-lean {
-  overflow: hidden;
-  max-height: 80px;
+.kd-latex,
+.kd-lean {
+  overflow: visible;
 }
 
-.kt-env {
+.kd-env {
   font-weight: 600;
   color: var(--sbs-text);
 }
 
-.kt-label {
+.kd-label {
   color: var(--sbs-text-muted);
 }
 
-.kt-statement {
+.kd-statement {
   margin-top: 0.25rem;
   color: var(--sbs-text);
 }
 
-.kt-lean code {
+.kd-lean code {
   font-size: 0.75rem;
   background: var(--sbs-bg-page);
   padding: 0.25rem;
@@ -761,17 +761,16 @@ nav.toc li.active a {
   overflow: hidden;
 }
 
-.kt-lean pre.lean-code {
+.kd-lean pre.lean-code {
   font-size: 0.75rem;
   background: var(--sbs-bg-page);
   padding: 0.25rem;
   border-radius: 3px;
   margin: 0;
-  overflow: hidden;
-  max-height: 60px;
+  overflow: visible;
 }
 
-.kt-lean pre.lean-code code {
+.kd-lean pre.lean-code code {
   font-size: inherit;
   background: transparent;
   padding: 0;

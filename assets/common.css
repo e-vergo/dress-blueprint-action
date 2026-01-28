@@ -607,11 +607,12 @@ html[data-theme="dark"] .theme-toggle-switch::after {
   font-size: 1rem;
 }
 
-.theme-toggle-icon.sun { display: inline; }
-.theme-toggle-icon.moon { display: none; }
+/* Both icons always visible, opacity indicates active state */
+.theme-toggle-icon.sun { display: inline; opacity: 1.0; }
+.theme-toggle-icon.moon { display: inline; opacity: 0.5; }
 
-html[data-theme="dark"] .theme-toggle-icon.sun { display: none; }
-html[data-theme="dark"] .theme-toggle-icon.moon { display: inline; }
+html[data-theme="dark"] .theme-toggle-icon.sun { opacity: 0.5; }
+html[data-theme="dark"] .theme-toggle-icon.moon { opacity: 1.0; }
 
 /* ---------------------------------------------
    8. Dark Mode Graph Edge Override
@@ -634,11 +635,7 @@ html[data-theme="dark"] .dep-graph-svg svg marker path {
   fill: var(--sbs-graph-edge) !important;
 }
 
-/* SVG text in dark mode */
-html[data-theme="dark"] .dep-graph-container svg text,
-html[data-theme="dark"] .dep-graph-svg svg text {
-  fill: var(--sbs-text) !important;
-}
+/* SVG text color - removed dark mode override to keep text consistent with node backgrounds */
 
 /* SVG background rect in dark mode */
 html[data-theme="dark"] .dep-graph-container svg > rect:first-child,
