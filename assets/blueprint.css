@@ -851,6 +851,16 @@ nav.toc li.active a {
   line-height: 1.4;
 }
 
+.notes-list a {
+  color: var(--sbs-text-muted);
+  text-decoration: none;
+}
+
+.notes-list a:hover {
+  color: var(--sbs-text);
+  text-decoration: underline;
+}
+
 .note-content {
   color: var(--sbs-text);
   font-size: 0.875rem;
