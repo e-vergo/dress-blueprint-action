@@ -199,6 +199,27 @@ code.verb{font-family:monospace;font-style:normal;font-weight:400}
 pre.verbatim{margin:1rem 2rem;background-color:var(--sbs-bg-surface);padding:.5rem}
 
 /* ========== Side-by-side Layout (from leanblueprint) ========== */
+
+/* Constrain non-node content (paragraphs, lists, display math) to left column width.
+   These elements appear in chapter-page, section, and direct content areas. */
+.chapter-page > p,
+.chapter-page > div.displaymath,
+.chapter-page > ul,
+.chapter-page > ol,
+.chapter-page > blockquote,
+section.section > p,
+section.section > div.displaymath,
+section.section > ul,
+section.section > ol,
+section.section > blockquote,
+div.content > p,
+div.content > div.displaymath,
+div.content > ul:not(.chapter-index):not(.dashboard-list):not(.notes-list):not(.toc),
+div.content > ol,
+div.content > blockquote {
+  max-width: 100ch;
+}
+
 a.github_link {
   font-weight: normal;
   font-size: 90%;
