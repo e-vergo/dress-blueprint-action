@@ -413,7 +413,8 @@ nav.toc li.active a {
   border: 1px solid var(--sbs-border);
   border-radius: 4px;
   min-width: 340px;
-  height: 320px;
+  height: 400px;
+  overflow: hidden;
   font-size: 0.875rem;
   color: var(--sbs-text);
 }
@@ -953,7 +954,8 @@ html[data-theme="dark"] .notes-messages h4 {
   border-radius: 8px;
   padding: 0;  /* Match stats-box padding (handled by children) */
   margin-top: 1rem;
-  height: 320px;  /* Match stats-box height */
+  height: 400px;  /* Match stats-box height */
+  overflow: hidden;
   box-sizing: border-box;
 }
 
