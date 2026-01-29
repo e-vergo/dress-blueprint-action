@@ -948,10 +948,11 @@ html[data-theme="dark"] .notes-messages h4 {
 
 .checks-tile {
   background-color: var(--sbs-bg-surface);
+  border: 1px solid var(--sbs-border);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0;  /* Match stats-box padding (handled by children) */
   margin-top: 1rem;
-  min-height: 280px;  /* Match stats-box height */
+  min-height: 0;  /* Let content determine height, matching stats-box */
   box-sizing: border-box;
 }
 
@@ -967,7 +968,7 @@ html[data-theme="dark"] .notes-messages h4 {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  padding: 0.75rem;
 }
 
 .check-item {
