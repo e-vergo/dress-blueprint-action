@@ -1,5 +1,5 @@
-name: "Dress Blueprint Action"
-description: "Build Lean 4 projects with Dress syntax highlighting and leanblueprint documentation"
+name: "Side-by-Side Blueprint Action"
+description: "Complete CI solution for Lean 4 projects with Side-by-Side Blueprint documentation"
 author: "e-vergo"
 
 branding:
@@ -7,235 +7,459 @@ branding:
   color: "blue"
 
 inputs:
-  build-dressed:
-    description: "Build with Dress artifact generation enabled"
-    required: false
-    default: "true"
-
-  blueprint-facet:
-    description: "Run `lake build :blueprint` to generate library index"
-    required: false
-    default: "true"
-
-  build-pdf:
-    description: "Build PDF version of blueprint"
-    required: false
-    default: "true"
-
-  build-web:
-    description: "Build web version of blueprint"
-    required: false
-    default: "true"
-
-  check-decls:
-    description: "Run declaration check against lean_decls file"
-    required: false
-    default: "true"
-
-  lake-package-directory:
-    description: "Directory containing the Lake package"
+  project-directory:
+    description: "Directory containing lakefile.toml and runway.json"
     required: false
     default: "."
 
-  blueprint-directory:
-    description: "Directory containing blueprint source"
+  lean-version:
+    description: "Override Lean version (auto-detected from lean-toolchain by default)"
     required: false
-    default: "blueprint"
+    default: ""
+
+  mathlib-cache:
+    description: "Use mathlib cache (GitHub Actions cache + server fallback)"
+    required: false
+    default: "true"
+
+  docgen4-mode:
+    description: "DocGen4 mode: skip, docs-static, or generate"
+    required: false
+    default: "skip"
 
   deploy-pages:
     description: "Upload artifact for GitHub Pages deployment"
     required: false
     default: "true"
 
-  output-directory:
-    description: "Directory for assembled site output"
-    required: false
-    default: "_site"
-
-  leanblueprint-version:
-    description: "leanblueprint package to install (pip spec)"
-    required: false
-    default: "git+https://github.com/e-vergo/leanblueprint.git"
-
-  use-mathlib-cache:
-    description: "Fetch Mathlib cache before building"
-    required: false
-    default: "true"
-
-  clean-dressed:
-    description: "Remove dressed artifacts before build"
-    required: false
-    default: "false"
-
-  use-runway:
-    description: "Use Runway (Lean) instead of leanblueprint (Python) for site generation"
-    required: false
-    default: "false"
-
-  runway-target:
-    description: "Lake target for Runway build (e.g., 'SBSTest:runway')"
-    required: false
-    default: ""
-
 outputs:
-  blueprint-pdf-path:
-    description: "Path to generated PDF"
-    value: ${{ steps.build-blueprint.outputs.pdf-path }}
+  site-path:
+    description: "Path to generated site directory"
+    value: ${{ steps.generate-site.outputs.site-path }}
 
-  blueprint-web-path:
-    description: "Path to generated web directory"
-    value: ${{ steps.build-blueprint.outputs.web-path }}
+  paper-pdf-path:
+    description: "Path to generated paper PDF (if paper.tex configured)"
+    value: ${{ steps.generate-paper.outputs.pdf-path }}
 
 runs:
   using: "composite"
   steps:
-    - name: Validate configuration
-      id: validate
+    # ========================================
+    # STEP 1: Free disk space
+    # ========================================
+    - name: Free disk space
+      uses: jlumbroso/free-disk-space@v1.3.0
+      with:
+        tool-cache: false
+        android: true
+        dotnet: true
+        haskell: true
+        large-packages: false
+        docker-images: false
+        swap-storage: false
+
+    # ========================================
+    # STEP 2: Checkout toolchain repos
+    # ========================================
+    - name: Checkout SubVerso
+      uses: actions/checkout@v4
+      with:
+        repository: e-vergo/subverso
+        path: _sbs_toolchain/subverso
+        ref: main
+
+    - name: Checkout LeanArchitect
+      uses: actions/checkout@v4
+      with:
+        repository: e-vergo/LeanArchitect
+        path: _sbs_toolchain/LeanArchitect
+        ref: main
+
+    - name: Checkout Dress
+      uses: actions/checkout@v4
+      with:
+        repository: e-vergo/Dress
+        path: _sbs_toolchain/Dress
+        ref: main
+
+    - name: Checkout Runway
+      uses: actions/checkout@v4
+      with:
+        repository: e-vergo/Runway
+        path: _sbs_toolchain/Runway
+        ref: main
+
+    - name: Checkout dress-blueprint-action (for assets)
+      uses: actions/checkout@v4
+      with:
+        repository: e-vergo/dress-blueprint-action
+        path: _sbs_toolchain/dress-blueprint-action
+        ref: main
+
+    # ========================================
+    # STEP 3: Install elan
+    # ========================================
+    - name: Install elan
       shell: bash
       run: |
-        cd "${{ inputs.lake-package-directory }}"
-        if [ ! -d "${{ inputs.blueprint-directory }}" ]; then
-          echo "::warning::Blueprint directory not found: ${{ inputs.blueprint-directory }}"
+        curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+        echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+    # ========================================
+    # STEP 4: Install Lean toolchain
+    # ========================================
+    - name: Install Lean toolchain
+      shell: bash
+      working-directory: ${{ inputs.project-directory }}
+      run: |
+        source $HOME/.elan/env
+        if [ -n "${{ inputs.lean-version }}" ]; then
+          echo "Installing specified Lean version: ${{ inputs.lean-version }}"
+          elan toolchain install ${{ inputs.lean-version }}
+          elan default ${{ inputs.lean-version }}
         fi
-        if [ ! -f "lakefile.toml" ] && [ ! -f "lakefile.lean" ]; then
-          echo "::error::No lakefile found in ${{ inputs.lake-package-directory }}"
-          exit 1
+        echo "Verifying Lean installation..."
+        lake --version
+
+    # ========================================
+    # STEP 5: Install LaTeX
+    # ========================================
+    - name: Install LaTeX
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra texlive-science
+
+    # ========================================
+    # STEP 6: Restore mathlib cache
+    # ========================================
+    - name: Restore mathlib cache
+      if: inputs.mathlib-cache == 'true'
+      id: mathlib-cache
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ inputs.project-directory }}/.lake/packages/mathlib
+        key: mathlib-${{ runner.os }}-${{ hashFiles(format('{0}/lake-manifest.json', inputs.project-directory)) }}
+
+    # ========================================
+    # STEP 7: Get mathlib cache (fallback to server)
+    # ========================================
+    - name: Get mathlib cache
+      if: inputs.mathlib-cache == 'true'
+      shell: bash
+      working-directory: ${{ inputs.project-directory }}
+      run: |
+        if [ "${{ steps.mathlib-cache.outputs.cache-hit }}" == "true" ]; then
+          echo "Mathlib restored from GitHub Actions cache"
+          OLEAN_COUNT=$(find .lake/packages/mathlib -name "*.olean" 2>/dev/null | wc -l)
+          echo "Found $OLEAN_COUNT oleans in cache"
+        else
+          echo "Fetching mathlib cache from server..."
+          lake exe cache get || echo "::warning::Server cache unavailable, will build from source"
+          OLEAN_COUNT=$(find .lake/packages/mathlib -name "*.olean" 2>/dev/null | wc -l)
+          echo "Found $OLEAN_COUNT oleans after cache get"
         fi
-        echo "Configuration validated"
 
-    - name: Fetch Mathlib cache
-      if: inputs.use-mathlib-cache == 'true'
+    # ========================================
+    # STEP 8: Build toolchain
+    # ========================================
+    - name: Build SubVerso
       shell: bash
-      working-directory: ${{ inputs.lake-package-directory }}
+      working-directory: ${{ github.workspace }}/_sbs_toolchain/subverso
       run: |
-        lake exe cache get || echo "::warning::Cache fetch completed with some skipped files"
+        echo "Building SubVerso (highlighting extraction)..."
+        lake build
+        echo "SubVerso build complete"
 
-    - name: Clean dressed artifacts
-      if: inputs.clean-dressed == 'true'
+    - name: Build LeanArchitect
       shell: bash
-      working-directory: ${{ inputs.lake-package-directory }}
+      working-directory: ${{ github.workspace }}/_sbs_toolchain/LeanArchitect
       run: |
-        rm -rf .lake/build/dressed
-        echo "Cleaned dressed artifacts"
+        echo "Building LeanArchitect (@[blueprint] attribute)..."
+        lake build
+        echo "LeanArchitect build complete"
 
-    - name: Build with Dress artifacts
-      if: inputs.build-dressed == 'true'
-      id: build-dressed
+    - name: Build Dress
       shell: bash
-      working-directory: ${{ inputs.lake-package-directory }}
+      working-directory: ${{ github.workspace }}/_sbs_toolchain/Dress
       run: |
-        echo "Creating .dress marker file"
+        echo "Building Dress (artifact generation)..."
+        lake build
+        echo "Dress build complete"
+
+    - name: Build Runway
+      shell: bash
+      working-directory: ${{ github.workspace }}/_sbs_toolchain/Runway
+      run: |
+        echo "Building Runway (site generator)..."
+        lake build
+        echo "Runway build complete"
+
+    # ========================================
+    # STEP 9: Build project with Dress
+    # ========================================
+    - name: Build project with Dress artifacts
+      shell: bash
+      working-directory: ${{ inputs.project-directory }}
+      run: |
+        echo "Building project with Dress artifact generation..."
         mkdir -p .lake/build
         echo "1" > .lake/build/.dress
-
-        echo "Building project with Dress artifact generation..."
         lake build
-
-        echo "Removing .dress marker file"
         rm -f .lake/build/.dress
 
-        echo "::notice::Dressed artifacts generated in .lake/build/dressed/"
-
-    - name: Build blueprint Lake facet
-      if: inputs.blueprint-facet == 'true'
-      shell: bash
-      working-directory: ${{ inputs.lake-package-directory }}
-      run: |
-        echo "Generating library index..."
-        lake build :blueprint
-        echo "::notice::Library index generated"
-
-    - name: Build with Runway
-      if: inputs.use-runway == 'true' && inputs.runway-target != ''
-      shell: bash
-      working-directory: ${{ inputs.lake-package-directory }}
-      run: |
-        echo "Building site with Runway..."
-        lake build ${{ inputs.runway-target }}
-        echo "::notice::Runway site generated in .lake/build/runway/"
-
-    - name: Build blueprint documentation
-      if: (inputs.build-pdf == 'true' || inputs.build-web == 'true') && inputs.use-runway != 'true'
-      id: build-blueprint
-      uses: xu-cheng/texlive-action@v2
-      with:
-        docker_image: ghcr.io/xu-cheng/texlive-full:20250101
-        run: |
-          # Install system dependencies
-          apk update
-          apk add --update make py3-pip git pkgconfig graphviz graphviz-dev gcc musl-dev python3-dev
-
-          # Configure git for container
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-
-          # Create Python venv and install dependencies
-          cd $GITHUB_WORKSPACE
-          python3 -m venv env
-          source env/bin/activate
-          pip install --upgrade pip requests wheel
-          pip install pygraphviz --config-settings="--global-option=build_ext" \
-            --config-settings="--global-option=-L/usr/lib/graphviz/" \
-            --config-settings="--global-option=-R/usr/lib/graphviz/"
-          pip install "${{ inputs.leanblueprint-version }}"
-
-          cd "${{ inputs.lake-package-directory }}/${{ inputs.blueprint-directory }}"
-
-          # Build PDF
-          if [ "${{ inputs.build-pdf }}" == "true" ]; then
-            echo "Building PDF..."
-            leanblueprint pdf || echo "::warning::PDF build failed or skipped"
-            if [ -f "print/print.pdf" ]; then
-              echo "pdf-path=${{ inputs.lake-package-directory }}/${{ inputs.blueprint-directory }}/print/print.pdf" >> $GITHUB_OUTPUT
-            fi
-          fi
-
-          # Build web
-          if [ "${{ inputs.build-web }}" == "true" ]; then
-            echo "Building web..."
-            leanblueprint web
-            echo "web-path=${{ inputs.lake-package-directory }}/${{ inputs.blueprint-directory }}/web" >> $GITHUB_OUTPUT
-          fi
-
-    - name: Check declarations
-      if: inputs.check-decls == 'true'
-      shell: bash
-      working-directory: ${{ inputs.lake-package-directory }}
-      run: |
-        DECLS_FILE="${{ inputs.blueprint-directory }}/lean_decls"
-        if [ -f "$DECLS_FILE" ]; then
-          echo "Checking declarations..."
-          lake exe checkdecls "$DECLS_FILE" || echo "::warning::Declaration check failed"
-        else
-          echo "::notice::No lean_decls file found, skipping declaration check"
+        # Verify dressed artifacts were generated
+        DRESSED_COUNT=$(find .lake/build/dressed -name "*.html" 2>/dev/null | wc -l)
+        echo "Generated $DRESSED_COUNT dressed HTML artifacts"
+        if [ "$DRESSED_COUNT" -eq 0 ]; then
+          echo "::warning::No dressed artifacts found - check @[blueprint] attributes"
         fi
 
-    - name: Assemble site
+    # ========================================
+    # STEP 10: Build blueprint facet
+    # ========================================
+    - name: Build blueprint facet
+      shell: bash
+      working-directory: ${{ inputs.project-directory }}
+      run: |
+        echo "Building blueprint Lake facet..."
+        lake build :blueprint
+        echo "Blueprint facet complete"
+
+    # ========================================
+    # STEP 11: Generate dependency graph
+    # ========================================
+    - name: Generate dependency graph
+      id: generate-graph
+      shell: bash
+      working-directory: ${{ inputs.project-directory }}
+      run: |
+        echo "Extracting projectName from runway.json..."
+        if [ ! -f "runway.json" ]; then
+          echo "::error::runway.json not found in ${{ inputs.project-directory }}"
+          exit 1
+        fi
+
+        # Extract projectName using grep/sed (no jq dependency)
+        PROJECT_NAME=$(grep -o '"projectName"[[:space:]]*:[[:space:]]*"[^"]*"' runway.json | sed 's/.*"projectName"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
+        if [ -z "$PROJECT_NAME" ]; then
+          echo "::error::Could not extract projectName from runway.json"
+          exit 1
+        fi
+        echo "Project name: $PROJECT_NAME"
+        echo "project-name=$PROJECT_NAME" >> $GITHUB_OUTPUT
+
+        echo "Generating dependency graph and manifest..."
+        lake env ${{ github.workspace }}/_sbs_toolchain/Dress/.lake/build/bin/extract_blueprint graph \
+          --build .lake/build \
+          $PROJECT_NAME
+
+        # Verify manifest was generated
+        if [ -f ".lake/build/dressed/manifest.json" ]; then
+          echo "Manifest generated successfully"
+        else
+          echo "::error::manifest.json not found at .lake/build/dressed/manifest.json"
+          exit 1
+        fi
+
+    # ========================================
+    # STEP 12: Generate site with Runway
+    # ========================================
+    - name: Generate site with Runway
+      id: generate-site
+      shell: bash
+      run: |
+        PROJECT_DIR="${{ inputs.project-directory }}"
+        if [ "$PROJECT_DIR" == "." ]; then
+          PROJECT_DIR="${{ github.workspace }}"
+        else
+          PROJECT_DIR="${{ github.workspace }}/${{ inputs.project-directory }}"
+        fi
+
+        mkdir -p "$PROJECT_DIR/.lake/build/runway"
+
+        # Create CI-compatible runway config with absolute paths
+        echo "Creating runway-ci.json with absolute paths..."
+
+        # Read the original runway.json and create modified version
+        # Replace relative assetsDir with absolute path to toolchain assets
+        if [ -f "$PROJECT_DIR/runway.json" ]; then
+          # Copy original config
+          cp "$PROJECT_DIR/runway.json" "$PROJECT_DIR/runway-ci.json"
+
+          # Update assetsDir to absolute path
+          sed -i 's|"assetsDir"[[:space:]]*:[[:space:]]*"[^"]*"|"assetsDir": "${{ github.workspace }}/_sbs_toolchain/dress-blueprint-action/assets"|g' "$PROJECT_DIR/runway-ci.json"
+
+          # Update blueprintTexPath to absolute path if it's relative
+          sed -i "s|\"blueprintTexPath\"[[:space:]]*:[[:space:]]*\"\([^/]\)|\"blueprintTexPath\": \"$PROJECT_DIR/\1|g" "$PROJECT_DIR/runway-ci.json"
+
+          # Update paperTexPath to absolute path if it's relative
+          sed -i "s|\"paperTexPath\"[[:space:]]*:[[:space:]]*\"\([^/]\)|\"paperTexPath\": \"$PROJECT_DIR/\1|g" "$PROJECT_DIR/runway-ci.json"
+
+          echo "Runway config:"
+          cat "$PROJECT_DIR/runway-ci.json"
+        else
+          echo "::error::runway.json not found"
+          exit 1
+        fi
+
+        echo "Running Runway site generator..."
+        cd ${{ github.workspace }}/_sbs_toolchain/Runway && lake exe runway \
+          --build-dir "$PROJECT_DIR/.lake/build" \
+          --output "$PROJECT_DIR/.lake/build/runway" \
+          build \
+          "$PROJECT_DIR/runway-ci.json"
+
+        echo "Site generation complete"
+        echo "site-path=$PROJECT_DIR/.lake/build/runway" >> $GITHUB_OUTPUT
+
+    # ========================================
+    # STEP 13: Generate paper (if configured)
+    # ========================================
+    - name: Generate paper
+      id: generate-paper
+      shell: bash
+      run: |
+        PROJECT_DIR="${{ inputs.project-directory }}"
+        if [ "$PROJECT_DIR" == "." ]; then
+          PROJECT_DIR="${{ github.workspace }}"
+        else
+          PROJECT_DIR="${{ github.workspace }}/${{ inputs.project-directory }}"
+        fi
+
+        # Check if paperTexPath is configured
+        if grep -q '"paperTexPath"' "$PROJECT_DIR/runway.json"; then
+          echo "Paper configuration found, generating paper..."
+          cd ${{ github.workspace }}/_sbs_toolchain/Runway && lake exe runway \
+            --build-dir "$PROJECT_DIR/.lake/build" \
+            --output "$PROJECT_DIR/.lake/build/runway" \
+            paper \
+            "$PROJECT_DIR/runway-ci.json"
+
+          if [ -f "$PROJECT_DIR/.lake/build/runway/paper.pdf" ]; then
+            echo "Paper PDF generated successfully"
+            echo "pdf-path=$PROJECT_DIR/.lake/build/runway/paper.pdf" >> $GITHUB_OUTPUT
+          else
+            echo "::warning::Paper PDF not generated"
+          fi
+        else
+          echo "No paperTexPath configured, skipping paper generation"
+        fi
+
+    # ========================================
+    # STEP 14: Handle DocGen4
+    # ========================================
+    - name: Handle DocGen4 (docs-static)
+      if: inputs.docgen4-mode == 'docs-static'
+      shell: bash
+      run: |
+        PROJECT_DIR="${{ inputs.project-directory }}"
+        if [ "$PROJECT_DIR" == "." ]; then
+          PROJECT_DIR="${{ github.workspace }}"
+        else
+          PROJECT_DIR="${{ github.workspace }}/${{ inputs.project-directory }}"
+        fi
+
+        # Extract GitHub URL from runway.json to determine repo
+        GITHUB_URL=$(grep -o '"githubUrl"[[:space:]]*:[[:space:]]*"[^"]*"' "$PROJECT_DIR/runway.json" | sed 's/.*"githubUrl"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
+
+        if [ -z "$GITHUB_URL" ]; then
+          echo "::warning::Could not extract githubUrl from runway.json, skipping docs-static"
+          exit 0
+        fi
+
+        echo "Downloading DocGen4 docs from docs-static branch..."
+        mkdir -p "$PROJECT_DIR/.lake/build/runway/docs"
+        cd "$PROJECT_DIR/.lake/build/runway/docs"
+        git init -q
+        git remote add origin "$GITHUB_URL"
+        git fetch origin docs-static --depth=1 || {
+          echo "::warning::docs-static branch not found, skipping DocGen4"
+          cd ..
+          rm -rf docs
+          exit 0
+        }
+        git checkout FETCH_HEAD
+        rm -rf .git
+        DOC_COUNT=$(find . -name '*.html' | wc -l)
+        echo "Downloaded $DOC_COUNT HTML files from docs-static branch"
+
+    - name: Handle DocGen4 (generate)
+      if: inputs.docgen4-mode == 'generate'
+      shell: bash
+      working-directory: ${{ inputs.project-directory }}
+      run: |
+        echo "Generating DocGen4 documentation..."
+        lake -R -Kenv=dev build +:docs
+
+        # Copy to runway output
+        PROJECT_DIR="${{ inputs.project-directory }}"
+        if [ "$PROJECT_DIR" == "." ]; then
+          PROJECT_DIR="${{ github.workspace }}"
+        else
+          PROJECT_DIR="${{ github.workspace }}/${{ inputs.project-directory }}"
+        fi
+
+        if [ -d ".lake/build/doc" ]; then
+          cp -r .lake/build/doc "$PROJECT_DIR/.lake/build/runway/docs"
+          DOC_COUNT=$(find "$PROJECT_DIR/.lake/build/runway/docs" -name '*.html' | wc -l)
+          echo "Generated $DOC_COUNT DocGen4 HTML files"
+        else
+          echo "::warning::DocGen4 output not found at .lake/build/doc"
+        fi
+
+    # ========================================
+    # STEP 15: Save mathlib cache
+    # ========================================
+    - name: Save mathlib cache
+      if: inputs.mathlib-cache == 'true' && steps.mathlib-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ inputs.project-directory }}/.lake/packages/mathlib
+        key: mathlib-${{ runner.os }}-${{ hashFiles(format('{0}/lake-manifest.json', inputs.project-directory)) }}
+
+    # ========================================
+    # STEP 16: Upload Pages artifact
+    # ========================================
+    - name: Verify site structure
       if: inputs.deploy-pages == 'true'
       shell: bash
-      working-directory: ${{ inputs.lake-package-directory }}
       run: |
-        mkdir -p "${{ inputs.output-directory }}"
-
-        # Check for Runway output first (new Lean toolchain)
-        if [ -d ".lake/build/runway" ]; then
-          cp -r .lake/build/runway/* "${{ inputs.output-directory }}/"
-          echo "Copied Runway output to ${{ inputs.output-directory }}/"
-        # Fall back to leanblueprint output (Python toolchain)
-        elif [ -d "${{ inputs.blueprint-directory }}/web" ]; then
-          cp -r "${{ inputs.blueprint-directory }}/web"/* "${{ inputs.output-directory }}/"
-          echo "Copied leanblueprint web output to ${{ inputs.output-directory }}/"
+        PROJECT_DIR="${{ inputs.project-directory }}"
+        if [ "$PROJECT_DIR" == "." ]; then
+          PROJECT_DIR="${{ github.workspace }}"
         else
-          echo "::warning::No site output found in .lake/build/runway or ${{ inputs.blueprint-directory }}/web"
+          PROJECT_DIR="${{ github.workspace }}/${{ inputs.project-directory }}"
         fi
 
-        # Copy PDF if available
-        if [ -f "${{ inputs.blueprint-directory }}/print/print.pdf" ]; then
-          cp "${{ inputs.blueprint-directory }}/print/print.pdf" "${{ inputs.output-directory }}/blueprint.pdf"
-          echo "Copied PDF to ${{ inputs.output-directory }}/blueprint.pdf"
-        fi
+        echo "Site structure:"
+        ls -la "$PROJECT_DIR/.lake/build/runway/"
+        echo ""
+        echo "Key files:"
+        for f in index.html dep_graph.html; do
+          if [ -f "$PROJECT_DIR/.lake/build/runway/$f" ]; then
+            echo "  [OK] $f"
+          else
+            echo "  [MISSING] $f"
+          fi
+        done
+        # Optional files (only if paper configured)
+        for f in paper.html paper.pdf pdf.html; do
+          if [ -f "$PROJECT_DIR/.lake/build/runway/$f" ]; then
+            echo "  [OK] $f"
+          fi
+        done
+        echo ""
+        echo "Directories:"
+        for d in assets docs; do
+          if [ -d "$PROJECT_DIR/.lake/build/runway/$d" ]; then
+            COUNT=$(find "$PROJECT_DIR/.lake/build/runway/$d" -type f | wc -l)
+            echo "  [OK] $d/ ($COUNT files)"
+          fi
+        done
 
     - name: Upload Pages artifact
       if: inputs.deploy-pages == 'true'
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ${{ inputs.lake-package-directory }}/${{ inputs.output-directory }}
+        path: ${{ inputs.project-directory == '.' && format('{0}/.lake/build/runway', github.workspace) || format('{0}/{1}/.lake/build/runway', github.workspace, inputs.project-directory) }}
