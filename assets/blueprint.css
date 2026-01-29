@@ -413,7 +413,7 @@ nav.toc li.active a {
   border: 1px solid var(--sbs-border);
   border-radius: 4px;
   min-width: 340px;
-  height: 400px;
+  height: 500px;
   overflow: hidden;
   font-size: 0.875rem;
   color: var(--sbs-text);
@@ -521,7 +521,7 @@ nav.toc li.active a {
 .dashboard-row.top-row {
   display: flex;
   gap: 1rem;
-  align-items: stretch;
+  align-items: flex-start;  /* Don't stretch to match heights */
 }
 
 /* Bottom row: Spacer (matches progress-cell) + Project Notes (fills remaining like key-declarations) */
@@ -954,7 +954,7 @@ html[data-theme="dark"] .notes-messages h4 {
   border-radius: 8px;
   padding: 0;  /* Match stats-box padding (handled by children) */
   margin-top: 1rem;
-  height: 400px;  /* Match stats-box height */
+  height: 500px;  /* Match stats-box height */
   overflow: hidden;
   box-sizing: border-box;
 }
