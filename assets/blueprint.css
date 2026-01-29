@@ -637,10 +637,10 @@ nav.toc li.active a {
 }
 
 .note-section {
-  margin-bottom: 0;
+  margin-bottom: 0.5rem;
   background: var(--sbs-bg-surface);
   border-radius: 4px;
-  padding: 0.5rem;
+  padding: 0.75rem;
 }
 
 .note-section:last-child {
@@ -648,12 +648,19 @@ nav.toc li.active a {
 }
 
 .note-section h4 {
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--sbs-border);
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--sbs-text);
+  color: #0000ff;  /* Lean keyword blue (light mode) */
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+/* Dark mode: brighter blue for Lean keyword style headers */
+html[data-theme="dark"] .note-section h4 {
+  color: #569cd6;
 }
 
 .note-section ul {
@@ -903,7 +910,7 @@ nav.toc li.active a {
    ======================================== */
 
 .checks-tile {
-  background-color: var(--bg-secondary, #f8f9fa);
+  background-color: var(--sbs-bg-surface);
   border-radius: 8px;
   padding: 1rem;
   margin-top: 1rem;
@@ -912,9 +919,9 @@ nav.toc li.active a {
 .checks-tile h3 {
   margin: 0 0 0.75rem 0;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border-color, #dee2e6);
+  border-bottom: 1px solid var(--sbs-border);
   font-size: 1.1rem;
-  color: var(--text-primary, #333);
+  color: var(--sbs-text);
 }
 
 .checks-list {
@@ -934,12 +941,12 @@ nav.toc li.active a {
 }
 
 .check-item.check-pass {
-  background-color: rgba(40, 167, 69, 0.1);
+  background-color: rgba(40, 167, 69, 0.15);
   border-left: 3px solid #28a745;
 }
 
 .check-item.check-fail {
-  background-color: rgba(220, 53, 69, 0.1);
+  background-color: rgba(220, 53, 69, 0.15);
   border-left: 3px solid #dc3545;
 }
 
@@ -957,7 +964,7 @@ nav.toc li.active a {
 }
 
 .check-text {
-  color: var(--text-primary, #333);
+  color: var(--sbs-text);
 }
 
 .cycles-detail {
@@ -969,12 +976,21 @@ nav.toc li.active a {
   margin: 0;
   padding-left: 1rem;
   font-size: 0.85rem;
-  color: var(--text-secondary, #666);
+  color: var(--sbs-text-muted);
 }
 
 .cycles-detail li {
   margin: 0.25rem 0;
   font-family: monospace;
+}
+
+/* Dark mode: slightly adjust background opacity for better contrast */
+html[data-theme="dark"] .check-item.check-pass {
+  background-color: rgba(40, 167, 69, 0.2);
+}
+
+html[data-theme="dark"] .check-item.check-fail {
+  background-color: rgba(220, 53, 69, 0.2);
 }
 
 /* Legacy progress bar styles (kept for backwards compatibility) */
