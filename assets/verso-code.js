@@ -267,21 +267,26 @@ document.addEventListener('DOMContentLoaded', function() {
         var viewportWidth = viewport.clientWidth;
         var viewportHeight = viewport.clientHeight;
 
-        // Get actual content bounding box
+        // Get SVG content bounds
         var bbox = svg.getBBox();
 
-        // Use bbox dimensions for scaling
-        var scaleX = (viewportWidth - 40) / bbox.width;
-        var scaleY = (viewportHeight - 40) / bbox.height;
-        scale = Math.min(scaleX, scaleY, 1);  // Don't scale up, only down
+        // Calculate scale to fit with padding
+        var padding = 40;
+        var availableWidth = viewportWidth - padding;
+        var availableHeight = viewportHeight - padding;
 
-        // Calculate center of actual content (accounting for bbox.x and bbox.y offset)
-        var contentCenterX = bbox.x + bbox.width / 2;
-        var contentCenterY = bbox.y + bbox.height / 2;
+        var scaleX = availableWidth / bbox.width;
+        var scaleY = availableHeight / bbox.height;
+        scale = Math.min(scaleX, scaleY, 1);  // Don't scale up
 
-        // Center the content in the viewport
-        translateX = viewportWidth / 2 - contentCenterX * scale;
-        translateY = viewportHeight / 2 - contentCenterY * scale;
+        // Calculate scaled content dimensions
+        var scaledWidth = bbox.width * scale;
+        var scaledHeight = bbox.height * scale;
+
+        // Center: translate so bbox top-left maps to centered position
+        // After scaling, bbox.x*scale and bbox.y*scale give the offset of content
+        translateX = (viewportWidth - scaledWidth) / 2 - bbox.x * scale;
+        translateY = (viewportHeight - scaledHeight) / 2 - bbox.y * scale;
 
         updateTransform();
     }
