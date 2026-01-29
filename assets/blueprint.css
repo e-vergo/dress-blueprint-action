@@ -722,8 +722,17 @@ nav.toc li.active a {
   color: inherit;
 }
 
-.key-declaration-link:hover {
-  background: var(--sbs-bg-page);
+.key-declaration-title-link {
+  cursor: pointer;
+  color: var(--primary-color, #0066cc);
+  text-decoration: none;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.key-declaration-title-link:hover {
+  text-decoration: underline;
 }
 
 .key-declaration-preview {
@@ -731,6 +740,8 @@ nav.toc li.active a {
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
   font-size: 0.8rem;
+  cursor: text;
+  user-select: text;
 }
 
 .kd-latex,
@@ -885,6 +896,82 @@ nav.toc li.active a {
 .note-text {
   color: var(--sbs-text-muted);
   font-size: 0.85rem;
+}
+
+/* ========================================
+   Checks Tile (Dashboard)
+   ======================================== */
+
+.checks-tile {
+  background-color: var(--bg-secondary, #f8f9fa);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.checks-tile h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: var(--text-primary, #333);
+}
+
+.checks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.check-item.check-pass {
+  background-color: rgba(40, 167, 69, 0.1);
+  border-left: 3px solid #28a745;
+}
+
+.check-item.check-fail {
+  background-color: rgba(220, 53, 69, 0.1);
+  border-left: 3px solid #dc3545;
+}
+
+.check-icon {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.check-pass .check-icon {
+  color: #28a745;
+}
+
+.check-fail .check-icon {
+  color: #dc3545;
+}
+
+.check-text {
+  color: var(--text-primary, #333);
+}
+
+.cycles-detail {
+  margin-top: 0.5rem;
+  padding-left: 1.5rem;
+}
+
+.cycles-detail ul {
+  margin: 0;
+  padding-left: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary, #666);
+}
+
+.cycles-detail li {
+  margin: 0.25rem 0;
+  font-family: monospace;
 }
 
 /* Legacy progress bar styles (kept for backwards compatibility) */
