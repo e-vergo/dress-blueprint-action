@@ -911,6 +911,8 @@ nav.toc li.active a {
 
 .checks-tile h3 {
   margin: 0 0 0.75rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color, #dee2e6);
   font-size: 1.1rem;
   color: var(--text-primary, #333);
 }
@@ -919,6 +921,7 @@ nav.toc li.active a {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .check-item {
