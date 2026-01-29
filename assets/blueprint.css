@@ -522,11 +522,19 @@ nav.toc li.active a {
   align-items: stretch;
 }
 
-/* Bottom row: Project Notes spanning full width */
+/* Bottom row: Spacer (matches progress-cell) + Project Notes (fills remaining like key-declarations) */
 .dashboard-row.bottom-row {
   display: flex;
   width: 100%;
   min-height: 200px;  /* Match approximate top row height */
+  gap: 1rem;
+}
+
+/* Invisible spacer to align Project Notes with Key Declarations */
+.dashboard-row.bottom-row::before {
+  content: '';
+  flex-shrink: 0;
+  min-width: 400px;  /* Match progress-cell width */
 }
 
 /* Ensure notes cell fills available height */
@@ -943,6 +951,8 @@ html[data-theme="dark"] .notes-messages h4 {
   border-radius: 8px;
   padding: 1rem;
   margin-top: 1rem;
+  min-height: 280px;  /* Match stats-box height */
+  box-sizing: border-box;
 }
 
 .checks-tile h3 {
@@ -1020,6 +1030,22 @@ html[data-theme="dark"] .check-item.check-pass {
 
 html[data-theme="dark"] .check-item.check-fail {
   background-color: rgba(220, 53, 69, 0.2);
+}
+
+.check-item.check-pending {
+  background: var(--sbs-bg-surface);
+  border-left: 4px solid var(--sbs-border);
+  opacity: 0.6;
+}
+
+.check-pending .check-icon {
+  color: var(--sbs-text-muted);
+}
+
+.check-pending .check-status {
+  font-size: 0.8rem;
+  color: var(--sbs-text-muted);
+  margin-left: auto;
 }
 
 /* Legacy progress bar styles (kept for backwards compatibility) */
