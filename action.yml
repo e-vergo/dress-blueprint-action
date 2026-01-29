@@ -17,11 +17,6 @@ inputs:
     required: false
     default: ""
 
-  mathlib-cache:
-    description: "Use mathlib cache (GitHub Actions cache + server fallback)"
-    required: false
-    default: "true"
-
   docgen4-mode:
     description: "DocGen4 mode: skip, docs-static, or generate"
     required: false
@@ -131,37 +126,19 @@ runs:
         sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra texlive-science
 
     # ========================================
-    # STEP 6: Restore mathlib cache
+    # STEP 6: Fetch mathlib cache from server
     # ========================================
-    - name: Restore mathlib cache
-      if: inputs.mathlib-cache == 'true'
-      id: mathlib-cache
-      uses: actions/cache/restore@v4
-      with:
-        path: ${{ inputs.project-directory }}/.lake/packages/mathlib
-        key: mathlib-${{ runner.os }}-${{ hashFiles(format('{0}/lake-manifest.json', inputs.project-directory)) }}
-
-    # ========================================
-    # STEP 7: Get mathlib cache (fallback to server)
-    # ========================================
-    - name: Get mathlib cache
-      if: inputs.mathlib-cache == 'true'
+    - name: Fetch mathlib cache
       shell: bash
       working-directory: ${{ inputs.project-directory }}
       run: |
-        if [ "${{ steps.mathlib-cache.outputs.cache-hit }}" == "true" ]; then
-          echo "Mathlib restored from GitHub Actions cache"
-          OLEAN_COUNT=$(find .lake/packages/mathlib -name "*.olean" 2>/dev/null | wc -l)
-          echo "Found $OLEAN_COUNT oleans in cache"
-        else
-          echo "Fetching mathlib cache from server..."
-          lake exe cache get || echo "::warning::Server cache unavailable, will build from source"
-          OLEAN_COUNT=$(find .lake/packages/mathlib -name "*.olean" 2>/dev/null | wc -l)
-          echo "Found $OLEAN_COUNT oleans after cache get"
-        fi
+        echo "Fetching mathlib cache from server..."
+        lake exe cache get || echo "::warning::Server cache unavailable, will build from source"
+        OLEAN_COUNT=$(find .lake/packages/mathlib -name "*.olean" 2>/dev/null | wc -l)
+        echo "Found $OLEAN_COUNT oleans from mathlib cache"
 
     # ========================================
-    # STEP 8: Build toolchain
+    # STEP 7: Build toolchain
     # ========================================
     - name: Build SubVerso
       shell: bash
@@ -196,7 +173,7 @@ runs:
         echo "Runway build complete"
 
     # ========================================
-    # STEP 9: Build project with Dress
+    # STEP 8: Build project with Dress
     # ========================================
     - name: Build project with Dress artifacts
       shell: bash
@@ -216,7 +193,7 @@ runs:
         fi
 
     # ========================================
-    # STEP 10: Build blueprint facet
+    # STEP 9: Build blueprint facet
     # ========================================
     - name: Build blueprint facet
       shell: bash
@@ -227,7 +204,7 @@ runs:
         echo "Blueprint facet complete"
 
     # ========================================
-    # STEP 11: Generate dependency graph
+    # STEP 10: Generate dependency graph
     # ========================================
     - name: Generate dependency graph
       id: generate-graph
@@ -263,7 +240,7 @@ runs:
         fi
 
     # ========================================
-    # STEP 12: Generate site with Runway
+    # STEP 11: Generate site with Runway
     # ========================================
     - name: Generate site with Runway
       id: generate-site
@@ -314,7 +291,7 @@ runs:
         echo "site-path=$PROJECT_DIR/.lake/build/runway" >> $GITHUB_OUTPUT
 
     # ========================================
-    # STEP 13: Generate paper (if configured)
+    # STEP 12: Generate paper (if configured)
     # ========================================
     - name: Generate paper
       id: generate-paper
@@ -347,7 +324,7 @@ runs:
         fi
 
     # ========================================
-    # STEP 14: Handle DocGen4
+    # STEP 13: Handle DocGen4
     # ========================================
     - name: Handle DocGen4 (docs-static)
       if: inputs.docgen4-mode == 'docs-static'
@@ -409,17 +386,7 @@ runs:
         fi
 
     # ========================================
-    # STEP 15: Save mathlib cache
-    # ========================================
-    - name: Save mathlib cache
-      if: inputs.mathlib-cache == 'true' && steps.mathlib-cache.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v4
-      with:
-        path: ${{ inputs.project-directory }}/.lake/packages/mathlib
-        key: mathlib-${{ runner.os }}-${{ hashFiles(format('{0}/lake-manifest.json', inputs.project-directory)) }}
-
-    # ========================================
-    # STEP 16: Upload Pages artifact
+    # STEP 14: Upload Pages artifact
     # ========================================
     - name: Verify site structure
       if: inputs.deploy-pages == 'true'
