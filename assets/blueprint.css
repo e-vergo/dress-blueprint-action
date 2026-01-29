@@ -858,6 +858,35 @@ html[data-theme="dark"] .note-section h4 {
   min-width: 0;
 }
 
+/* Messages column: padding from left edge + vertical divider on right */
+.notes-messages {
+  padding-left: 0.5rem;
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--sbs-border);
+}
+
+/* Messages header: same blue styling as note-section headers */
+.notes-messages h4 {
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--sbs-border);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0000ff;  /* Lean keyword blue (light mode) */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Dark mode: brighter blue for Messages header */
+html[data-theme="dark"] .notes-messages h4 {
+  color: #569cd6;
+}
+
+/* Other notes column: padding from the vertical divider */
+.notes-other {
+  padding-left: 0.5rem;
+}
+
 .notes-list {
   list-style: none;
   padding: 0;
