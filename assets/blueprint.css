@@ -588,6 +588,11 @@ nav.toc li.active a {
   width: auto;  /* Override fixed width from base stats-box */
 }
 
+/* Gap between key declarations and project notes (matches checks-tile margin) */
+.stats-box.project-notes {
+  margin-top: 1rem;
+}
+
 /* Ensure the main stats-box also has rounded corners */
 .stats-box {
   border-radius: 8px;
