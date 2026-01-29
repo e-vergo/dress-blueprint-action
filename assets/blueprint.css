@@ -528,8 +528,9 @@ nav.toc li.active a {
 .dashboard-row.bottom-row {
   display: flex;
   width: 100%;
-  min-height: 200px;  /* Match approximate top row height */
+  min-height: 200px;
   gap: 1rem;
+  align-items: flex-start;  /* Don't stretch to match heights */
 }
 
 /* Invisible spacer to align Project Notes with Key Declarations */
