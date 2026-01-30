@@ -105,6 +105,76 @@
   --sbs-info: #0dcaf0;
 }
 
+/* ============================================
+   Status Indicator Dots
+   Colored dots indicating node status (6 states)
+   Used in: headers, lists, modals, dashboard
+   ============================================ */
+
+/* Base status dot */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Header status dot (blueprint theorem headers) */
+.header-status-dot {
+  width: 10px;
+  height: 10px;
+}
+
+/* Paper status dot (paper theorem headers) */
+.paper-status-dot {
+  width: 10px;
+  height: 10px;
+  vertical-align: middle;
+  margin-right: 0.25rem;
+}
+
+/* Modal status dot (dependency graph modals) */
+.modal-status-dot {
+  width: 12px;
+  height: 12px;
+}
+
+/* Node list items (sidebar/TOC) */
+.node-list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.node-list-item .status-dot {
+  flex-shrink: 0;
+}
+
+/* Note items with status dots (dashboard) */
+.note-item-with-dot {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.note-item-with-dot .status-dot {
+  margin-top: 0.35rem;
+}
+
+.note-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Modal header bar (dependency graph) */
+.dep-modal-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
 /* Dark Mode (JavaScript-controlled via toggle) */
 html[data-theme="dark"] {
   /* Backgrounds */
