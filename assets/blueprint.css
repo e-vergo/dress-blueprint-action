@@ -1590,6 +1590,23 @@ pre.lean-code {
   background-color: var(--bp-bg-alt);
 }
 
+/* Modal footer with blueprint link - simple text link style */
+.dep-modal-footer {
+  margin-top: 0.75rem;
+  text-align: right;
+}
+
+.dep-modal-footer .blueprint-link {
+  color: var(--sbs-link);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.dep-modal-footer .blueprint-link:hover {
+  text-decoration: underline;
+  color: var(--sbs-link-hover);
+}
+
 /* SVG node click styling */
 .dep-graph-svg .node {
   cursor: pointer;
@@ -1733,19 +1750,19 @@ pre.lean-code {
   overflow-y: auto;
 }
 
-/* Modal links section - right-aligned with border */
-.dep-modal-content .dep-modal-links {
-  margin-top: 1rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--bp-border, #e0e0e0);
+/* Modal footer with blueprint link - simple text style, no border */
+.dep-modal-content .dep-modal-footer {
+  margin-top: 0.75rem;
   text-align: right;
 }
 
-.dep-modal-content .dep-modal-links a {
-  color: var(--bp-link, #0066cc);
+.dep-modal-content .dep-modal-footer .blueprint-link {
+  color: var(--sbs-link, #0066cc);
   text-decoration: none;
+  font-size: 0.9rem;
 }
 
-.dep-modal-content .dep-modal-links a:hover {
+.dep-modal-content .dep-modal-footer .blueprint-link:hover {
   text-decoration: underline;
+  color: var(--sbs-link-hover, #0055aa);
 }
