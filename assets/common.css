@@ -92,11 +92,11 @@
 
   /* Status Colors (6-status model) */
   --sbs-status-not-ready: #F4A460;      /* Sandy Brown */
-  --sbs-status-ready: #20B2AA;          /* Light Sea Green */
-  --sbs-status-sorry: #8B0000;          /* Dark Red */
+  --sbs-status-ready: #ee00ff;          /* Light Sea Green */
+  --sbs-status-sorry: #d40101;          /* Dark Red */
   --sbs-status-proven: #90EE90;         /* Light Green */
   --sbs-status-fully-proven: #228B22;   /* Forest Green */
-  --sbs-status-mathlib-ready: #87CEEB;  /* Light Blue (changed from Royal Blue) */
+  --sbs-status-mathlib-ready: #06a6e5;  /* Light Blue (changed from Royal Blue) */
 
   /* Semantic Colors */
   --sbs-success: #198754;
@@ -113,8 +113,8 @@
 
 /* Base status dot */
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   display: inline-block;
   flex-shrink: 0;
