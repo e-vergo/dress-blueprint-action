@@ -744,8 +744,7 @@ html[data-theme="dark"] .note-section h4 {
 }
 
 .key-declaration-title-link {
-  cursor: pointer;
-  color: var(--primary-color, #0066cc);
+  color: var(--sbs-link);
   text-decoration: none;
   font-weight: 600;
   display: block;
@@ -753,6 +752,7 @@ html[data-theme="dark"] .note-section h4 {
 }
 
 .key-declaration-title-link:hover {
+  color: var(--sbs-link-hover);
   text-decoration: underline;
 }
 
@@ -810,47 +810,49 @@ html[data-theme="dark"] .note-section h4 {
 
 /* Stats details structured layout */
 .stats-details {
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
 }
 
 .stats-details .stats-total {
   text-align: center;
   font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   color: var(--sbs-text);
 }
 
 .stats-details .stats-columns {
   display: flex;
-  justify-content: center;  /* Center columns in panel */
-  gap: 2rem;  /* Space between columns */
+  justify-content: space-evenly;
+  gap: 1.5rem;
 }
 
 .stats-details .stats-column {
-  width: 120px;  /* Reduced from ~160px (25% reduction) */
+  width: 130px;
 }
 
 .stats-details .stats-column-header {
-  text-align: center;  /* Center header over content */
+  text-align: center;
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.75rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   color: var(--sbs-text-muted);
 }
 
 .stats-details .stats-row {
   display: flex;
-  justify-content: space-between;  /* Push value right, label left */
+  justify-content: space-between;
   font-size: 0.85rem;
-  padding: 0.15rem 0;
+  padding: 0.25rem 0;
+  line-height: 1.4;
 }
 
 .stats-details .stats-value {
   text-align: right;
-  min-width: 30px;
+  min-width: 35px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .stats-details .stats-label {
