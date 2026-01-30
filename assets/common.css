@@ -175,6 +175,12 @@
   margin-bottom: 0.5rem;
 }
 
+.dep-modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 /* Dark Mode (JavaScript-controlled via toggle) */
 html[data-theme="dark"] {
   /* Backgrounds */
