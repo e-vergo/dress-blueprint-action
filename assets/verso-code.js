@@ -26,18 +26,6 @@ window.addEventListener('DOMContentLoaded', () => {
         return false;
     }
 
-    function blockedByTippy(elem) {
-        var block = elem;
-        const topLevel = new Set(["section", "body", "html", "nav", "header", "article", "main"]);
-        while (block.parentNode && !topLevel.has(block.parentNode.nodeName.toLowerCase())) {
-            block = block.parentNode;
-        }
-        for (const child of block.querySelectorAll(".token, .has-info")) {
-            if (child._tippy && child._tippy.state.isVisible) { return true };
-        }
-        return false;
-    }
-
     // Token binding highlights
     for (const c of document.querySelectorAll(".hl.lean .token")) {
         if (c.dataset.binding != "") {
@@ -90,17 +78,6 @@ window.addEventListener('DOMContentLoaded', () => {
         const codeBlock = element.closest('.lean-code[data-lean-hovers]');
         if (!codeBlock) return null;
         return codeBlockHoverData.get(codeBlock) || null;
-    }
-
-    function hideParentTooltips(element) {
-        let parent = element.parentElement;
-        while (parent) {
-            const tippyInstance = parent._tippy;
-            if (tippyInstance) {
-                tippyInstance.hide();
-            }
-            parent = parent.parentElement;
-        }
     }
 
     const defaultTippyProps = {
@@ -254,13 +231,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateTransform() {
         svgContainer.style.transform = 'translate(' + translateX + 'px, ' + translateY + 'px) scale(' + scale + ')';
-    }
-
-    function resetView() {
-        scale = 1;
-        translateX = 0;
-        translateY = 0;
-        updateTransform();
     }
 
     function fitToWindow() {
