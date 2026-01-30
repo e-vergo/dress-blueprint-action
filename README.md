@@ -132,12 +132,11 @@ To enable paper generation, add to `runway.json`:
 
 ```json
 {
-  "paperTexPath": "blueprint/src/paper.tex",
-  "paperTitle": "Paper Title",
-  "paperAuthors": ["Author One", "Author Two"],
-  "paperAbstract": "Abstract text..."
+  "paperTexPath": "blueprint/src/paper.tex"
 }
 ```
+
+Paper metadata (title, authors, abstract) is automatically extracted from `paper.tex` using standard LaTeX commands (`\title{}`, `\author{}`, `\begin{abstract}...\end{abstract}`).
 
 Use these hooks in `paper.tex`:
 - `\paperstatement{label}` - Insert LaTeX statement with link to Lean
