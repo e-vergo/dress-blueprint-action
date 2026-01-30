@@ -361,6 +361,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize MathJax and Tippy.js when a modal is opened
 function onModalOpen(modalElement) {
+    // Move the [blueprint] link inline with the theorem header (after status dot)
+    var blueprintLink = modalElement.querySelector('.modal-blueprint-link');
+    var headerExtras = modalElement.querySelector('.thm_header_extras');
+    if (blueprintLink && headerExtras && !headerExtras.querySelector('.modal-blueprint-link')) {
+        // Clone and append the link after the status dot
+        var linkClone = blueprintLink.cloneNode(true);
+        linkClone.style.display = 'inline';
+        headerExtras.appendChild(linkClone);
+        // Hide the original
+        blueprintLink.style.display = 'none';
+    }
+
     // Render MathJax in modal content
     if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
         MathJax.typesetPromise([modalElement]).catch(function(err) {

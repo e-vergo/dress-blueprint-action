@@ -167,18 +167,42 @@
   min-width: 0;
 }
 
-/* Modal header bar (dependency graph) */
+/* Modal header bar (dependency graph) - close button only */
 .dep-modal-header-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
+  justify-content: flex-end;
+  margin-bottom: 0;
 }
 
-.dep-modal-header-left {
-  display: flex;
+/* Modal body wrapper */
+.dep-modal-body-wrapper {
+  position: relative;
+}
+
+/* Hide the original blueprint link (JS will clone it into thm_header_extras) */
+.dep-modal-body-wrapper > .modal-blueprint-link {
+  display: none;
+}
+
+/* In modals, make thm_header_extras always visible */
+.dep-modal-body-wrapper .thm_header_extras {
+  display: inline-flex !important;
   align-items: center;
-  gap: 0.25rem;
+}
+
+/* Style the blueprint link when inside thm_header_extras (after status dot) */
+.thm_header_extras .modal-blueprint-link {
+  color: var(--sbs-link);
+  text-decoration: none;
+  font-style: italic;
+  font-weight: normal;
+  margin-left: 0.75rem;
+  white-space: nowrap;
+}
+
+.thm_header_extras .modal-blueprint-link:hover {
+  text-decoration: underline;
 }
 
 /* Dark Mode (JavaScript-controlled via toggle) */
