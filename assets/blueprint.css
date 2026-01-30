@@ -476,15 +476,13 @@ nav.toc li.active a {
   flex-shrink: 0;
 }
 
-/* Color classes for stats legend - use unified status colors */
+/* Color classes for stats legend - use unified status colors (6 statuses) */
 .stats-legend .legend-swatch.not-ready { background-color: var(--sbs-status-not-ready); }
-.stats-legend .legend-swatch.stated { background-color: var(--sbs-status-stated); }
 .stats-legend .legend-swatch.ready { background-color: var(--sbs-status-ready); }
 .stats-legend .legend-swatch.sorry { background-color: var(--sbs-status-sorry); }
 .stats-legend .legend-swatch.proven { background-color: var(--sbs-status-proven); }
 .stats-legend .legend-swatch.fully-proven { background-color: var(--sbs-status-fully-proven); }
 .stats-legend .legend-swatch.mathlib-ready { background-color: var(--sbs-status-mathlib-ready); }
-.stats-legend .legend-swatch.in-mathlib { background-color: var(--sbs-status-in-mathlib); }
 
 .stats-summary {
   padding: 0.75rem;
@@ -1106,7 +1104,6 @@ html[data-theme="dark"] .check-item.check-fail {
 
 .stat.proved::before { background: var(--bp-success); }
 .stat.mathlib::before { background: var(--bp-primary); }
-.stat.stated::before { background: var(--bp-warning); }
 .stat.not-ready::before { background: var(--bp-danger); }
 .stat.total::before { background: var(--bp-text-muted); }
 
@@ -1675,15 +1672,13 @@ pre.lean-code {
   border-radius: 3px;
 }
 
-/* 8 Status Colors - use unified CSS variables */
+/* 6 Status Colors - use unified CSS variables */
 .dep-graph-legend .legend-swatch.not-ready { background-color: var(--sbs-status-not-ready); }
-.dep-graph-legend .legend-swatch.stated { background-color: var(--sbs-status-stated); }
 .dep-graph-legend .legend-swatch.ready { background-color: var(--sbs-status-ready); }
 .dep-graph-legend .legend-swatch.sorry { background-color: var(--sbs-status-sorry); }
 .dep-graph-legend .legend-swatch.proven { background-color: var(--sbs-status-proven); }
 .dep-graph-legend .legend-swatch.fully-proven { background-color: var(--sbs-status-fully-proven); }
 .dep-graph-legend .legend-swatch.mathlib-ready { background-color: var(--sbs-status-mathlib-ready); }
-.dep-graph-legend .legend-swatch.in-mathlib { background-color: var(--sbs-status-in-mathlib); }
 
 /* Legend separator line between colors and shapes */
 .dep-graph-legend .legend-separator {

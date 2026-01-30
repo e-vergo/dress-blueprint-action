@@ -90,15 +90,13 @@
   --sbs-badge-progress-text: #856404;
   --sbs-badge-progress-border: #ffeeba;
 
-  /* Status Colors (8-status model) */
-  --sbs-status-not-ready: #F4A460;
-  --sbs-status-stated: #FFD700;
-  --sbs-status-ready: #20B2AA;
-  --sbs-status-sorry: #8B0000;
-  --sbs-status-proven: #90EE90;
-  --sbs-status-fully-proven: #228B22;
-  --sbs-status-mathlib-ready: #4169E1;
-  --sbs-status-in-mathlib: #191970;
+  /* Status Colors (6-status model) */
+  --sbs-status-not-ready: #F4A460;      /* Sandy Brown */
+  --sbs-status-ready: #20B2AA;          /* Light Sea Green */
+  --sbs-status-sorry: #8B0000;          /* Dark Red */
+  --sbs-status-proven: #90EE90;         /* Light Green */
+  --sbs-status-fully-proven: #228B22;   /* Forest Green */
+  --sbs-status-mathlib-ready: #87CEEB;  /* Light Blue (changed from Royal Blue) */
 
   /* Semantic Colors */
   --sbs-success: #198754;
