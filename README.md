@@ -1,83 +1,61 @@
 # dress-blueprint-action
 
-GitHub Action for the Side-by-Side Blueprint documentation toolchain. Automates the complete build pipeline for Lean 4 formalization projects, generating interactive documentation that pairs LaTeX theorem statements with their Lean formalizations.
+GitHub Action and CSS/JS assets for the Side-by-Side Blueprint documentation toolchain. Builds Lean 4 formalization projects into interactive documentation with side-by-side LaTeX theorem statements and Lean formalizations.
 
-## Overview
+## What This Repository Provides
 
-This action executes a 14-step pipeline that builds the entire toolchain and generates:
+1. **GitHub Action** (`action.yml`) - A 14-step composite action that builds the complete toolchain and generates documentation
+2. **CSS Stylesheets** - Four files organizing styles by concern (design system, blueprint layout, paper layout, dependency graph)
+3. **JavaScript** - Two files providing interactivity (tooltips, pan/zoom, dark mode toggle)
 
-- Side-by-side displays of LaTeX statements and Lean proofs
-- Interactive dependency graphs with pan/zoom and node modals
-- Dashboard homepage with statistics, key theorems, and project notes
-- Syntax highlighting with hover tooltips for type signatures
-- Paper/PDF output with verification badges
+## GitHub Action
 
-The action packages [SubVerso](https://github.com/e-vergo/subverso), [LeanArchitect](https://github.com/e-vergo/LeanArchitect), [Dress](https://github.com/e-vergo/Dress), and [Runway](https://github.com/e-vergo/Runway) into a single composable GitHub Action.
-
-## Prerequisites
-
-Your project requires:
-
-1. **Dress dependency** in `lakefile.toml`:
-   ```toml
-   [[require]]
-   name = "Dress"
-   git = "https://github.com/e-vergo/Dress"
-   rev = "main"
-   ```
-
-2. **`@[blueprint]` attributes** on declarations (import Dress in your Lean files):
-   ```lean
-   import Dress
-
-   @[blueprint "thm:main"]
-   theorem mainTheorem : 2 + 2 = 4 := rfl
-
-   @[blueprint (keyDeclaration := true, message := "Main result")]
-   theorem keyResult : ... := ...
-   ```
-
-3. **runway.json** configuration file:
-   ```json
-   {
-     "title": "Project Title",
-     "projectName": "ProjectName",
-     "githubUrl": "https://github.com/user/repo",
-     "baseUrl": "/",
-     "blueprintTexPath": "blueprint/src/blueprint.tex",
-     "assetsDir": "../dress-blueprint-action/assets"
-   }
-   ```
-
-4. **Blueprint directory** with `blueprint.tex` containing LaTeX document structure
-
-## Inputs
+### Inputs
 
 | Input | Default | Description |
 |-------|---------|-------------|
 | `project-directory` | `.` | Directory containing `lakefile.toml` and `runway.json` |
 | `lean-version` | (auto) | Override Lean version (auto-detected from `lean-toolchain`) |
-| `docgen4-mode` | `skip` | DocGen4 documentation mode |
+| `docgen4-mode` | `skip` | DocGen4 mode: `skip`, `docs-static`, or `generate` |
 | `deploy-pages` | `true` | Upload artifact for GitHub Pages deployment |
 
-### docgen4-mode Options
+### DocGen4 Mode Options
 
-| Mode | Behavior | Build Time |
-|------|----------|------------|
-| `skip` | No DocGen4 documentation | Fastest |
-| `docs-static` | Download from `docs-static` branch | Seconds |
-| `generate` | Run `lake -R -Kenv=dev build +:docs` | ~1 hour |
+| Mode | Behavior |
+|------|----------|
+| `skip` | No DocGen4 documentation |
+| `docs-static` | Download pre-generated docs from `docs-static` branch |
+| `generate` | Run `lake -R -Kenv=dev build +:docs` (slow, ~1 hour for mathlib projects) |
 
-## Outputs
+### Outputs
 
 | Output | Description |
 |--------|-------------|
 | `site-path` | Path to generated site directory |
 | `paper-pdf-path` | Path to generated paper PDF (if `paperTexPath` configured) |
 
-## Usage
+### Build Pipeline
 
-### Minimal Workflow
+The action executes 14 steps:
+
+| Step | Description |
+|------|-------------|
+| 1 | Free disk space (removes Android SDK, .NET, Haskell) |
+| 2 | Checkout toolchain repos (SubVerso, LeanArchitect, Dress, Runway, assets) |
+| 3 | Install elan |
+| 4 | Install Lean toolchain |
+| 5 | Install LaTeX (texlive packages) |
+| 6 | Fetch mathlib cache |
+| 7 | Build toolchain in dependency order: SubVerso -> LeanArchitect -> Dress -> Runway |
+| 8 | Build project with Dress artifact generation |
+| 9 | Build `:blueprint` Lake facet |
+| 10 | Generate dependency graph and manifest |
+| 11 | Generate site with Runway |
+| 12 | Generate paper/PDF (if `paperTexPath` configured) |
+| 13 | Handle DocGen4 (based on mode) |
+| 14 | Upload Pages artifact |
+
+### Minimal Workflow Example
 
 ```yaml
 name: Blueprint
@@ -117,147 +95,154 @@ jobs:
     docgen4-mode: docs-static
 ```
 
-### Custom Project Directory
+The `docs-static` pattern avoids regenerating DocGen4 documentation on each build. Generate docs locally, push to an orphan `docs-static` branch, and the action downloads them.
 
-```yaml
-- uses: e-vergo/dress-blueprint-action@main
-  with:
-    project-directory: lean-project
-```
+## CSS Architecture
 
-## Build Pipeline
+Four files organize styles by concern. All files are in `assets/` and depend on `common.css` being loaded first.
 
-The action executes 14 steps:
+| File | Lines | Purpose |
+|------|-------|---------|
+| `common.css` | ~1050 | Design system: CSS variables, status dots, Lean syntax highlighting, Tippy tooltips, modals, dark mode toggle |
+| `blueprint.css` | ~1280 | Blueprint pages: plasTeX base styles, sidebar, chapter layout, dashboard grid, side-by-side displays |
+| `paper.css` | ~270 | Paper pages: ar5iv-style academic layout, verification badges, print styles |
+| `dep_graph.css` | ~540 | Dependency graph: pan/zoom viewport, toolbar, legend, SVG node styling |
 
-| Step | Description |
-|------|-------------|
-| 1 | Free disk space (removes Android SDK, .NET, Haskell) |
-| 2 | Checkout toolchain repos (SubVerso, LeanArchitect, Dress, Runway, assets) |
-| 3 | Install elan (Lean version manager) |
-| 4 | Install Lean toolchain (from `lean-toolchain` or override) |
-| 5 | Install LaTeX (texlive-latex-base, fonts, extras, science) |
-| 6 | Fetch mathlib cache (`lake exe cache get`) |
-| 7 | Build toolchain in dependency order |
-| 8 | Build project with Dress artifact generation |
-| 9 | Build `:blueprint` Lake facet |
-| 10 | Generate dependency graph and manifest |
-| 11 | Generate site with Runway |
-| 12 | Generate paper (if `paperTexPath` configured) |
-| 13 | Handle DocGen4 (based on mode) |
-| 14 | Upload Pages artifact |
+### CSS Variables
 
-### Step Details
+`common.css` defines the design system in `:root`. Key variable groups:
 
-**Step 7: Toolchain Build Order**
-```
-SubVerso (syntax highlighting) -> LeanArchitect (@[blueprint] attribute)
-    -> Dress (artifact generation) -> Runway (site generator)
-```
+**Core Palette**
 
-**Step 8: Artifact Generation**
+| Variable | Light | Dark |
+|----------|-------|------|
+| `--sbs-bg-page` | #ebebeb | #252525 |
+| `--sbs-bg-surface` | #ffffff | #1a1a1a |
+| `--sbs-text` | #000000 | #ffffff |
+| `--sbs-text-muted` | #333333 | #cccccc |
+| `--sbs-border` | #333333 | #cccccc |
+| `--sbs-link` | #0066cc | #60a5fa |
+| `--sbs-accent` | #396282 | #4a7a9e |
 
-During the project build, Dress captures each `@[blueprint]` declaration:
-- SubVerso extracts syntax highlighting with hover data
-- Dress writes artifacts to `.lake/build/dressed/{Module}/{label}/`:
-  - `decl.tex` - LaTeX source
-  - `decl.html` - Rendered HTML with hovers
-  - `decl.json` - Metadata (status, dependencies)
-  - `decl.hovers.json` - Hover tooltip data
+**Status Colors (6-status model)**
 
-**Step 10: Graph Generation**
+| Variable | Color | Hex |
+|----------|-------|-----|
+| `--sbs-status-not-ready` | Mango | #ffd363 |
+| `--sbs-status-ready` | Magenta | #ee00ff |
+| `--sbs-status-sorry` | Bright Red | #d40101 |
+| `--sbs-status-proven` | Light Green | #90EE90 |
+| `--sbs-status-fully-proven` | Forest Green | #228B22 |
+| `--sbs-status-mathlib-ready` | Royal Blue | #06a6e5 |
 
-The `extract_blueprint graph` command produces:
-- `manifest.json` - Complete project data (nodes, stats, validation)
-- `dep-graph.json` - Raw dependency graph
-- `dep-graph.svg` - Rendered SVG with Sugiyama layout
+**Tooltip Themes**
 
-**Step 11: Site Generation**
+| Theme | Background Variable | Border Variable |
+|-------|---------------------|-----------------|
+| warning | `--sbs-tooltip-warning-bg` | `--sbs-tooltip-warning-border` |
+| error | `--sbs-tooltip-error-bg` | `--sbs-tooltip-error-border` |
+| info | `--sbs-tooltip-info-bg` | `--sbs-tooltip-info-border` |
 
-Runway produces:
-- `index.html` - Dashboard homepage
-- `dep_graph.html` - Interactive dependency graph
-- Chapter pages with side-by-side displays
-- `assets/` - CSS and JavaScript
+**Rainbow Bracket Colors**
 
-**Step 12: Paper Generation**
+Classes `.lean-bracket-1` through `.lean-bracket-6` cycle through bracket nesting depths. Light mode uses a purple/blue palette; dark mode uses Dracula-style brighter colors.
 
-If `paperTexPath` is configured:
-- `paper.html` - HTML version with MathJax
-- `paper.pdf` - PDF (uses tectonic > pdflatex > xelatex > lualatex)
-- `pdf.html` - PDF viewer page
+### Dark Mode
 
-## Assets
+Controlled via `html[data-theme="dark"]`. Theme selection persists to `localStorage` under `sbs-theme`. Defaults to light mode.
 
-This repository includes CSS and JavaScript assets copied to generated sites.
+The toggle switch is rendered in the sidebar. Clicking calls `window.toggleSbsTheme()`.
 
-### CSS Files
+### Status Dot Classes
 
-| File | Purpose | Size |
-|------|---------|------|
-| `common.css` | Shared styles: CSS variables, status dots, Lean syntax, Tippy tooltips, modals, dark mode toggle | 993 lines |
-| `blueprint.css` | Blueprint pages: plasTeX base, dashboard grid, graph controls, theorem environments | 1769 lines |
-| `paper.css` | Paper pages: ar5iv-style academic layout, verification badges, print styles | 272 lines |
+| Class | Size | Use Case |
+|-------|------|----------|
+| `.status-dot` | 8px | Base style |
+| `.header-status-dot` | 10px | Blueprint theorem headers |
+| `.paper-status-dot` | 10px | Paper theorem headers |
+| `.modal-status-dot` | 12px | Dependency graph modals |
 
-### JavaScript Files
+## JavaScript
 
-| File | Purpose |
-|------|---------|
-| `verso-code.js` | Token binding highlights, Tippy.js hover initialization, pan/zoom controls, modal handling, sidebar expansion state |
-| `plastex.js` | Dark mode toggle, proof expand/collapse, LaTeX proof body animation sync |
+Two files in `assets/` provide client-side interactivity.
 
-### CSS Architecture
+### verso-code.js
 
-**Design System Variables** (`:root` in common.css):
-- Grayscale palette (4 colors)
-- Semantic mappings (backgrounds, text, borders, links)
-- Tooltip themes (warning, error, info)
-- Graph and legend colors
-- Verification badge colors
+Provides Lean code interactivity. Depends on Tippy.js and optionally marked.js.
 
-**Status Colors** (6-status model):
+| Feature | Description |
+|---------|-------------|
+| Token binding highlights | Hovering a variable highlights all occurrences with the same binding |
+| Tippy.js tooltips | Type signatures, docstrings, and tactic states shown on hover |
+| Tactic state display | Proof goals shown via checkbox toggle or tooltip |
+| Error/warning popups | Compiler messages displayed with themed tooltips |
+| Proof sync | Lean proof body visibility syncs with LaTeX proof toggle |
+| Pan/zoom controls | Mouse wheel zoom (centered on cursor), pointer drag panning |
+| `fitToWindow()` | Fits graph to viewport using SVG `getBBox()` |
+| `onModalOpen()` | Initializes MathJax and Tippy in modals, positions blueprint link |
+| Node click handling | Clicking graph nodes opens corresponding modal |
 
-| Status | Variable | Color |
-|--------|----------|-------|
-| notReady | `--sbs-status-not-ready` | Mango (#ffd363) |
-| ready | `--sbs-status-ready` | Magenta (#ee00ff) |
-| sorry | `--sbs-status-sorry` | Bright Red (#d40101) |
-| proven | `--sbs-status-proven` | Light Green (#90EE90) |
-| fullyProven | `--sbs-status-fully-proven` | Forest Green (#228B22) |
-| mathlibReady | `--sbs-status-mathlib-ready` | Royal Blue (#06a6e5) |
+**Tippy Themes**
 
-**Rainbow Bracket Colors** (`.lean-bracket-1` through `.lean-bracket-6`):
-Light mode uses purple/blue palette; dark mode uses Dracula-style brighter colors.
+Elements are tagged with `data-tippy-theme`:
+- `lean` - Standard token hovers
+- `warning` - Warning messages
+- `error` - Error messages
+- `info` - Information messages
+- `tactic` - Tactic state display
 
-**Dark Mode**:
-- Controlled via `html[data-theme="dark"]`
-- Toggle persists to localStorage (`sbs-theme`)
-- Defaults to light mode
+### plastex.js
 
-### JavaScript Functionality
+Provides UI controls. Depends on jQuery.
 
-**verso-code.js**:
+| Feature | Description |
+|---------|-------------|
+| `toggleSbsTheme()` | Toggles dark/light mode, persists to localStorage |
+| Theme toggle click | Attached to `.theme-toggle` element |
+| TOC toggle | Mobile sidebar show/hide via `#toc-toggle` |
+| Proof toggle | Expands/collapses LaTeX proofs with jQuery animation, syncs Lean proof visibility |
 
-| Function | Purpose |
-|----------|---------|
-| Token binding | Highlights all occurrences of a variable on hover |
-| Tippy.js initialization | Type signatures, docstrings, tactic states |
-| Proof sync | Syncs Lean proof body visibility with LaTeX toggle |
-| Pan/zoom | Mouse wheel zoom centered on cursor, pointer drag panning |
-| `fitToWindow()` | Fits graph to viewport using `getBBox()` |
-| `onModalOpen()` | Initializes MathJax and Tippy in modal, positions blueprint link |
-| Node click handling | Opens modal when clicking graph nodes |
+## Integration
 
-**plastex.js**:
+### Project Requirements
 
-| Function | Purpose |
-|----------|---------|
-| `toggleSbsTheme()` | Toggles dark/light mode |
-| TOC toggle | Mobile sidebar show/hide |
-| Proof toggle | Expands/collapses LaTeX proofs with jQuery animation |
+1. **Dress dependency** in `lakefile.toml`:
+   ```toml
+   [[require]]
+   name = "Dress"
+   git = "https://github.com/e-vergo/Dress"
+   rev = "main"
+   ```
 
-## Paper Generation
+2. **`@[blueprint]` attributes** on declarations:
+   ```lean
+   import Dress
 
-To enable paper generation, add to `runway.json`:
+   @[blueprint "thm:main"]
+   theorem mainTheorem : 2 + 2 = 4 := rfl
+   ```
+
+3. **runway.json** configuration:
+   ```json
+   {
+     "title": "Project Title",
+     "projectName": "ProjectName",
+     "githubUrl": "https://github.com/user/repo",
+     "baseUrl": "/",
+     "blueprintTexPath": "blueprint/src/blueprint.tex",
+     "assetsDir": "../dress-blueprint-action/assets"
+   }
+   ```
+
+4. **Blueprint directory** with `blueprint.tex` containing LaTeX document structure
+
+### Asset Integration
+
+The `assetsDir` field in `runway.json` points to where CSS/JS files are located. During CI, the action sets this to the checked-out action repository. For local development, set it to a relative path to your local clone of this repository.
+
+### Paper Generation
+
+To enable paper/PDF generation, add to `runway.json`:
 
 ```json
 {
@@ -274,16 +259,16 @@ Use these hooks in `paper.tex`:
 - `\paperstatement{label}` - Insert LaTeX statement with link to Lean
 - `\paperfull{label}` - Insert full side-by-side display
 
-## docs-static Branch Pattern
+### docs-static Branch Pattern
 
-For projects with pre-generated DocGen4 documentation (avoids ~1 hour build):
+For mathlib-dependent projects where DocGen4 generation takes ~1 hour:
 
 1. Generate docs locally:
    ```bash
    lake -R -Kenv=dev build Module:docs
    ```
 
-2. Create orphan branch and push:
+2. Push to orphan branch:
    ```bash
    git checkout --orphan docs-static
    git rm -rf .
@@ -300,10 +285,37 @@ For projects with pre-generated DocGen4 documentation (avoids ~1 hour build):
        docgen4-mode: docs-static
    ```
 
+## Generated Site Structure
+
+The action generates:
+
+| Path | Content |
+|------|---------|
+| `index.html` | Dashboard with stats, key theorems, messages, project notes |
+| `dep_graph.html` | Interactive dependency graph with pan/zoom and node modals |
+| `chapter_*.html` | Chapter pages with side-by-side theorem/proof displays |
+| `paper.html` | Paper (if `paperTexPath` configured) |
+| `paper.pdf` | PDF (if `paperTexPath` configured) |
+| `pdf.html` | Embedded PDF viewer |
+| `assets/` | CSS and JavaScript files |
+| `docs/` | DocGen4 documentation (if enabled) |
+
+## Related Repositories
+
+| Repository | Purpose |
+|------------|---------|
+| [SubVerso](https://github.com/e-vergo/subverso) | Syntax highlighting with O(1) indexed lookups |
+| [LeanArchitect](https://github.com/e-vergo/LeanArchitect) | `@[blueprint]` attribute with 8 metadata + 3 status options |
+| [Dress](https://github.com/e-vergo/Dress) | Artifact generation, graph layout, validation |
+| [Runway](https://github.com/e-vergo/Runway) | Site generator, dashboard, paper/PDF |
+| [SBS-Test](https://github.com/e-vergo/SBS-Test) | Minimal test project |
+| [General_Crystallographic_Restriction](https://github.com/e-vergo/General_Crystallographic_Restriction) | Production example with paper |
+| [PrimeNumberTheoremAnd](https://github.com/e-vergo/PrimeNumberTheoremAnd) | Large-scale integration (530 nodes) |
+
 ## Troubleshooting
 
 **No dressed artifacts found**
-- Verify Dress is imported: `import Dress`
+- Verify `import Dress` in your Lean files
 - Check declarations have `@[blueprint "label"]` attributes
 - Review build logs for elaboration errors
 
@@ -320,18 +332,6 @@ For projects with pre-generated DocGen4 documentation (avoids ~1 hour build):
 **DocGen4 docs-static not found**
 - The `docs-static` branch must exist in your repository
 - Ensure `githubUrl` in `runway.json` points to the correct repository
-
-## Related Repositories
-
-| Repository | Purpose |
-|------------|---------|
-| [SubVerso](https://github.com/e-vergo/subverso) | Syntax highlighting extraction with O(1) indexed lookups |
-| [LeanArchitect](https://github.com/e-vergo/LeanArchitect) | `@[blueprint]` attribute with 8 metadata + 3 status options |
-| [Dress](https://github.com/e-vergo/Dress) | Artifact generation, graph layout, validation |
-| [Runway](https://github.com/e-vergo/Runway) | Site generator, dashboard, paper/PDF generation |
-| [SBS-Test](https://github.com/e-vergo/SBS-Test) | Minimal test project (16 nodes, all 6 status colors) |
-| [General_Crystallographic_Restriction](https://github.com/e-vergo/General_Crystallographic_Restriction) | Production example with paper generation |
-| [PrimeNumberTheoremAnd](https://github.com/e-vergo/PrimeNumberTheoremAnd) | Large-scale integration (530 annotations) |
 
 ## License
 
