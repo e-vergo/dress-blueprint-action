@@ -126,14 +126,16 @@ Four files organize styles by concern. All files are in `assets/` and depend on 
 
 **Status Colors (6-status model)**
 
-| Variable | Color | Hex |
-|----------|-------|-----|
-| `--sbs-status-not-ready` | Mango | #ffd363 |
-| `--sbs-status-ready` | Magenta | #ee00ff |
-| `--sbs-status-sorry` | Bright Red | #d40101 |
-| `--sbs-status-proven` | Light Green | #90EE90 |
-| `--sbs-status-fully-proven` | Forest Green | #228B22 |
-| `--sbs-status-mathlib-ready` | Royal Blue | #06a6e5 |
+These colors match the Lean definitions in `Dress/Graph/Svg.lean` and `LeanArchitect/Architect/Basic.lean`:
+
+| Variable | Status | Color Name | Hex |
+|----------|--------|------------|-----|
+| `--sbs-status-not-ready` | notReady | Sandy Brown | #F4A460 |
+| `--sbs-status-ready` | ready | Light Sea Green | #20B2AA |
+| `--sbs-status-sorry` | sorry | Dark Red | #8B0000 |
+| `--sbs-status-proven` | proven | Light Green | #90EE90 |
+| `--sbs-status-fully-proven` | fullyProven | Forest Green | #228B22 |
+| `--sbs-status-mathlib-ready` | mathlibReady | Light Blue | #87CEEB |
 
 **Tooltip Themes**
 
@@ -190,6 +192,15 @@ Elements are tagged with `data-tippy-theme`:
 - `error` - Error messages
 - `info` - Information messages
 - `tactic` - Tactic state display
+
+**Pan/Zoom Implementation**
+
+The dependency graph uses pointer events for panning:
+- `pointerdown` initiates drag (captures pointer for reliable tracking)
+- `pointermove` updates translation
+- `pointerup`/`pointercancel` ends drag
+- Mouse wheel zoom applies delta centered on cursor position
+- Scale clamped to 0.1-5x range
 
 ### plastex.js
 
@@ -310,7 +321,7 @@ The action generates:
 | [Runway](https://github.com/e-vergo/Runway) | Site generator, dashboard, paper/PDF |
 | [SBS-Test](https://github.com/e-vergo/SBS-Test) | Minimal test project |
 | [General_Crystallographic_Restriction](https://github.com/e-vergo/General_Crystallographic_Restriction) | Production example with paper |
-| [PrimeNumberTheoremAnd](https://github.com/e-vergo/PrimeNumberTheoremAnd) | Large-scale integration (530 nodes) |
+| [PrimeNumberTheoremAnd](https://github.com/e-vergo/PrimeNumberTheoremAnd) | Large-scale integration (591 nodes) |
 
 ## Troubleshooting
 
