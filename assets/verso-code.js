@@ -414,6 +414,87 @@ function onModalOpen(modalElement) {
     }
 }
 
+// Expandable sidebar chapter navigation
+function toggleExpand(arrowElement) {
+    var header = arrowElement.closest('.item-header');
+    if (!header) return;
+
+    var chapterList = header.nextElementSibling;
+    if (!chapterList || !chapterList.classList.contains('chapter-list')) return;
+
+    var isCollapsed = chapterList.classList.toggle('collapsed');
+    arrowElement.classList.toggle('expanded', !isCollapsed);
+
+    // Save state to localStorage
+    var docId = chapterList.dataset.doc;
+    if (docId) {
+        localStorage.setItem('sidebar-expand-' + docId, !isCollapsed);
+    }
+}
+
+// Restore sidebar expansion state on page load
+function restoreSidebarState() {
+    document.querySelectorAll('.chapter-list').forEach(function(list) {
+        var docId = list.dataset.doc;
+        if (!docId) return;
+
+        var expanded = localStorage.getItem('sidebar-expand-' + docId) === 'true';
+        list.classList.toggle('collapsed', !expanded);
+
+        var arrow = list.previousElementSibling;
+        if (arrow) {
+            arrow = arrow.querySelector('.expand-arrow');
+            if (arrow) {
+                arrow.classList.toggle('expanded', expanded);
+            }
+        }
+    });
+
+    // Auto-expand if current page is a chapter
+    autoExpandCurrentChapter();
+}
+
+// Auto-expand the section containing the current page
+function autoExpandCurrentChapter() {
+    var currentPath = window.location.pathname.split('/').pop() || 'index.html';
+
+    document.querySelectorAll('.chapter-list a').forEach(function(link) {
+        var href = link.getAttribute('href');
+        // Normalize href (remove leading ./ if present)
+        if (href && href.startsWith('./')) {
+            href = href.substring(2);
+        }
+
+        if (href === currentPath) {
+            // Mark as active
+            link.classList.add('active');
+
+            // Expand parent chapter list
+            var chapterList = link.closest('.chapter-list');
+            if (chapterList) {
+                chapterList.classList.remove('collapsed');
+
+                var arrow = chapterList.previousElementSibling;
+                if (arrow) {
+                    arrow = arrow.querySelector('.expand-arrow');
+                    if (arrow) {
+                        arrow.classList.add('expanded');
+                    }
+                }
+
+                // Save expanded state
+                var docId = chapterList.dataset.doc;
+                if (docId) {
+                    localStorage.setItem('sidebar-expand-' + docId, 'true');
+                }
+            }
+        }
+    });
+}
+
+// Initialize sidebar state on page load
+document.addEventListener('DOMContentLoaded', restoreSidebarState);
+
 // Dependency graph node click modal handling
 document.addEventListener('DOMContentLoaded', function() {
     // Helper to escape special characters in label for CSS selector
