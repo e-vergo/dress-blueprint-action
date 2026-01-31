@@ -386,6 +386,7 @@ html[data-theme="dark"] {
 .lean-bracket-6 { color: #E45649; }
 
 /* Line comments */
+.line-comment,
 .hl.lean .line-comment {
   color: #6a9955;
   font-style: italic;
@@ -831,6 +832,7 @@ html[data-theme="dark"] .lean-bracket-5 { color: #ffb86c; }
 html[data-theme="dark"] .lean-bracket-6 { color: #ff5555; }
 
 /* Line comments - same green works well in dark mode */
+html[data-theme="dark"] .line-comment,
 html[data-theme="dark"] .hl.lean .line-comment {
   color: #6a9955;
 }
