@@ -950,98 +950,128 @@ html[data-theme="dark"] .hl.lean .docstring code {
 }
 
 /* ---------------------------------------------
-   11. Expandable Sidebar Items
+   11. Chapter Panel (separate column for blueprint pages)
    --------------------------------------------- */
 
-/* Expandable sidebar items container */
-.sidebar-item.expandable {
-  position: relative;
-}
-
-/* Header row with arrow and link */
-.sidebar-item.expandable .item-header {
+/* Chapter panel - appears between sidebar and content for blueprint pages */
+.chapter-panel {
+  flex-shrink: 0;
+  width: 200px;
+  background-color: #f5f5f5;
+  border-right: 1px solid var(--sbs-border);
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/* Expand/collapse arrow */
-.expand-arrow {
-  cursor: pointer;
-  font-size: 0.75rem;
-  width: 1rem;
-  text-align: center;
-  user-select: none;
-  transition: transform 0.2s ease;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.expand-arrow:hover {
-  color: rgba(255, 255, 255, 1);
-}
-
-.expand-arrow.expanded {
-  transform: rotate(90deg);
-}
-
-/* Chapter list (nested under expandable items) */
-.chapter-list {
-  padding-left: 1.5rem;
-  margin: 0.25rem 0 0 0;
-  list-style: none;
-  /* Note: overflow is controlled by nav.toc (overflow-x: hidden) */
-}
-
-.chapter-list.collapsed {
-  display: none;
-}
-
-.chapter-list li {
-  margin: 0.25rem 0;
-}
-
-.chapter-list a {
-  font-size: 0.8rem;
-  opacity: 0.85;
-  color: rgba(255, 255, 255, 0.9);
-  text-decoration: none;
-  display: block;
-  padding: 0.15rem 0;
-}
-
-.chapter-list a:hover {
-  opacity: 1;
-  color: #fff;
-}
-
-/* Active chapter styling - full-width highlight box using pseudo-element */
-.chapter-list a.active {
+/* Chapter panel header */
+.chapter-panel-header {
+  padding: 0.75rem 1rem;
   font-weight: 600;
-  opacity: 1;
-  color: var(--sidebar-active-text);
-  position: relative;
-  z-index: 1;
+  font-size: 0.875rem;
+  color: var(--sbs-text);
+  border-bottom: 1px solid var(--sbs-border);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-/* Pseudo-element creates the full-width highlight background */
-.chapter-list a.active::before {
-  content: '';
-  position: absolute;
-  top: -0.1rem;
-  bottom: -0.1rem;
-  /* Extend left: cancel chapter-list padding-left (1.5rem) */
-  left: -1.5rem;
-  /* Extend right: to edge of nav.toc (100% width + padding-right 1rem) */
-  right: -1rem;
-  background-color: var(--sidebar-active-bg);
-  z-index: -1;
+/* Chapter panel list */
+.chapter-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* Dark mode adjustments for expand arrow */
-html[data-theme="dark"] .expand-arrow {
-  color: rgba(255, 255, 255, 0.6);
+.chapter-panel-list li {
+  margin: 0;
 }
 
-html[data-theme="dark"] .expand-arrow:hover {
-  color: rgba(255, 255, 255, 0.9);
+/* Chapter panel items */
+.chapter-panel-item {
+  display: block;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  color: var(--sbs-text);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background-color 0.15s ease;
+}
+
+.chapter-panel-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--sbs-text);
+}
+
+/* Active chapter in panel - secondary highlight color */
+.chapter-panel-item.active {
+  background-color: #e8f0fe;
+  color: var(--sbs-accent-blue);
+  font-weight: 500;
+  border-left: 3px solid var(--sbs-accent-blue);
+  padding-left: calc(1rem - 3px);
+}
+
+/* Dark mode chapter panel */
+html[data-theme="dark"] .chapter-panel {
+  background-color: #252525;
+  border-right-color: #444;
+}
+
+html[data-theme="dark"] .chapter-panel-header {
+  color: var(--sbs-text);
+  border-bottom-color: #444;
+}
+
+html[data-theme="dark"] .chapter-panel-item {
+  color: var(--sbs-text);
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+html[data-theme="dark"] .chapter-panel-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+html[data-theme="dark"] .chapter-panel-item.active {
+  background-color: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+  border-left-color: #60a5fa;
+}
+
+/* Hide chapter panel on mobile */
+@media (max-width: 1023px) {
+  .chapter-panel {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------
+   12. PDF Page Styles (fullpage embed)
+   --------------------------------------------- */
+
+/* PDF page body - prevent scrolling */
+body.pdf-page {
+  overflow: hidden;
+}
+
+/* PDF content area - fill available space */
+.pdf-content {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+/* PDF viewer container - fill parent */
+.pdf-viewer-fullpage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* PDF embed - maximize size */
+.pdf-embed-fullpage {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
 }

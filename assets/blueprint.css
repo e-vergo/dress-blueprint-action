@@ -1770,3 +1770,16 @@ pre.lean-code {
   text-decoration: underline;
   color: var(--sbs-link-hover, #0055aa);
 }
+
+/* ========== Wrapper Layout with Chapter Panel ========== */
+/* When chapter panel is present, wrapper contains: sidebar + chapter-panel + content */
+div.wrapper.with-chapter-panel {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Ensure proper width allocation when chapter panel is present */
+div.wrapper.with-chapter-panel div.content {
+  flex: 1;
+  min-width: 0;  /* Allow content to shrink */
+}

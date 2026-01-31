@@ -54,19 +54,12 @@ $(document).ready(function() {
     }
   });
 
+  // Mobile menu toggle
   $("#toc-toggle").click(function() {
-    $("nav.toc").toggle()
+    $("nav.toc").toggle();
+    // Also toggle chapter panel on mobile
+    $("nav.chapter-panel").toggle();
   });
-
-  $("nav.toc").on("click", "span.expand-toc",
-    function() {
-      $(this).siblings("ul").slideToggle('fast');
-      if ($(this).html() == "▼") {
-        $(this).html("▶");
-      } else {
-        $(this).html("▼");
-      };
-    })
 
   $("div.proof_heading").click(
     function() {
