@@ -875,8 +875,12 @@ html[data-theme="dark"] .hl.lean .docstring code {
 .sidebar-item.active {
   background-color: var(--sidebar-active-bg);
   color: var(--sidebar-active-text);
-  font-weight: 600;
-  border-radius: 4px;
+  font-weight: 400;  /* Remove bold - was 600 */
+  border-radius: 0;  /* No rounded corners - was 4px */
+  display: block;
+  margin: 0 -1rem;  /* Extend to edges */
+  padding: 0.5rem 1rem;
+  width: calc(100% + 2rem);
 }
 
 /* Sidebar spacer (pushes theme toggle to bottom) */
