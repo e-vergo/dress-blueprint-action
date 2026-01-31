@@ -871,16 +871,28 @@ html[data-theme="dark"] .hl.lean .docstring code {
   color: inherit;
 }
 
-/* Active sidebar item (currently viewing) */
+/* Active sidebar item (currently viewing) - uses pseudo-element for full-width highlight */
 .sidebar-item.active {
-  background-color: var(--sidebar-active-bg);
   color: var(--sidebar-active-text);
   font-weight: 400;  /* Remove bold - was 600 */
-  border-radius: 0;  /* No rounded corners - was 4px */
-  display: block;
-  margin: 0 -1rem;  /* Extend to edges */
-  padding: 0.5rem 1rem;
-  width: calc(100% + 2rem);
+  position: relative;
+  z-index: 1;
+  /* Reset any inherited constraints */
+  max-width: none;
+}
+
+/* Pseudo-element creates the full-width highlight background */
+.sidebar-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Extend left: cancel .sub-toc-0 a padding-left (0.8rem) */
+  left: -0.8rem;
+  /* Extend right: into nav.toc padding-right (1rem) */
+  right: -1rem;
+  background-color: var(--sidebar-active-bg);
+  z-index: -1;
 }
 
 /* Sidebar spacer (pushes theme toggle to bottom) */
@@ -952,6 +964,7 @@ html[data-theme="dark"] .hl.lean .docstring code {
   padding-left: 1.5rem;
   margin: 0.25rem 0 0 0;
   list-style: none;
+  /* Note: overflow is controlled by nav.toc (overflow-x: hidden) */
 }
 
 .chapter-list.collapsed {
@@ -976,10 +989,27 @@ html[data-theme="dark"] .hl.lean .docstring code {
   color: #fff;
 }
 
-/* Active chapter styling */
+/* Active chapter styling - full-width highlight box using pseudo-element */
 .chapter-list a.active {
   font-weight: 600;
   opacity: 1;
+  color: var(--sidebar-active-text);
+  position: relative;
+  z-index: 1;
+}
+
+/* Pseudo-element creates the full-width highlight background */
+.chapter-list a.active::before {
+  content: '';
+  position: absolute;
+  top: -0.1rem;
+  bottom: -0.1rem;
+  /* Extend left: cancel chapter-list padding-left (1.5rem) */
+  left: -1.5rem;
+  /* Extend right: to edge of nav.toc (100% width + padding-right 1rem) */
+  right: -1rem;
+  background-color: var(--sidebar-active-bg);
+  z-index: -1;
 }
 
 /* Dark mode adjustments for expand arrow */
