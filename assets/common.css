@@ -385,6 +385,12 @@ html[data-theme="dark"] {
 .lean-bracket-5 { color: #50A14F; }
 .lean-bracket-6 { color: #E45649; }
 
+/* Line comments */
+.hl.lean .line-comment {
+  color: #6a9955;
+  font-style: italic;
+}
+
 /* Message spans */
 .lean-span, .hl.lean .has-info { }
 .lean-error, .hl.lean .has-info.error { text-decoration: wavy underline #c82829; }
@@ -823,6 +829,11 @@ html[data-theme="dark"] .lean-bracket-3 { color: #8be9fd; }
 html[data-theme="dark"] .lean-bracket-4 { color: #50fa7b; }
 html[data-theme="dark"] .lean-bracket-5 { color: #ffb86c; }
 html[data-theme="dark"] .lean-bracket-6 { color: #ff5555; }
+
+/* Line comments - same green works well in dark mode */
+html[data-theme="dark"] .hl.lean .line-comment {
+  color: #6a9955;
+}
 
 /* Hypothesis names in dark mode */
 html[data-theme="dark"] .hl.lean .hypotheses .name {
