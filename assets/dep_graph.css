@@ -1,0 +1,538 @@
+/* ============================================
+   dep_graph.css - Dependency Graph Page Styles
+   Used by: dep_graph.html (full page), graph modals, embedded graphs
+   Depends on: common.css (must be loaded first for CSS variables)
+   ============================================ */
+
+/* ========== Graph Section Container ========== */
+.graph-section {
+  margin: 2rem 0;
+}
+
+.dep-graph-container {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--bp-border);
+  border-radius: 8px;
+  background: var(--bp-bg-alt);
+  overflow: hidden;
+}
+
+/* ========== Graph Toolbar ========== */
+.dep-graph-toolbar {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 10;
+  display: flex;
+  gap: 0.25rem;
+  background: var(--bp-bg);
+  border: 1px solid var(--bp-border);
+  border-radius: 4px;
+  padding: 0.25rem;
+}
+
+.dep-graph-toolbar button {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--bp-border);
+  border-radius: 3px;
+  background: var(--bp-bg);
+  color: var(--bp-text);
+  cursor: pointer;
+  font-size: 0.875rem;
+  line-height: 1;
+  transition: background 0.15s ease;
+}
+
+.dep-graph-toolbar button:hover {
+  background: var(--bp-bg-alt);
+}
+
+.dep-graph-toolbar button:active {
+  background: var(--bp-border);
+}
+
+/* Fit button expands to fill available width */
+.dep-graph-toolbar button#graph-fit {
+  flex: 1;
+}
+
+/* ========== Graph Viewport (pan/zoom area) ========== */
+.dep-graph-viewport {
+  width: 100%;
+  min-height: 200px;
+  max-height: 600px;
+  overflow: auto;
+  cursor: grab;
+  background: var(--sbs-graph-bg);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+.dep-graph-viewport:active {
+  cursor: grabbing;
+}
+
+/* ========== Graph SVG Container ========== */
+.dep-graph-svg {
+  transform-origin: 0 0;
+  will-change: transform;
+  display: inline-block;  /* Shrink-wrap to SVG size */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dep-graph-svg.dragging {
+  transition: none !important;
+}
+
+.dep-graph-svg svg {
+  display: block;
+  background: var(--sbs-graph-bg);
+}
+
+.dep-graph-svg text,
+.dep-graph-svg tspan {
+  pointer-events: none;  /* Prevent text from interfering with drag */
+  user-select: none;
+}
+
+/* ========== Graph Placeholder ========== */
+.dep-graph-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--bp-text-muted);
+  font-style: italic;
+}
+
+/* ========== Node Highlight Animation ========== */
+.node-highlight {
+  animation: node-flash 2s ease-out;
+}
+
+@keyframes node-flash {
+  0%, 100% { box-shadow: none; }
+  20%, 80% { box-shadow: 0 0 0 4px var(--bp-primary); }
+}
+
+/* ========== Full-page Graph Styles ========== */
+.dep-graph-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dep-graph-page .wrapper {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.dep-graph-page .content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.dep-graph-fullpage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dep-graph-fullpage .dep-graph-viewport {
+  flex: 1;
+  height: 90vh !important;
+  max-height: none;
+}
+
+/* ========== Graph Header with Link ========== */
+.graph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.graph-header h2 {
+  margin: 0;
+}
+
+.graph-fullpage-link {
+  color: var(--bp-primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--bp-border);
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.graph-fullpage-link:hover {
+  background-color: var(--bp-bg-alt);
+  text-decoration: none;
+}
+
+/* ========== Graph Link Card (Homepage) ========== */
+.graph-link-card {
+  margin: 2rem 0;
+}
+
+.graph-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.graph-card {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  background: var(--bp-bg-alt);
+  border: 1px solid var(--bp-border);
+  border-radius: 8px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.graph-card:hover {
+  background-color: var(--sbs-graph-card-hover);
+  border-color: var(--bp-primary);
+}
+
+.graph-card-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bp-primary);
+  margin-right: 1.5rem;
+}
+
+.graph-card-icon svg {
+  width: 48px;
+  height: 48px;
+}
+
+.graph-card-content {
+  flex: 1;
+}
+
+.graph-card-content h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--bp-text);
+  font-size: 1.25rem;
+}
+
+.graph-card-content p {
+  margin: 0;
+  color: var(--bp-text-muted);
+  font-size: 0.95rem;
+}
+
+.graph-card-arrow {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: var(--bp-primary);
+  margin-left: 1rem;
+}
+
+/* ========== Graph Legend (Collapsible) ========== */
+.graph-legend {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: var(--bp-bg-alt);
+  border: 1px solid var(--bp-border);
+  border-radius: 8px;
+}
+
+.graph-legend .title {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+.graph-legend .btn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 0.5rem;
+  padding: 3px;
+}
+
+.graph-legend .bar {
+  width: 18px;
+  height: 2px;
+  background: var(--bp-text);
+}
+
+.graph-legend dl.legend {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  font-size: 0.875rem;
+}
+
+.graph-legend dt {
+  font-weight: 600;
+  color: var(--bp-text);
+}
+
+.graph-legend dd {
+  margin: 0;
+  color: var(--bp-text-muted);
+}
+
+/* ========== Dependency Graph Modals ========== */
+/* Note: Base .dep-modal-container, .dep-modal-content, .dep-closebtn
+   are defined in common.css. This section adds graph-specific extensions. */
+
+.dep-modal-body {
+  padding-top: 10px;
+}
+
+.dep-modal-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--bp-border);
+}
+
+.dep-modal-type {
+  font-weight: bold;
+  color: var(--bp-primary);
+}
+
+.dep-modal-label {
+  color: var(--bp-text);
+}
+
+.dep-modal-links {
+  margin-top: 1rem;
+}
+
+.dep-modal-links a {
+  color: var(--bp-primary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--bp-border);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.dep-modal-links a:hover {
+  background-color: var(--bp-bg-alt);
+}
+
+/* Modal footer with blueprint link */
+.dep-modal-footer {
+  margin-top: 0.75rem;
+  text-align: right;
+}
+
+.dep-modal-footer .blueprint-link {
+  color: var(--sbs-link);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.dep-modal-footer .blueprint-link:hover {
+  text-decoration: underline;
+  color: var(--sbs-link-hover);
+}
+
+/* SVG node click styling */
+.dep-graph-svg .node {
+  cursor: pointer;
+}
+
+/* Node hover highlight with smooth transition */
+.dep-graph-svg .node ellipse,
+.dep-graph-svg .node rect,
+.dep-graph-svg .node polygon {
+  transition: stroke-width 0.15s ease;
+}
+
+.dep-graph-svg .node:hover ellipse,
+.dep-graph-svg .node:hover rect,
+.dep-graph-svg .node:hover polygon {
+  stroke-width: 3px;
+}
+
+/* ========== Static HTML Legend and Toolbar ========== */
+
+/* Wrapper for controls + graph - uses grid for side-by-side layout */
+.dep-graph-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+/* Combined controls container (legend + toolbar) */
+.dep-graph-controls {
+  position: static;  /* No longer absolute - grid handles positioning */
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-self: start;  /* Align to top of grid cell */
+}
+
+/* When toolbar is inside controls, remove its absolute positioning */
+.dep-graph-controls .dep-graph-toolbar {
+  position: static;
+}
+
+/* Compact legend styles */
+.dep-graph-legend {
+  background: var(--sbs-legend-bg);
+  border: 1px solid var(--sbs-border);
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--sbs-legend-text);
+}
+
+.dep-graph-legend .legend-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.dep-graph-legend .legend-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dep-graph-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dep-graph-legend .legend-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+}
+
+/* 6 Status Colors - use unified CSS variables */
+.dep-graph-legend .legend-swatch.not-ready { background-color: var(--sbs-status-not-ready); }
+.dep-graph-legend .legend-swatch.ready { background-color: var(--sbs-status-ready); }
+.dep-graph-legend .legend-swatch.sorry { background-color: var(--sbs-status-sorry); }
+.dep-graph-legend .legend-swatch.proven { background-color: var(--sbs-status-proven); }
+.dep-graph-legend .legend-swatch.fully-proven { background-color: var(--sbs-status-fully-proven); }
+.dep-graph-legend .legend-swatch.mathlib-ready { background-color: var(--sbs-status-mathlib-ready); }
+
+/* Legend separator line between colors and shapes */
+.dep-graph-legend .legend-separator {
+  width: 100%;
+  height: 1px;
+  background-color: var(--sbs-legend-separator);
+  margin: 0.5rem 0;
+}
+
+.dep-graph-legend .legend-shape {
+  width: 16px;
+  height: 12px;
+  border: 1px solid var(--sbs-legend-shape-border);
+  background: var(--sbs-legend-shape-bg);
+}
+
+.dep-graph-legend .legend-shape.ellipse {
+  border-radius: 50%;
+}
+
+.dep-graph-legend .legend-shape.box {
+  border-radius: 2px;
+}
+
+/* ========== SBS Container in Modal ========== */
+/* Ensure sbs-container displays properly in modal */
+.dep-modal-content .sbs-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* Flexible 50/50 instead of fixed 100ch */
+  gap: 1.5rem;
+  margin-left: 0;  /* Override the normal 3rem margin */
+  margin-bottom: 1rem;
+  max-width: 100%;  /* Prevent growing beyond modal */
+  overflow: hidden;  /* Prevent content from pushing modal wider */
+}
+
+.dep-modal-content .sbs-latex-column,
+.dep-modal-content .sbs-lean-column {
+  min-width: 0;  /* Allow shrinking below content size */
+  overflow: hidden;  /* Prevent content overflow */
+}
+
+/* LaTeX proof toggle in modal */
+.dep-modal-content .proof_wrapper {
+  margin-top: 0.5rem;
+}
+
+.dep-modal-content .proof_heading {
+  cursor: pointer;
+}
+
+/* Lean code max height in modal */
+.dep-modal-content .lean-code {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Modal footer with blueprint link - simple text style, no border */
+.dep-modal-content .dep-modal-footer {
+  margin-top: 0.75rem;
+  text-align: right;
+}
+
+.dep-modal-content .dep-modal-footer .blueprint-link {
+  color: var(--sbs-link, #0066cc);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.dep-modal-content .dep-modal-footer .blueprint-link:hover {
+  text-decoration: underline;
+  color: var(--sbs-link-hover, #0055aa);
+}
+
+/* ========== Dark Mode Graph Edge Override ========== */
+/* SVG edge colors in dark mode */
+html[data-theme="dark"] .dep-graph-container svg path,
+html[data-theme="dark"] .dep-graph-svg svg path {
+  stroke: var(--sbs-graph-edge) !important;
+}
+
+html[data-theme="dark"] .dep-graph-container svg path:hover,
+html[data-theme="dark"] .dep-graph-svg svg path:hover {
+  stroke: var(--sbs-graph-edge-hover) !important;
+}
+
+/* Also override marker (arrow) colors */
+html[data-theme="dark"] .dep-graph-container svg marker path,
+html[data-theme="dark"] .dep-graph-svg svg marker path {
+  fill: var(--sbs-graph-edge) !important;
+}
+
+/* SVG background rect in dark mode */
+html[data-theme="dark"] .dep-graph-container svg > rect:first-child,
+html[data-theme="dark"] .dep-graph-svg svg > rect:first-child {
+  fill: var(--sbs-graph-bg) !important;
+}

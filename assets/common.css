@@ -762,37 +762,10 @@ html[data-theme="dark"] .theme-toggle-switch::after {
 html[data-theme="dark"] .theme-toggle-icon.sun { opacity: 0.5; }
 html[data-theme="dark"] .theme-toggle-icon.moon { opacity: 1.0; }
 
-/* ---------------------------------------------
-   8. Dark Mode Graph Edge Override
-   --------------------------------------------- */
-
-/* SVG edge colors in dark mode */
-html[data-theme="dark"] .dep-graph-container svg path,
-html[data-theme="dark"] .dep-graph-svg svg path {
-  stroke: var(--sbs-graph-edge) !important;
-}
-
-html[data-theme="dark"] .dep-graph-container svg path:hover,
-html[data-theme="dark"] .dep-graph-svg svg path:hover {
-  stroke: var(--sbs-graph-edge-hover) !important;
-}
-
-/* Also override marker (arrow) colors */
-html[data-theme="dark"] .dep-graph-container svg marker path,
-html[data-theme="dark"] .dep-graph-svg svg marker path {
-  fill: var(--sbs-graph-edge) !important;
-}
-
-/* SVG text color - removed dark mode override to keep text consistent with node backgrounds */
-
-/* SVG background rect in dark mode */
-html[data-theme="dark"] .dep-graph-container svg > rect:first-child,
-html[data-theme="dark"] .dep-graph-svg svg > rect:first-child {
-  fill: var(--sbs-graph-bg) !important;
-}
+/* Note: Dark mode graph edge styles moved to dep_graph.css */
 
 /* ---------------------------------------------
-   9. Dark Mode Lean Syntax Highlighting
+   8. Dark Mode Lean Syntax Highlighting
    --------------------------------------------- */
 
 /* Lean syntax colors for dark mode (manual toggle only) */

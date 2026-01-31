@@ -141,7 +141,12 @@ window.addEventListener('DOMContentLoaded', () => {
                         links.className = 'extra-doc-links';
                         extras.forEach((l) => {
                             const li = document.createElement('li');
-                            li.innerHTML = "<a href=\"" + l['href'] + "\" title=\"" + l.long + "\">" + l.short + "</a>";
+                            // Use DOM methods instead of innerHTML to prevent XSS
+                            const a = document.createElement('a');
+                            a.href = l['href'];
+                            a.title = l.long || '';
+                            a.textContent = l.short || '';
+                            li.appendChild(a);
                             links.appendChild(li);
                         });
                         content.appendChild(links);
