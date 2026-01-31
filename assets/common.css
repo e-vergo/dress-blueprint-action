@@ -90,13 +90,16 @@
   --sbs-badge-progress-text: #856404;
   --sbs-badge-progress-border: #ffeeba;
 
-  /* Status Colors (6-status model) */
-  --sbs-status-not-ready: #ffd363;      /* Mango */
-  --sbs-status-ready: #ee00ff;          /* Magenta */
-  --sbs-status-sorry: #d40101;          /* Bright Red */
+  /* Status Colors (6-status model)
+     IMPORTANT: These colors must match the Lean definitions in:
+     - Dress/Dress/Graph/Svg.lean
+     - Dress/Dress/Render/SideBySide.lean */
+  --sbs-status-not-ready: #F4A460;      /* Sandy Brown */
+  --sbs-status-ready: #20B2AA;          /* Light Sea Green */
+  --sbs-status-sorry: #8B0000;          /* Dark Red */
   --sbs-status-proven: #90EE90;         /* Light Green */
   --sbs-status-fully-proven: #228B22;   /* Forest Green */
-  --sbs-status-mathlib-ready: #06a6e5;  /* Royal Blue (changed from Royal Blue) */
+  --sbs-status-mathlib-ready: #87CEEB;  /* Light Blue */
 
   /* Semantic Colors */
   --sbs-success: #198754;
