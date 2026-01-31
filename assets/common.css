@@ -851,3 +851,31 @@ html[data-theme="dark"] .hl.lean .token.binding-hl {
 html[data-theme="dark"] .hl.lean .docstring code {
   background-color: rgba(255, 255, 255, 0.1);
 }
+
+/* ---------------------------------------------
+   10. Sidebar Document Items
+   --------------------------------------------- */
+
+/* Disabled sidebar items (unavailable documents) */
+.sidebar-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: inherit;
+}
+
+/* Section headers in sidebar navigation */
+.nav-section-header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.75rem 1rem 0.25rem 1rem;
+  margin-top: 0.5rem;
+  pointer-events: none;
+}
+
+/* First section header doesn't need top margin */
+.nav-separator + .nav-section-header {
+  margin-top: 0;
+}
