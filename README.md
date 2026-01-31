@@ -245,7 +245,6 @@ Light mode uses purple/blue palette; dark mode uses Dracula-style brighter color
 | Pan/zoom | Mouse wheel zoom centered on cursor, pointer drag panning |
 | `fitToWindow()` | Fits graph to viewport using `getBBox()` |
 | `onModalOpen()` | Initializes MathJax and Tippy in modal, positions blueprint link |
-| `toggleExpand()` | Sidebar chapter navigation with localStorage persistence |
 | Node click handling | Opens modal when clicking graph nodes |
 
 **plastex.js**:
