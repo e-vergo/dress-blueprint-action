@@ -16,7 +16,7 @@
   /* Grayscale (4 colors) */
   --sbs-black: #000000;
   --sbs-white: #ffffff;
-  --sbs-gray-light: #f8f8f8;
+  --sbs-gray-light: #ebebeb;  /* Increased contrast for zebra striping (was #f8f8f8) */
   --sbs-gray-dark: #333333;
 
   /* Blues (sidebar/topper) */
@@ -171,6 +171,31 @@
   min-width: 0;
 }
 
+/* ============================================
+   Zebra Striping for Dashboard Lists
+   Alternating background colors for readability
+   ============================================ */
+
+/* Dashboard list items - base styling for zebra stripes */
+.dashboard-list > li,
+.notes-list > li {
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+  border-radius: 4px;
+}
+
+/* Odd rows get the alternate background */
+.dashboard-list > li:nth-child(odd),
+.notes-list > li:nth-child(odd) {
+  background-color: var(--sbs-bg-page);
+}
+
+/* Even rows get the surface background (white in light, dark in dark mode) */
+.dashboard-list > li:nth-child(even),
+.notes-list > li:nth-child(even) {
+  background-color: var(--sbs-bg-surface);
+}
+
 /* Modal header bar (dependency graph) - close button only */
 .dep-modal-header-bar {
   display: flex;
@@ -221,9 +246,9 @@
 
 /* Dark Mode (JavaScript-controlled via toggle) */
 html[data-theme="dark"] {
-  /* Backgrounds */
-  --sbs-bg-page: #1a1a1a;
-  --sbs-bg-surface: #1a1a1a;
+  /* Backgrounds - different values for zebra striping */
+  --sbs-bg-page: #252525;     /* Lighter for alternating rows (was #1a1a1a) */
+  --sbs-bg-surface: #1a1a1a;  /* Base dark background */
 
   /* Text */
   --sbs-text: var(--sbs-white);

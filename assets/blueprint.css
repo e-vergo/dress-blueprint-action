@@ -727,6 +727,15 @@ html[data-theme="dark"] .note-section h4 {
   border-bottom: none;
 }
 
+/* Zebra striping for key declarations */
+.key-declaration-item:nth-child(odd) {
+  background-color: var(--sbs-bg-page);
+}
+
+.key-declaration-item:nth-child(even) {
+  background-color: var(--sbs-bg-surface);
+}
+
 /* Key declaration status dot positioning */
 .key-declaration-item .status-dot {
   margin-top: 0.5rem;
