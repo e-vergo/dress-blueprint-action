@@ -184,7 +184,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // Sync Lean proof body visibility with LaTeX proof toggle using jQuery animations
-// Note: plastex.js now uses [show]/[hide] text instead of arrow symbols
+// Note: plastex.js now uses .expanded class on proof_wrapper instead of text changes
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.sbs-container').forEach(function(container) {
         var proofHeading = container.querySelector('.proof_heading');
@@ -196,14 +196,14 @@ document.addEventListener('DOMContentLoaded', function() {
         proofHeading.addEventListener('click', function() {
             // Read toggle state after plastex.js has toggled it (setTimeout for timing)
             setTimeout(function() {
-                var icon = container.querySelector('.expand-proof');
-                // plastex.js uses [show] when collapsed, [hide] when expanded
-                var isCollapsed = icon && icon.textContent.trim() === '[show]';
+                var proofWrapper = container.querySelector('.proof_wrapper');
+                // plastex.js adds .expanded class when proof is shown
+                var isExpanded = proofWrapper && proofWrapper.classList.contains('expanded');
                 // Use jQuery slideUp/slideDown to match LaTeX proof animation
-                if (isCollapsed) {
-                    $(leanProofBody).slideUp(300);
-                } else {
+                if (isExpanded) {
                     $(leanProofBody).slideDown(300);
+                } else {
+                    $(leanProofBody).slideUp(300);
                 }
             }, 50);
         });

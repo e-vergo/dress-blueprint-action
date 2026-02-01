@@ -107,6 +107,15 @@
   --sbs-danger: #dc3545;
   --sbs-info: #0dcaf0;
 
+  /* Check Status Colors */
+  --sbs-check-pass-bg: rgba(25, 135, 84, 0.15);
+  --sbs-check-fail-bg: rgba(220, 53, 69, 0.15);
+
+  /* Chapter Panel */
+  --sbs-chapter-panel-bg: #f5f5f5;
+  --sbs-chapter-panel-border: rgba(0, 0, 0, 0.05);
+  --sbs-chapter-active-bg: #e8f0fe;
+
   /* Sidebar Active Item (light mode) */
   --sidebar-active-bg: #ffffff;
   --sidebar-active-text: #1a1a1a;
@@ -307,6 +316,15 @@ html[data-theme="dark"] {
   /* Sidebar Active Item (dark mode) */
   --sidebar-active-bg: #2a2a2a;
   --sidebar-active-text: #ffffff;
+
+  /* Check Status Colors (dark mode) */
+  --sbs-check-pass-bg: rgba(25, 135, 84, 0.2);
+  --sbs-check-fail-bg: rgba(220, 53, 69, 0.2);
+
+  /* Chapter Panel (dark mode) */
+  --sbs-chapter-panel-bg: #252525;
+  --sbs-chapter-panel-border: rgba(255, 255, 255, 0.05);
+  --sbs-chapter-active-bg: rgba(96, 165, 250, 0.15);
 }
 
 /* ---------------------------------------------
@@ -347,24 +365,46 @@ html[data-theme="dark"] {
 
 .proof_heading {
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  background-color: rgba(57, 98, 130, 0.08);
+  border: 1px solid rgba(57, 98, 130, 0.15);
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+}
+
+.proof_heading:hover {
+  background-color: rgba(57, 98, 130, 0.14);
+  border-color: rgba(57, 98, 130, 0.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.proof_heading:active {
+  background-color: rgba(57, 98, 130, 0.18);
 }
 
 .proof_caption {
   font-style: italic;
 }
 
+/* Chevron indicator replacing [show]/[hide] text */
 .expand-proof {
-  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
   color: var(--sbs-link);
   font-weight: normal;
+  transition: transform 0.2s ease;
 }
 
-.expand-proof:hover {
-  text-decoration: underline;
+/* Rotate chevron when expanded */
+.proof_wrapper.expanded .expand-proof {
+  transform: rotate(180deg);
 }
 
 .proof_content {
@@ -375,6 +415,17 @@ html[data-theme="dark"] {
 
 .proof_wrapper.expanded .proof_content {
   display: block;
+}
+
+/* Dark mode adjustments for proof toggle */
+html[data-theme="dark"] .proof_heading {
+  background-color: rgba(100, 150, 200, 0.12);
+  border-color: rgba(100, 150, 200, 0.2);
+}
+
+html[data-theme="dark"] .proof_heading:hover {
+  background-color: rgba(100, 150, 200, 0.18);
+  border-color: rgba(100, 150, 200, 0.3);
 }
 
 /* Lean proof body - synced with LaTeX proof toggle via JavaScript (plastex.js)
@@ -933,7 +984,7 @@ html[data-theme="dark"] .hl.lean .docstring code {
 .chapter-panel {
   flex-shrink: 0;
   width: 200px;
-  background-color: #f5f5f5;
+  background-color: var(--sbs-chapter-panel-bg);
   border-right: 1px solid var(--sbs-border);
   display: flex;
   flex-direction: column;
@@ -970,48 +1021,48 @@ html[data-theme="dark"] .hl.lean .docstring code {
   font-size: 0.85rem;
   color: var(--sbs-text);
   text-decoration: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--sbs-chapter-panel-border);
   transition: background-color 0.15s ease;
 }
 
 .chapter-panel-item:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--sbs-chapter-panel-border);
   color: var(--sbs-text);
 }
 
 /* Active chapter in panel - secondary highlight color */
 .chapter-panel-item.active {
-  background-color: #e8f0fe;
+  background-color: var(--sbs-chapter-active-bg);
   color: var(--sbs-accent-blue);
   font-weight: 500;
   border-left: 3px solid var(--sbs-accent-blue);
   padding-left: calc(1rem - 3px);
 }
 
-/* Dark mode chapter panel */
+/* Dark mode chapter panel - uses CSS variables defined in html[data-theme="dark"] */
 html[data-theme="dark"] .chapter-panel {
-  background-color: #252525;
-  border-right-color: #444;
+  background-color: var(--sbs-chapter-panel-bg);
+  border-right-color: var(--sbs-border);
 }
 
 html[data-theme="dark"] .chapter-panel-header {
   color: var(--sbs-text);
-  border-bottom-color: #444;
+  border-bottom-color: var(--sbs-border);
 }
 
 html[data-theme="dark"] .chapter-panel-item {
   color: var(--sbs-text);
-  border-bottom-color: rgba(255, 255, 255, 0.05);
+  border-bottom-color: var(--sbs-chapter-panel-border);
 }
 
 html[data-theme="dark"] .chapter-panel-item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--sbs-chapter-panel-border);
 }
 
 html[data-theme="dark"] .chapter-panel-item.active {
-  background-color: rgba(96, 165, 250, 0.15);
-  color: #60a5fa;
-  border-left-color: #60a5fa;
+  background-color: var(--sbs-chapter-active-bg);
+  color: var(--sbs-link);
+  border-left-color: var(--sbs-link);
 }
 
 /* Hide chapter panel on mobile */

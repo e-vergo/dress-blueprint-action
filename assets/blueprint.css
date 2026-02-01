@@ -989,13 +989,13 @@ html[data-theme="dark"] .notes-messages h4 {
 }
 
 .check-item.check-pass {
-  background-color: rgba(40, 167, 69, 0.15);
-  border-left: 3px solid #28a745;
+  background-color: var(--sbs-check-pass-bg);
+  border-left: 3px solid var(--sbs-success);
 }
 
 .check-item.check-fail {
-  background-color: rgba(220, 53, 69, 0.15);
-  border-left: 3px solid #dc3545;
+  background-color: var(--sbs-check-fail-bg);
+  border-left: 3px solid var(--sbs-danger);
 }
 
 .check-icon {
@@ -1004,11 +1004,11 @@ html[data-theme="dark"] .notes-messages h4 {
 }
 
 .check-pass .check-icon {
-  color: #28a745;
+  color: var(--sbs-success);
 }
 
 .check-fail .check-icon {
-  color: #dc3545;
+  color: var(--sbs-danger);
 }
 
 .check-text {
@@ -1032,13 +1032,13 @@ html[data-theme="dark"] .notes-messages h4 {
   font-family: monospace;
 }
 
-/* Dark mode: slightly adjust background opacity for better contrast */
+/* Dark mode: uses CSS variables defined in html[data-theme="dark"] in common.css */
 html[data-theme="dark"] .check-item.check-pass {
-  background-color: rgba(40, 167, 69, 0.2);
+  background-color: var(--sbs-check-pass-bg);
 }
 
 html[data-theme="dark"] .check-item.check-fail {
-  background-color: rgba(220, 53, 69, 0.2);
+  background-color: var(--sbs-check-fail-bg);
 }
 
 .check-item.check-pending {

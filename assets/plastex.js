@@ -61,19 +61,29 @@ $(document).ready(function() {
     $("nav.chapter-panel").toggle();
   });
 
+  // Initialize all expand-proof spans with chevron on page load
+  $("span.expand-proof").each(function() {
+    var text = $(this).text().trim();
+    // Convert legacy [show]/[hide] to chevron, or set chevron if empty
+    if (text === "[show]" || text === "" || text === "\u25BC") {
+      $(this).html("\u25BC"); // Down-pointing triangle
+    } else if (text === "[hide]") {
+      $(this).html("\u25BC");
+      $(this).closest('.proof_wrapper').addClass('expanded');
+    }
+  });
+
   $("div.proof_heading").click(
     function() {
-      var expand_span = $(this).children('span.expand-proof');
       var proofWrapper = $(this).closest('.proof_wrapper');
       var sbsContainer = $(this).closest('.sbs-container');
 
-      if ($(expand_span).html() == "[hide]") {
-        $(expand_span).html("[show]");
+      // Toggle expanded state (CSS handles chevron rotation)
+      if (proofWrapper.hasClass('expanded')) {
         proofWrapper.removeClass('expanded');
         // Also hide the Lean proof body
         sbsContainer.find('.lean-proof-body').slideUp();
       } else {
-        $(expand_span).html("[hide]");
         proofWrapper.addClass('expanded');
         // Also show the Lean proof body
         sbsContainer.find('.lean-proof-body').slideDown();
