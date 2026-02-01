@@ -500,7 +500,7 @@ The action builds these in dependency order, ensuring each component is availabl
 
 ## Tooling
 
-For build commands, screenshot capture, compliance validation, archive management, and custom rubrics, see the [Archive & Tooling Hub](../archive/README.md).
+For build commands, screenshot capture, compliance validation, archive management, and custom rubrics, see the [Archive & Tooling Hub](../../dev/storage/README.md).
 
 ## Troubleshooting
 
