@@ -335,6 +335,7 @@ html[data-theme="dark"] {
 
 .sbs-lean-column {
   min-width: 0;
+  max-width: 100%;
   overflow-x: auto;
 }
 
