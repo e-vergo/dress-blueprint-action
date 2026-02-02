@@ -780,7 +780,7 @@ html[data-theme="dark"] .note-section h4 {
 
 .kd-lean code {
   font-size: 0.75rem;
-  background: var(--sbs-bg-page);
+  background: transparent;
   padding: 0.25rem;
   border-radius: 3px;
   display: block;
