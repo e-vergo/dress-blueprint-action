@@ -184,27 +184,15 @@
 }
 
 /* ============================================
-   Zebra Striping for Dashboard Lists
-   Alternating background colors for readability
+   Dashboard List Styling
+   Uniform background for clean appearance
    ============================================ */
 
-/* Dashboard list items - base styling for zebra stripes */
 .dashboard-list > li,
 .notes-list > li {
   padding: 0.5rem 0.75rem;
   margin: 0;
   border-radius: 4px;
-}
-
-/* Odd rows get the alternate background */
-.dashboard-list > li:nth-child(odd),
-.notes-list > li:nth-child(odd) {
-  background-color: var(--sbs-bg-page);
-}
-
-/* Even rows get the surface background (white in light, dark in dark mode) */
-.dashboard-list > li:nth-child(even),
-.notes-list > li:nth-child(even) {
   background-color: var(--sbs-bg-surface);
 }
 

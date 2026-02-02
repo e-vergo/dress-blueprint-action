@@ -720,13 +720,8 @@ html[data-theme="dark"] .note-section h4 {
   border-bottom: none;
 }
 
-/* Zebra striping for key declarations */
-.key-declaration-item:nth-child(odd) {
-  background-color: var(--sbs-bg-page);
-  border-radius: 4px;
-}
-
-.key-declaration-item:nth-child(even) {
+/* Key declarations uniform styling */
+.key-declaration-item {
   background-color: var(--sbs-bg-surface);
   border-radius: 4px;
 }
