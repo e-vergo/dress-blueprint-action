@@ -57,8 +57,6 @@ $(document).ready(function() {
   // Mobile menu toggle
   $("#toc-toggle").click(function() {
     $("nav.toc").toggle();
-    // Also toggle chapter panel on mobile
-    $("nav.chapter-panel").toggle();
   });
 
   // Initialize all expand-proof spans with chevron on page load
@@ -107,6 +105,19 @@ $(document).ready(function() {
       var expand_icon = proof.find('svg.expand-proof');
       expand_icon.replaceWith(icon('cross', 'expand-proof'));
     })
+
+  // Blueprint chapter toggle
+  (function() {
+    var $group = $('.sidebar-blueprint-group');
+    if (!$group.length) return;
+    var $toggle = $group.find('.sidebar-blueprint-toggle');
+    if (document.body.hasAttribute('data-blueprint-page')) {
+      $group.addClass('expanded');
+    }
+    $toggle.on('click', function() {
+      $group.toggleClass('expanded');
+    });
+  })();
 
   $("button.modal").click(
     function() {

@@ -111,11 +111,6 @@
   --sbs-check-pass-bg: rgba(25, 135, 84, 0.15);
   --sbs-check-fail-bg: rgba(220, 53, 69, 0.15);
 
-  /* Chapter Panel */
-  --sbs-chapter-panel-bg: #f5f5f5;
-  --sbs-chapter-panel-border: rgba(0, 0, 0, 0.05);
-  --sbs-chapter-active-bg: #e8f0fe;
-
   /* Sidebar Active Item (light mode) - matches content area for tab-like effect */
   --sidebar-active-bg: var(--sbs-bg-surface);
   --sidebar-active-text: #1a1a1a;
@@ -317,10 +312,6 @@ html[data-theme="dark"] {
   --sbs-check-pass-bg: rgba(25, 135, 84, 0.2);
   --sbs-check-fail-bg: rgba(220, 53, 69, 0.2);
 
-  /* Chapter Panel (dark mode) */
-  --sbs-chapter-panel-bg: #252525;
-  --sbs-chapter-panel-border: rgba(255, 255, 255, 0.05);
-  --sbs-chapter-active-bg: rgba(96, 165, 250, 0.15);
 }
 
 /* ---------------------------------------------
@@ -1039,99 +1030,70 @@ html[data-theme="dark"] .hl.lean .docstring code {
 }
 
 /* ---------------------------------------------
-   11. Chapter Panel (separate column for blueprint pages)
+   11. Sidebar Blueprint Chapter Toggle
    --------------------------------------------- */
 
-/* Chapter panel - appears between sidebar and content for blueprint pages */
-.chapter-panel {
-  flex-shrink: 0;
-  width: 200px;
-  background-color: var(--sbs-chapter-panel-bg);
-  border-right: 1px solid var(--sbs-border);
+/* Blueprint chapter toggle */
+.sidebar-blueprint-group {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
-/* Chapter panel header */
-.chapter-panel-header {
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: var(--sbs-text);
-  border-bottom: 1px solid var(--sbs-border);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.sidebar-blueprint-toggle {
+  cursor: pointer;
+  user-select: none;
 }
 
-/* Chapter panel list */
-.chapter-panel-list {
+.sidebar-chevron {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 0.7em;
+  margin-right: 0.2rem;
+}
+
+.sidebar-blueprint-group.expanded .sidebar-chevron {
+  transform: rotate(90deg);
+}
+
+.sidebar-chapter-list {
   list-style: none;
-  margin: 0;
   padding: 0;
-}
-
-.chapter-panel-list li {
   margin: 0;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.25s ease;
 }
 
-/* Chapter panel items */
-.chapter-panel-item {
+.sidebar-blueprint-group.expanded .sidebar-chapter-list {
+  max-height: 50vh;
+}
+
+.sidebar-chapter-item {
   display: block;
-  padding: 0.5rem 1rem;
+  padding: 0.3rem 0.8rem 0.3rem 1.8rem;
   font-size: 0.85rem;
-  color: var(--sbs-text);
+  color: var(--sbs-sidebar-text-secondary);
   text-decoration: none;
-  border-bottom: 1px solid var(--sbs-chapter-panel-border);
-  transition: background-color 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
-.chapter-panel-item:hover {
-  background-color: var(--sbs-chapter-panel-border);
-  color: var(--sbs-text);
+.sidebar-chapter-item:hover {
+  color: var(--sbs-sidebar-text);
 }
 
-/* Active chapter in panel - secondary highlight color */
-.chapter-panel-item.active {
-  background-color: var(--sbs-chapter-active-bg);
-  color: var(--sbs-accent-blue);
+.sidebar-chapter-item.active {
+  color: var(--sidebar-active-text);
   font-weight: 500;
-  border-left: 3px solid var(--sbs-accent-blue);
-  padding-left: calc(1rem - 3px);
+  position: relative;
 }
 
-/* Dark mode chapter panel - uses CSS variables defined in html[data-theme="dark"] */
-html[data-theme="dark"] .chapter-panel {
-  background-color: var(--sbs-chapter-panel-bg);
-  border-right-color: var(--sbs-border);
-}
-
-html[data-theme="dark"] .chapter-panel-header {
-  color: var(--sbs-text);
-  border-bottom-color: var(--sbs-border);
-}
-
-html[data-theme="dark"] .chapter-panel-item {
-  color: var(--sbs-text);
-  border-bottom-color: var(--sbs-chapter-panel-border);
-}
-
-html[data-theme="dark"] .chapter-panel-item:hover {
-  background-color: var(--sbs-chapter-panel-border);
-}
-
-html[data-theme="dark"] .chapter-panel-item.active {
-  background-color: var(--sbs-chapter-active-bg);
-  color: var(--sbs-link);
-  border-left-color: var(--sbs-link);
-}
-
-/* Hide chapter panel on mobile */
-@media (max-width: 1023px) {
-  .chapter-panel {
-    display: none;
-  }
+.sidebar-chapter-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: -0.8rem; right: -1rem;
+  background-color: var(--sidebar-active-bg);
+  z-index: -1;
 }
 
 /* ---------------------------------------------
