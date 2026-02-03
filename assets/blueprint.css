@@ -1262,6 +1262,130 @@ pre.lean-code {
 
 /* Note: Full-page graph, legend, modals, and SBS container in modal styles moved to dep_graph.css */
 
+/* ========== Paper-Like Typography for TeX Blueprint Pages ========== */
+/* Issue #49: Visual differentiation between TeX and Verso blueprint pages.
+   TeX pages should feel like reading a typeset paper. */
+
+/* Base typography for chapter pages */
+.chapter-page {
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  line-height: 1.7;
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+/* Serif headings for chapter pages */
+.chapter-page h1,
+.chapter-page h2,
+.chapter-page h3,
+.chapter-page h4,
+.chapter-page h5,
+.chapter-page h6 {
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  text-align: left; /* Headings stay left-aligned even with justified body */
+}
+
+/* Narrower prose column for paper-like feel */
+.chapter-page > p,
+.chapter-page > div.displaymath,
+.chapter-page > ul,
+.chapter-page > ol,
+.chapter-page > blockquote {
+  max-width: 80ch; /* Narrower than default 100ch for paper feel */
+}
+
+/* Also narrow section content */
+.chapter-page section.section > p,
+.chapter-page section.section > div.displaymath,
+.chapter-page section.section > ul,
+.chapter-page section.section > ol,
+.chapter-page section.section > blockquote {
+  max-width: 80ch;
+}
+
+/* More generous paragraph spacing */
+.chapter-page p {
+  margin: 1rem 0;
+}
+
+/* Theorem environments - italic statements (math paper convention) */
+.chapter-page div[class$=_thmcontent] {
+  font-style: italic;
+}
+
+/* Definition bodies should stay roman (upright) */
+.chapter-page .definition_thmcontent,
+.chapter-page .notation_thmcontent,
+.chapter-page .remark_thmcontent,
+.chapter-page .example_thmcontent {
+  font-style: normal;
+}
+
+/* Section dividers - lighter, more paper-like */
+.chapter-page .section {
+  border-top-color: var(--sbs-border);
+  border-top-style: solid;
+  border-top-width: 0.5px;
+}
+
+/* ========== Simplified Proof Toggle for TeX Pages ========== */
+/* Plain [show]/[hide] text instead of modern button style */
+
+.chapter-page .proof_heading {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  font-weight: normal;
+  font-style: italic;
+  display: inline;
+  gap: 0;
+}
+
+.chapter-page .proof_heading:hover {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.chapter-page .proof_heading:active {
+  background: none;
+}
+
+/* Hide the chevron, replace with [show]/[hide] text */
+.chapter-page .expand-proof {
+  font-size: 0;
+  color: var(--sbs-text);
+  transform: none !important; /* Never rotate text */
+  display: inline;
+}
+
+.chapter-page .expand-proof::before {
+  content: '[show]';
+  font-size: 0.85rem;
+  color: var(--sbs-text);
+  text-decoration: underline;
+  font-style: normal;
+  font-weight: normal;
+}
+
+.chapter-page .proof_wrapper.expanded .expand-proof::before {
+  content: '[hide]';
+}
+
+/* Proof caption styling */
+.chapter-page .proof_caption {
+  font-style: italic;
+  margin-right: 0.25rem;
+}
+
+/* Dark mode for paper-like chapter styles */
+html[data-theme="dark"] .chapter-page .expand-proof::before {
+  color: var(--sbs-text);
+}
+
 /* ========== Wrapper Layout with Chapter Panel ========== */
 /* When chapter panel is present, wrapper contains: sidebar + chapter-panel + content */
 div.wrapper.with-chapter-panel {
