@@ -913,7 +913,7 @@ html[data-theme="dark"] .hl.lean .docstring code {
 }
 
 /* Active sidebar item (currently viewing) - uses pseudo-element for full-width highlight */
-.sidebar-item.active {
+.toc .sidebar-item.active {
   color: var(--sidebar-active-text);
   font-weight: 400;  /* Remove bold - was 600 */
   position: relative;
@@ -923,7 +923,7 @@ html[data-theme="dark"] .hl.lean .docstring code {
 }
 
 /* Pseudo-element creates the full-width highlight background */
-.sidebar-item.active::before {
+.toc .sidebar-item.active::before {
   content: '';
   position: absolute;
   top: 0;
@@ -963,6 +963,71 @@ html[data-theme="dark"] .hl.lean .docstring code {
 /* First section header doesn't need top margin */
 .nav-separator + .nav-section-header {
   margin-top: 0;
+}
+
+/* Top spacer for breathing room in sidebar */
+.sidebar-top-spacer {
+  height: 0.5rem;
+  pointer-events: none;
+  list-style: none;
+}
+
+/* Paper inline links row */
+.sidebar-doc-row {
+  display: flex;
+  align-items: center;
+  padding: 0.35rem 0.8rem;
+  gap: 0.35rem;
+  list-style: none;
+}
+
+.sidebar-item-label {
+  color: #fff;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.sidebar-doc-link {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.sidebar-doc-link:hover {
+  color: #fff;
+}
+
+.sidebar-doc-link.active {
+  color: var(--sidebar-active-text);
+  font-weight: 500;
+}
+
+.sidebar-doc-link.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* External links row (bottom of sidebar) */
+.sidebar-external-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-external-links a {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.sidebar-external-links a:hover {
+  color: #fff;
 }
 
 /* ---------------------------------------------
