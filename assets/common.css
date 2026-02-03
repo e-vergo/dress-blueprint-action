@@ -1096,6 +1096,13 @@ html[data-theme="dark"] .hl.lean .docstring code {
   z-index: -1;
 }
 
+/* On mobile, auto-expand chapters when sidebar is toggled visible */
+@media (max-width: 1023px) {
+  .sidebar-blueprint-group.expanded .sidebar-chapter-list {
+    max-height: none;
+  }
+}
+
 /* ---------------------------------------------
    12. PDF Page Styles (fullpage embed)
    --------------------------------------------- */
