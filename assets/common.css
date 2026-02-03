@@ -116,8 +116,8 @@
   --sbs-chapter-panel-border: rgba(0, 0, 0, 0.05);
   --sbs-chapter-active-bg: #e8f0fe;
 
-  /* Sidebar Active Item (light mode) */
-  --sidebar-active-bg: #ffffff;
+  /* Sidebar Active Item (light mode) - matches content area for tab-like effect */
+  --sidebar-active-bg: var(--sbs-bg-surface);
   --sidebar-active-text: #1a1a1a;
 }
 
@@ -301,8 +301,8 @@ html[data-theme="dark"] {
   --sbs-badge-progress-text: #fde68a;
   --sbs-badge-progress-border: #d97706;
 
-  /* Sidebar Active Item (dark mode) */
-  --sidebar-active-bg: #2a2a2a;
+  /* Sidebar Active Item (dark mode) - matches content area for tab-like effect */
+  --sidebar-active-bg: var(--sbs-bg-surface);
   --sidebar-active-text: #ffffff;
 
   /* Check Status Colors (dark mode) */
