@@ -92,7 +92,9 @@ $(document).ready(function() {
       } else {
         proofWrapper.addClass('expanded');
         // Also show the Lean proof body
-        sbsContainer.find('.lean-proof-body').slideDown();
+        sbsContainer.find('.lean-proof-body').slideDown(300, function() {
+            $(this).css('display', 'inline');
+        });
       };
       $(this).siblings("div.proof_content").slideToggle()
     })
