@@ -111,6 +111,9 @@
   --sbs-check-pass-bg: rgba(25, 135, 84, 0.15);
   --sbs-check-fail-bg: rgba(220, 53, 69, 0.15);
 
+  /* Zebra Striping (alternating row backgrounds) */
+  --sbs-zebra-even: #ebebeb;
+
   /* Sidebar Active Item (light mode) - matches content area for tab-like effect */
   --sidebar-active-bg: var(--sbs-bg-surface);
   --sidebar-active-text: #1a1a1a;
@@ -303,6 +306,9 @@ html[data-theme="dark"] {
   --sbs-badge-progress-bg: #451a03;
   --sbs-badge-progress-text: #fde68a;
   --sbs-badge-progress-border: #d97706;
+
+  /* Zebra Striping (dark mode) */
+  --sbs-zebra-even: #252525;
 
   /* Sidebar Active Item (dark mode) - matches content area for tab-like effect */
   --sidebar-active-bg: var(--sbs-bg-surface);

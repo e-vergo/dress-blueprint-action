@@ -233,9 +233,12 @@ a.github_link {
   margin-bottom: 3rem;
 }
 
-/* Zebra striping for side-by-side containers */
-.sbs-container:nth-child(even) {
-  background: var(--sbs-bg-page);
+/* Zebra striping for side-by-side containers.
+   Uses :nth-child(even of .sbs-container) to reliably alternate among .sbs-container
+   siblings regardless of intervening non-container elements (h2, p, etc.).
+   Supported in Chrome 111+, Safari 15.4+, Firefox 113+. */
+.sbs-container:nth-child(even of .sbs-container) {
+  background: var(--sbs-zebra-even);
 }
 
 /* Note: .sbs-latex-column sizing is defined in common.css */
