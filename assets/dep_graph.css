@@ -57,12 +57,25 @@
   flex: 1;
 }
 
+/* Separator between zoom and pan button groups */
+.dep-graph-toolbar-sep {
+  width: 1px;
+  background: var(--bp-border);
+  margin: 0 0.125rem;
+}
+
+/* Pan buttons */
+.dep-graph-toolbar button.pan-btn {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.375rem;
+}
+
 /* ========== Graph Viewport (pan/zoom area) ========== */
 .dep-graph-viewport {
   width: 100%;
   min-height: 200px;
   max-height: 600px;
-  overflow: auto;
+  overflow: hidden;
   cursor: grab;
   background: var(--sbs-graph-bg);
   user-select: none;

@@ -488,6 +488,20 @@ html[data-theme="dark"] .proof_heading:hover {
   font-style: italic;
 }
 
+/* SBS container expand/collapse toggle indicator */
+.sbs-toggle-indicator {
+  display: inline-block;
+  font-size: 0.65rem;
+  margin-left: 0.5rem;
+  color: var(--sbs-text-muted);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.sbs-collapsed .sbs-toggle-indicator {
+  transform: rotate(-90deg);
+}
+
 /* Message spans */
 .lean-span, .hl.lean .has-info { }
 .lean-error, .hl.lean .has-info.error { text-decoration: wavy underline #c82829; }

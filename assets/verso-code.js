@@ -360,8 +360,49 @@ document.addEventListener('DOMContentLoaded', function() {
         document.removeEventListener('dragstart', preventSelection);
     });
 
-    // Initial fit
-    fitToWindow();
+    // Pan step size (pixels)
+    var panStep = 80;
+
+    // Pan buttons
+    var panLeft = document.getElementById('graph-pan-left');
+    var panRight = document.getElementById('graph-pan-right');
+    var panUp = document.getElementById('graph-pan-up');
+    var panDown = document.getElementById('graph-pan-down');
+
+    if (panLeft) {
+        panLeft.addEventListener('click', function() {
+            translateX += panStep;
+            updateTransform();
+        });
+    }
+    if (panRight) {
+        panRight.addEventListener('click', function() {
+            translateX -= panStep;
+            updateTransform();
+        });
+    }
+    if (panUp) {
+        panUp.addEventListener('click', function() {
+            translateY += panStep;
+            updateTransform();
+        });
+    }
+    if (panDown) {
+        panDown.addEventListener('click', function() {
+            translateY -= panStep;
+            updateTransform();
+        });
+    }
+
+    // Initial fit - use requestAnimationFrame to ensure SVG is rendered and getBBox is accurate
+    requestAnimationFrame(function() {
+        fitToWindow();
+    });
+
+    // Re-fit after all resources (fonts, images) are loaded for accurate getBBox
+    window.addEventListener('load', function() {
+        fitToWindow();
+    });
 });
 
 // Initialize MathJax and Tippy.js when a modal is opened
