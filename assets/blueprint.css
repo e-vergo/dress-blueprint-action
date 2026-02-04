@@ -234,10 +234,10 @@ a.github_link {
 }
 
 /* Zebra striping for side-by-side containers.
-   Uses :nth-child(even of .sbs-container) to reliably alternate among .sbs-container
-   siblings regardless of intervening non-container elements (h2, p, etc.).
+   Each .sbs-container lives inside its own <section>, so we target the parent
+   section using :has() + :nth-child(even of ...) CSS4 selectors.
    Supported in Chrome 111+, Safari 15.4+, Firefox 113+. */
-.sbs-container:nth-child(even of .sbs-container) {
+section:has(.sbs-container):nth-child(even of section:has(.sbs-container)) .sbs-container {
   background: var(--sbs-zebra-even);
 }
 
