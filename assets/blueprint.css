@@ -233,6 +233,11 @@ a.github_link {
   margin-bottom: 3rem;
 }
 
+/* Zebra striping for side-by-side containers */
+.sbs-container:nth-child(even) {
+  background: var(--sbs-bg-page);
+}
+
 /* Note: .sbs-latex-column sizing is defined in common.css */
 .sbs-latex-column {
   overflow-wrap: break-word;
