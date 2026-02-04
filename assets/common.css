@@ -314,20 +314,6 @@ html[data-theme="dark"] {
 
 }
 
-/* System preference fallback -- applies before JS sets data-theme attribute */
-@media (prefers-color-scheme: dark) {
-  html:not([data-theme]) {
-    --sbs-bg-page: #252525;
-    --sbs-bg-surface: #1a1a1a;
-    --sbs-bg-card: #2d2d2d;
-    --sbs-text: #f0f0f0;
-    --sbs-text-muted: #cccccc;
-    --sbs-border: #cccccc;
-    --sbs-link: #60a5fa;
-    --sbs-link-hover: #93c5fd;
-  }
-}
-
 /* ---------------------------------------------
    1. Side-by-Side Layout
    --------------------------------------------- */
