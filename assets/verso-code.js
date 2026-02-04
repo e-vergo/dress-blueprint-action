@@ -81,7 +81,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     const defaultTippyProps = {
-        maxWidth: "none",
+        maxWidth: 600,
         appendTo: () => document.body,
         interactive: true,
         delay: [100, null],
@@ -389,7 +389,7 @@ function onModalOpen(modalElement) {
     if (typeof tippy !== 'undefined') {
         // Simple tippy props for modal elements (self-contained, no external dependencies)
         var modalTippyProps = {
-            maxWidth: "none",
+            maxWidth: 600,
             appendTo: function() { return document.body; },
             interactive: true,
             delay: [100, null],

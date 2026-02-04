@@ -334,12 +334,14 @@ html[data-theme="dark"] {
 
 .sbs-container {
   display: grid;
-  grid-template-columns: 100ch 100ch;
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
   align-items: start;
   background: var(--sbs-bg-surface);
   padding: 1rem;
   border-radius: 4px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .sbs-latex-column {
@@ -350,11 +352,14 @@ html[data-theme="dark"] {
   min-width: 0;
   max-width: 100%;
   overflow-x: auto;
+  overflow-wrap: break-word;
 }
 
 .sbs-lean-column pre.lean-code {
   margin: 0;
   background: transparent;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 /* ---------------------------------------------
@@ -552,6 +557,12 @@ html[data-theme="dark"] .proof_heading:hover {
 .tippy-box {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  max-width: 600px !important;
+}
+
+.tippy-box .tippy-content {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .tippy-box[data-theme~='lean'] {

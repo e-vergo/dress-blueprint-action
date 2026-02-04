@@ -37,8 +37,8 @@ div.content-wrapper{max-width:1800px}
 @media (min-width:1024px){div.content-wrapper{margin-left:auto;margin-right:auto}}
 div.content{flex-grow:1;display:flex;flex-direction:column;overflow:auto;padding:.5rem;margin-bottom:2.5rem}
 @media (min-width:1024px){div.content{padding:1rem;margin-bottom:0}}
-/* Blueprint content area sizing - matches paper page (200ch = 100ch + 100ch doublet) */
-div.content{width:calc(200ch + 5rem);max-width:95%;margin-left:auto;margin-right:auto;padding:1.5rem 2rem}
+/* Blueprint content area sizing - fluid width, constrained by viewport */
+div.content{width:100%;max-width:min(calc(200ch + 5rem), 95%);margin-left:auto;margin-right:auto;padding:1.5rem 2rem;box-sizing:border-box}
 div.centered{display:flex;flex-direction:column;flex-wrap:wrap;align-items:center;justify-content:space-around;min-width:100%;margin:0 auto}
 div.flushleft,div.raggedright{display:flex;justify-content:flex-start}
 div.flushright,div.raggedbottom,div.raggedleft{display:flex;justify-content:flex-end}
@@ -59,7 +59,7 @@ p{margin:.5rem 0}
 b,strong{font-weight:700}
 dfn{font-style:italic}
 code,kbd,pre,samp{font-family:monospace,serif;font-size:1rem}
-pre{white-space:pre-wrap}
+pre{white-space:pre-wrap;max-width:100%;overflow-x:auto}
 q{quotes:""" """ "'" "'"}
 small{font-size:80%}
 sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
@@ -254,6 +254,8 @@ a.github_link {
   font-size: 0.85rem;
   line-height: 1.5;
   white-space: pre;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .sbs-lean-column pre.lean-code code {
@@ -729,7 +731,10 @@ html[data-theme="dark"] .note-section h4 {
   margin-top: 0.5rem;
 }
 
-.key-declaration-link {
+.key-declaration-link,
+.key-declaration-link:visited,
+.key-declaration-link:hover,
+.key-declaration-link:active {
   flex: 1;
   text-decoration: none;
   color: inherit;
