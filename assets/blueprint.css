@@ -603,7 +603,8 @@ nav.toc li.active a {
   line-height: 1.4;
 }
 
-.dashboard-list a {
+.dashboard-list a,
+.dashboard-list a:visited {
   color: var(--sbs-text-muted);
   text-decoration: none;
 }
@@ -611,6 +612,7 @@ nav.toc li.active a {
 .dashboard-list a:hover {
   color: var(--sbs-text);
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* Message and note text styling */
@@ -740,7 +742,8 @@ html[data-theme="dark"] .note-section h4 {
   color: inherit;
 }
 
-.key-declaration-title-link {
+.key-declaration-title-link,
+.key-declaration-title-link:visited {
   color: var(--sbs-link);
   text-decoration: none;
   font-weight: 600;
@@ -751,6 +754,7 @@ html[data-theme="dark"] .note-section h4 {
 .key-declaration-title-link:hover {
   color: var(--sbs-link-hover);
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .key-declaration-preview {
