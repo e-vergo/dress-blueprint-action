@@ -46,10 +46,10 @@ This repository provides two things:
 | Component | Files | Lines | Purpose |
 |-----------|-------|-------|---------|
 | **GitHub Action** | `action.yml` | 432 | 14-step composite action: builds entire toolchain, generates site |
-| **CSS** | 4 files | 3,196 | Design system, blueprint layout, paper styling, dependency graph |
-| **JavaScript** | 2 files | 609 | Tooltips, pan/zoom, dark mode, proof synchronization |
+| **CSS** | 4 files | 3,332 | Design system, blueprint layout, paper styling, dependency graph |
+| **JavaScript** | 2 files | 620 | Tooltips, pan/zoom, dark mode, proof synchronization, chapter toggle |
 
-**Total frontend assets: 3,805 lines** across 6 files.
+**Total frontend assets: 3,952 lines** across 6 files.
 
 The action handles the complete build pipeline: checking out toolchain repos, building SubVerso -> LeanArchitect -> Dress -> Runway, generating artifacts, and deploying to GitHub Pages.
 
@@ -186,8 +186,8 @@ Four files in `assets/` organize styles by concern. All files depend on `common.
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| `common.css` | 1,104 | Design system: CSS variables, status dots, Lean syntax highlighting, Tippy tooltips, modals, dark mode toggle, rainbow brackets |
-| `blueprint.css` | 1,283 | Blueprint pages: plasTeX base styles, sidebar, chapter layout, dashboard grid, side-by-side displays, zebra striping |
+| `common.css` | 1,135 | Design system: CSS variables, status dots, Lean syntax highlighting, Tippy tooltips, modals, dark mode toggle, rainbow brackets |
+| `blueprint.css` | 1,388 | Blueprint pages: plasTeX base styles, sidebar with collapsible chapter list, dashboard grid, side-by-side displays, zebra striping |
 | `paper.css` | 271 | Paper pages: ar5iv-style academic layout, verification badges, print styles |
 | `dep_graph.css` | 538 | Dependency graph: pan/zoom viewport, toolbar, legend, SVG node styling |
 
@@ -285,7 +285,7 @@ Two files in `assets/` provide client-side interactivity.
 | File | Lines | Purpose |
 |------|-------|---------|
 | `verso-code.js` | 490 | Token binding, Tippy.js tooltips, proof sync, pan/zoom, modal handling |
-| `plastex.js` | 119 | Theme toggle, TOC toggle, LaTeX proof expand/collapse |
+| `plastex.js` | 130 | Theme toggle, TOC toggle, LaTeX proof expand/collapse, chapter list toggle |
 
 **Total JavaScript: 609 lines.**
 
@@ -325,7 +325,7 @@ The dependency graph uses pointer events for reliable cross-browser panning:
 
 The `fitToWindow()` function calculates content bounds using `getBBox()` and adjusts the transform to center the graph. This requires the SVG viewBox origin to be (0,0), which is ensured by coordinate normalization in the Sugiyama layout algorithm.
 
-### plastex.js (119 lines)
+### plastex.js (130 lines)
 
 UI controls and theme management. Depends on jQuery.
 
@@ -335,6 +335,7 @@ UI controls and theme management. Depends on jQuery.
 | Theme toggle click | Attached to `.theme-toggle` element |
 | TOC toggle | Mobile sidebar show/hide via `#toc-toggle` |
 | Proof toggle | Expands/collapses LaTeX proofs with jQuery animation, syncs Lean proof visibility |
+| Chapter list toggle | Collapsible chapter list in sidebar; auto-expands on blueprint pages via `data-blueprint-page` body attribute |
 
 The proof toggle synchronization ensures that when a LaTeX proof section is expanded/collapsed, the corresponding Lean proof body follows suit, maintaining visual correspondence in side-by-side displays.
 
