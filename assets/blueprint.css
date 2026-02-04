@@ -114,7 +114,7 @@ footer#footnotes h1{font-size:1.5rem;margin:0;margin-bottom:.5rem;color:var(--sb
 a.footnote{text-decoration:none}
 a.footnote sup:after{content:"]"}
 a.footnote sup:before{content:"["}
-body>header{background:linear-gradient(180deg,var(--sbs-accent) 0,var(--sbs-accent));color:#fff;display:flex;align-items:center;padding:.5rem}
+body>header{display:none;background:linear-gradient(180deg,var(--sbs-accent) 0,var(--sbs-accent));color:#fff;align-items:center;padding:.5rem}
 #toc-toggle{font-size:1.75rem;margin-right:1rem;cursor:pointer;color:#fff;display:none}
 @media (max-width:1023px){#toc-toggle{display:inline-block}}
 h1#doc_title{color:#fff;font-size:1.5rem;margin:auto}
