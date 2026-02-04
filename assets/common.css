@@ -1005,8 +1005,9 @@ html[data-theme="dark"] .hl.lean .docstring code {
 }
 
 /* Paper inline links row */
-.sidebar-doc-row {
+.toc ul li.sidebar-doc-row {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   padding: 0.35rem 0.8rem;
   gap: 0.35rem;
