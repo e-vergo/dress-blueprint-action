@@ -72,12 +72,15 @@ $(document).ready(function() {
       var sbsContainer = $(this).closest('.sbs-container');
 
       // Toggle expanded state (CSS handles chevron rotation)
-      proofWrapper.toggleClass('expanded');
-
-      // Toggle Lean proof body with same animation as LaTeX proof
-      sbsContainer.find('.lean-proof-body').slideToggle();
-
-      // Toggle LaTeX proof content
+      if (proofWrapper.hasClass('expanded')) {
+        proofWrapper.removeClass('expanded');
+        // Also hide the Lean proof body
+        sbsContainer.find('.lean-proof-body').slideUp();
+      } else {
+        proofWrapper.addClass('expanded');
+        // Also show the Lean proof body
+        sbsContainer.find('.lean-proof-body').slideDown();
+      };
       $(this).siblings("div.proof_content").slideToggle()
     })
 

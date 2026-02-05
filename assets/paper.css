@@ -269,3 +269,60 @@
     display: none;
   }
 }
+
+/* ========== Simplified Proof Toggle for Paper Pages ========== */
+/* Match blueprint.css styling - plain [show]/[hide] text instead of modern button style */
+
+.ar5iv-paper .proof_heading {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  font-weight: normal;
+  font-style: italic;
+  display: inline;
+  gap: 0;
+}
+
+.ar5iv-paper .proof_heading:hover {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.ar5iv-paper .proof_heading:active {
+  background: none;
+}
+
+/* Hide the chevron, replace with [show]/[hide] text */
+.ar5iv-paper .expand-proof {
+  font-size: 0;
+  color: var(--sbs-text);
+  transform: none !important; /* Never rotate text */
+  display: inline;
+}
+
+.ar5iv-paper .expand-proof::before {
+  content: '[show]';
+  font-size: 0.85rem;
+  color: var(--sbs-text);
+  text-decoration: underline;
+  font-style: normal;
+  font-weight: normal;
+}
+
+.ar5iv-paper .proof_wrapper.expanded .expand-proof::before {
+  content: '[hide]';
+}
+
+/* Proof caption styling */
+.ar5iv-paper .proof_caption {
+  font-style: italic;
+  margin-right: 0.25rem;
+}
+
+/* Dark mode */
+html[data-theme="dark"] .ar5iv-paper .expand-proof::before {
+  color: var(--sbs-text);
+}
