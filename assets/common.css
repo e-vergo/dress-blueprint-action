@@ -115,7 +115,7 @@
   --sbs-zebra-even: #ebebeb;
 
   /* Sidebar Active Item (light mode) - matches content area for tab-like effect */
-  --sidebar-active-bg: var(--sbs-bg-surface);
+  --sidebar-active-bg: var(--sbs-bg-page);
   --sidebar-active-text: #1a1a1a;
 
   /* Sidebar Text Colors (on accent background) */
@@ -311,7 +311,7 @@ html[data-theme="dark"] {
   --sbs-zebra-even: #252525;
 
   /* Sidebar Active Item (dark mode) - matches content area for tab-like effect */
-  --sidebar-active-bg: var(--sbs-bg-surface);
+  --sidebar-active-bg: var(--sbs-bg-page);
   --sidebar-active-text: #ffffff;
 
   /* Check Status Colors (dark mode) */
@@ -1104,11 +1104,14 @@ html[data-theme="dark"] .hl.lean .docstring code {
 
 .sidebar-chapter-item {
   display: block;
-  padding: 0.3rem 0.8rem 0.3rem 1.8rem;
+  padding: 0.35rem 0.8rem 0.35rem 1.8rem;
   font-size: 0.85rem;
   color: var(--sbs-sidebar-text-secondary);
   text-decoration: none;
   transition: color 0.15s ease, background-color 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar-chapter-item:hover {
