@@ -201,9 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var isExpanded = proofWrapper && proofWrapper.classList.contains('expanded');
                 // Use jQuery slideUp/slideDown to match LaTeX proof animation
                 if (isExpanded) {
-                    $(leanProofBody).slideDown(300, function() {
-                        $(this).css('display', 'inline');
-                    });
+                    $(leanProofBody).slideDown(300);
                 } else {
                     $(leanProofBody).slideUp(300);
                 }
