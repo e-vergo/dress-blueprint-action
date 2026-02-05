@@ -1079,11 +1079,18 @@ html[data-theme="dark"] .hl.lean .docstring code {
   font-size: 0.875rem;
   display: block;
   white-space: nowrap;
+  padding: 0.35rem 0.8rem;
+  padding-left: 0.8rem !important;
+  padding-right: 0.8rem !important;
 }
 
-/* Override nested padding for Blueprint toggle */
-.sub-toc-0 .sidebar-blueprint-toggle {
-  padding: 0.35rem 0.8rem !important;
+/* Ensure no nested overrides */
+.sub-toc-0 .sidebar-blueprint-toggle,
+.sub-toc-1 .sidebar-blueprint-toggle,
+.sub-toc-2 .sidebar-blueprint-toggle,
+.sub-toc-3 .sidebar-blueprint-toggle,
+.sub-toc-4 .sidebar-blueprint-toggle {
+  padding-left: 0.8rem !important;
 }
 
 .sidebar-chevron {
