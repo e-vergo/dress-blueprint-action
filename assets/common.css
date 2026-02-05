@@ -1076,6 +1076,10 @@ html[data-theme="dark"] .hl.lean .docstring code {
 .sidebar-blueprint-toggle {
   cursor: pointer;
   user-select: none;
+  font-size: 0.875rem;
+  padding: 0.35rem 0.8rem;
+  display: block;
+  white-space: nowrap;
 }
 
 .sidebar-chevron {
