@@ -62,7 +62,7 @@ $(document).ready(function() {
       var proofWrapper = $(this).closest('.proof_wrapper');
       proofWrapper.addClass('expanded');
       // Also show the Lean proof body for initially-expanded proofs
-      proofWrapper.closest('.sbs-container').find('.lean-proof-body').addClass('show');
+      proofWrapper.closest('.sbs-container').find('.lean-proof-body').show();
     }
   });
 
@@ -72,15 +72,12 @@ $(document).ready(function() {
       var sbsContainer = $(this).closest('.sbs-container');
 
       // Toggle expanded state (CSS handles chevron rotation)
-      if (proofWrapper.hasClass('expanded')) {
-        proofWrapper.removeClass('expanded');
-        // Also hide the Lean proof body (CSS transition handles animation)
-        sbsContainer.find('.lean-proof-body').removeClass('show');
-      } else {
-        proofWrapper.addClass('expanded');
-        // Also show the Lean proof body (CSS transition handles animation)
-        sbsContainer.find('.lean-proof-body').addClass('show');
-      };
+      proofWrapper.toggleClass('expanded');
+
+      // Toggle Lean proof body with same animation as LaTeX proof
+      sbsContainer.find('.lean-proof-body').slideToggle();
+
+      // Toggle LaTeX proof content
       $(this).siblings("div.proof_content").slideToggle()
     })
 

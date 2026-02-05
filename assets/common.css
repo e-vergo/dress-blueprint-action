@@ -430,16 +430,9 @@ html[data-theme="dark"] .proof_heading:hover {
 }
 
 /* Lean proof body - synced with LaTeX proof toggle via JavaScript (plastex.js)
-   Uses CSS transitions for smooth animation without jQuery layout fighting */
+   Uses slideToggle() like LaTeX proof_content */
 .lean-proof-body {
-  display: block;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
-}
-
-.lean-proof-body.show {
-  max-height: 2000px;
+  display: none;
 }
 
 
