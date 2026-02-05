@@ -1105,13 +1105,11 @@ html[data-theme="dark"] .hl.lean .docstring code {
 .sidebar-chapter-item {
   display: block;
   padding: 0.35rem 0.8rem 0.35rem 1.8rem;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--sbs-sidebar-text-secondary);
   text-decoration: none;
   transition: color 0.15s ease, background-color 0.15s ease;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .sidebar-chapter-item:hover {
