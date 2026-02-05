@@ -1071,6 +1071,7 @@ html[data-theme="dark"] .hl.lean .docstring code {
 .sidebar-blueprint-group {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
 }
 
 .sidebar-blueprint-toggle {
