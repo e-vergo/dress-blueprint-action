@@ -1077,9 +1077,13 @@ html[data-theme="dark"] .hl.lean .docstring code {
   cursor: pointer;
   user-select: none;
   font-size: 0.875rem;
-  padding: 0.35rem 0.8rem !important;
   display: block;
   white-space: nowrap;
+}
+
+/* Override nested padding for Blueprint toggle */
+.sub-toc-0 .sidebar-blueprint-toggle {
+  padding: 0.35rem 0.8rem !important;
 }
 
 .sidebar-chevron {
