@@ -59,7 +59,10 @@ $(document).ready(function() {
       $(this).html("\u25BC"); // Down-pointing triangle
     } else if (text === "[hide]") {
       $(this).html("\u25BC");
-      $(this).closest('.proof_wrapper').addClass('expanded');
+      var proofWrapper = $(this).closest('.proof_wrapper');
+      proofWrapper.addClass('expanded');
+      // Also show the Lean proof body for initially-expanded proofs
+      proofWrapper.closest('.sbs-container').find('.lean-proof-body').addClass('show');
     }
   });
 
@@ -71,14 +74,12 @@ $(document).ready(function() {
       // Toggle expanded state (CSS handles chevron rotation)
       if (proofWrapper.hasClass('expanded')) {
         proofWrapper.removeClass('expanded');
-        // Also hide the Lean proof body
-        sbsContainer.find('.lean-proof-body').slideUp();
+        // Also hide the Lean proof body (CSS transition handles animation)
+        sbsContainer.find('.lean-proof-body').removeClass('show');
       } else {
         proofWrapper.addClass('expanded');
-        // Also show the Lean proof body
-        sbsContainer.find('.lean-proof-body').slideDown(300, function() {
-            $(this).css('display', 'inline');
-        });
+        // Also show the Lean proof body (CSS transition handles animation)
+        sbsContainer.find('.lean-proof-body').addClass('show');
       };
       $(this).siblings("div.proof_content").slideToggle()
     })
