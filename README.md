@@ -5,7 +5,7 @@
 
 > **Prototype Status**: Alpha software with known bugs and incomplete features. Not yet production-ready.
 
-GitHub Action and frontend assets for the [Side-by-Side Blueprint](https://github.com/e-vergo/Side-By-Side-Blueprint) toolchain. Builds Lean 4 formalization projects into interactive documentation with side-by-side LaTeX statements and Lean proofs.
+GitHub Action and frontend assets for the [Side-by-Side Blueprint](https://github.com/e-vergo/SLS-Strange-Loop-Station) toolchain. Builds Lean 4 formalization projects into interactive documentation with side-by-side LaTeX statements and Lean proofs.
 
 ## Table of Contents
 
