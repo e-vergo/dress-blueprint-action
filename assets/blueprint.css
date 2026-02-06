@@ -257,7 +257,7 @@ section:has(.sbs-container):nth-child(even of section:has(.sbs-container)) .sbs-
 
 .sbs-lean-column pre.lean-code {
   margin: 0;
-  padding-top: 0.35rem;
+  padding-top: 1.5rem;
   background: transparent;
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 0.85rem;

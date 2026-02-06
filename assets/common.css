@@ -433,7 +433,6 @@ html[data-theme="dark"] .proof_heading:hover {
    Uses slideToggle() like LaTeX proof_content */
 .lean-proof-body {
   display: none;
-  margin-top: 0.25rem;
 }
 
 
