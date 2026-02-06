@@ -115,40 +115,6 @@ $(document).ready(function() {
     }
   });
 
-  // SBS container expand/collapse toggle
-  // Makes theorem/definition headers clickable to show/hide the Lean column
-  $(".sbs-container").each(function() {
-    var $container = $(this);
-    var $heading = $container.find("div[class$='_thmheading']").first();
-    var $leanCol = $container.find(".sbs-lean-column").first();
-
-    if (!$heading.length || !$leanCol.length) return;
-
-    // Add toggle indicator to the heading's thm_header_extras
-    var $extras = $heading.find(".thm_header_extras").first();
-    if ($extras.length) {
-      $extras.append('<span class="sbs-toggle-indicator" title="Toggle Lean code">&#x25BC;</span>');
-    }
-
-    // Start expanded
-    $container.addClass('sbs-expanded');
-
-    // Make heading clickable to toggle Lean column
-    $heading.css('cursor', 'pointer');
-    $heading.on('click', function(e) {
-      // Don't toggle if clicking a link
-      if ($(e.target).is('a') || $(e.target).closest('a').length) return;
-
-      if ($container.hasClass('sbs-expanded')) {
-        $container.removeClass('sbs-expanded').addClass('sbs-collapsed');
-        $leanCol.slideUp(200);
-      } else {
-        $container.removeClass('sbs-collapsed').addClass('sbs-expanded');
-        $leanCol.slideDown(200);
-      }
-    });
-  });
-
   // Blueprint chapter toggle
   (function() {
     var $group = $('.sidebar-blueprint-group');

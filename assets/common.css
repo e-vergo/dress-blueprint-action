@@ -410,7 +410,7 @@ html[data-theme="dark"] {
 
 .proof_content {
   display: none;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   padding-left: 1rem;
 }
 
@@ -433,6 +433,7 @@ html[data-theme="dark"] .proof_heading:hover {
    Uses slideToggle() like LaTeX proof_content */
 .lean-proof-body {
   display: none;
+  margin-top: 0.25rem;
 }
 
 
@@ -478,20 +479,6 @@ html[data-theme="dark"] .proof_heading:hover {
 .hl.lean .line-comment {
   color: #6a9955;
   font-style: italic;
-}
-
-/* SBS container expand/collapse toggle indicator */
-.sbs-toggle-indicator {
-  display: inline-block;
-  font-size: 0.65rem;
-  margin-left: 0.5rem;
-  color: var(--sbs-text-muted);
-  transition: transform 0.2s ease;
-  cursor: pointer;
-}
-
-.sbs-collapsed .sbs-toggle-indicator {
-  transform: rotate(-90deg);
 }
 
 /* Message spans */
