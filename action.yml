@@ -126,21 +126,24 @@ runs:
         sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra texlive-science
 
     # ========================================
-    # STEP 6: Fetch mathlib cache from server
+    # CACHE LAYER 1: Toolchain builds
     # ========================================
-    - name: Fetch mathlib cache
-      shell: bash
-      working-directory: ${{ inputs.project-directory }}
-      run: |
-        echo "Fetching mathlib cache from server..."
-        lake exe cache get || echo "::warning::Server cache unavailable, will build from source"
-        OLEAN_COUNT=$(find .lake/packages/mathlib -name "*.olean" 2>/dev/null | wc -l)
-        echo "Found $OLEAN_COUNT oleans from mathlib cache"
+    - name: Cache toolchain builds
+      id: toolchain-cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ github.workspace }}/_sbs_toolchain/subverso/.lake
+          ${{ github.workspace }}/_sbs_toolchain/LeanArchitect/.lake
+          ${{ github.workspace }}/_sbs_toolchain/Dress/.lake
+          ${{ github.workspace }}/_sbs_toolchain/Runway/.lake
+        key: toolchain-${{ runner.os }}-${{ hashFiles(format('{0}/lean-toolchain', inputs.project-directory)) }}
 
     # ========================================
-    # STEP 7: Build toolchain
+    # STEP 7: Build toolchain (skipped on cache hit)
     # ========================================
     - name: Build SubVerso
+      if: steps.toolchain-cache.outputs.cache-hit != 'true'
       shell: bash
       working-directory: ${{ github.workspace }}/_sbs_toolchain/subverso
       run: |
@@ -149,6 +152,7 @@ runs:
         echo "SubVerso build complete"
 
     - name: Build LeanArchitect
+      if: steps.toolchain-cache.outputs.cache-hit != 'true'
       shell: bash
       working-directory: ${{ github.workspace }}/_sbs_toolchain/LeanArchitect
       run: |
@@ -157,6 +161,7 @@ runs:
         echo "LeanArchitect build complete"
 
     - name: Build Dress
+      if: steps.toolchain-cache.outputs.cache-hit != 'true'
       shell: bash
       working-directory: ${{ github.workspace }}/_sbs_toolchain/Dress
       run: |
@@ -165,12 +170,49 @@ runs:
         echo "Dress build complete"
 
     - name: Build Runway
+      if: steps.toolchain-cache.outputs.cache-hit != 'true'
       shell: bash
       working-directory: ${{ github.workspace }}/_sbs_toolchain/Runway
       run: |
         echo "Building Runway (site generator)..."
         lake build
         echo "Runway build complete"
+
+    - name: Report toolchain cache status
+      shell: bash
+      run: |
+        if [ "${{ steps.toolchain-cache.outputs.cache-hit }}" == "true" ]; then
+          echo "Toolchain restored from cache (skipped ~10min build)"
+        else
+          echo "Toolchain built from source (will be cached for next run)"
+        fi
+
+    # ========================================
+    # CACHE LAYER 2: Lake project build
+    # ========================================
+    - name: Cache Lake build
+      id: lake-cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ inputs.project-directory }}/.lake
+        key: lake-${{ runner.os }}-${{ hashFiles(format('{0}/lean-toolchain', inputs.project-directory)) }}-${{ hashFiles(format('{0}/lakefile.toml', inputs.project-directory), format('{0}/lakefile.lean', inputs.project-directory)) }}-${{ hashFiles('**/*.lean', '!.lake/**') }}
+        restore-keys: |
+          lake-${{ runner.os }}-${{ hashFiles(format('{0}/lean-toolchain', inputs.project-directory)) }}-${{ hashFiles(format('{0}/lakefile.toml', inputs.project-directory), format('{0}/lakefile.lean', inputs.project-directory)) }}-
+          lake-${{ runner.os }}-${{ hashFiles(format('{0}/lean-toolchain', inputs.project-directory)) }}-
+
+    # ========================================
+    # STEP 6: Fetch mathlib cache from server
+    # ========================================
+    # Runs AFTER Lake cache restore so fresh mathlib oleans
+    # overwrite any stale cached versions
+    - name: Fetch mathlib cache
+      shell: bash
+      working-directory: ${{ inputs.project-directory }}
+      run: |
+        echo "Fetching mathlib cache from server..."
+        lake exe cache get || echo "::warning::Server cache unavailable, will build from source"
+        OLEAN_COUNT=$(find .lake/packages/mathlib -name "*.olean" 2>/dev/null | wc -l)
+        echo "Found $OLEAN_COUNT oleans from mathlib cache"
 
     # ========================================
     # STEP 8: Build project with Dress
@@ -202,6 +244,18 @@ runs:
         echo "Building blueprint Lake facet..."
         lake build :blueprint
         echo "Blueprint facet complete"
+
+    # ========================================
+    # CACHE LAYER 3: Dependency graph
+    # ========================================
+    - name: Cache dependency graph
+      id: graph-cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ inputs.project-directory }}/.lake/build/dressed/.graph_cache
+        key: graph-${{ runner.os }}-${{ github.sha }}
+        restore-keys: |
+          graph-${{ runner.os }}-
 
     # ========================================
     # STEP 10: Generate dependency graph
