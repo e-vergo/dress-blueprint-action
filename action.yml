@@ -400,6 +400,7 @@ runs:
         fi
 
         echo "Downloading DocGen4 docs from docs-static branch..."
+        rm -rf "$PROJECT_DIR/.lake/build/runway/docs"
         mkdir -p "$PROJECT_DIR/.lake/build/runway/docs"
         cd "$PROJECT_DIR/.lake/build/runway/docs"
         git init -q
