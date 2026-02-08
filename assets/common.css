@@ -436,10 +436,6 @@ html[data-theme="dark"] {
   padding-left: 1rem;
 }
 
-.proof_wrapper.expanded .proof_content {
-  display: block;
-}
-
 /* Dark mode adjustments for proof toggle */
 html[data-theme="dark"] .proof_heading {
   background-color: rgba(100, 150, 200, 0.12);
