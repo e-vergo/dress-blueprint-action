@@ -126,6 +126,20 @@ runs:
         sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra texlive-science
 
     # ========================================
+    # CACHE STRATEGY (3 layers)
+    # ========================================
+    # Layer 1 - Toolchain: Saves ~10min. Invalidates only on lean-toolchain change.
+    # Layer 2 - Lake build: Saves ~5-30min (varies by project). Uses cascading
+    #           restore-keys so partial cache hits still skip most compilation.
+    #           Key: lean-toolchain + lakefile + all .lean files.
+    # Layer 3 - Graph layout: Saves ~2-15s (Sugiyama computation). Content-addressed
+    #           by .lean sources + lakefile. Previous key (github.sha) invalidated
+    #           every commit; now persists across non-topology-changing commits.
+    #
+    # Expected CI time with warm caches: ~5min (vs ~30min cold).
+    # ========================================
+
+    # ========================================
     # CACHE LAYER 1: Toolchain builds
     # ========================================
     - name: Cache toolchain builds
@@ -246,14 +260,19 @@ runs:
         echo "Blueprint facet complete"
 
     # ========================================
-    # CACHE LAYER 3: Dependency graph
+    # CACHE LAYER 3: Dependency graph layout
     # ========================================
+    # Graph layout cache persists the Sugiyama layout computation.
+    # Key is content-addressed: only invalidates when Lean sources or
+    # lakefile change (which could alter graph topology). The restore-key
+    # ensures stale-but-usable layout is available across unrelated changes.
+    # Previous key used github.sha which invalidated every commit unnecessarily.
     - name: Cache dependency graph
       id: graph-cache
       uses: actions/cache@v4
       with:
         path: ${{ inputs.project-directory }}/.lake/build/dressed/.graph_cache
-        key: graph-${{ runner.os }}-${{ github.sha }}
+        key: graph-${{ runner.os }}-${{ hashFiles('**/*.lean', '!.lake/**') }}-${{ hashFiles(format('{0}/lakefile.toml', inputs.project-directory), format('{0}/lakefile.lean', inputs.project-directory)) }}
         restore-keys: |
           graph-${{ runner.os }}-
 
