@@ -242,7 +242,29 @@ section:has(.sbs-container):nth-child(even of section:has(.sbs-container)) .sbs-
   background: var(--sbs-zebra-even);
 }
 
-/* Note: .sbs-latex-column sizing is defined in common.css */
+/* Grid cell styles for 3-row layout */
+.sbs-signature pre.lean-code,
+.sbs-proof-lean pre.lean-code {
+  margin: 0;
+  background: transparent;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  white-space: pre;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.sbs-signature pre.lean-code code,
+.sbs-proof-lean pre.lean-code code {
+  font-family: inherit;
+}
+
+.sbs-signature {
+  position: relative;
+}
+
+/* Legacy column classes (kept for dep graph modals and Verso fallback) */
 .sbs-latex-column {
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -285,7 +307,8 @@ section:has(.sbs-container):nth-child(even of section:has(.sbs-container)) .sbs-
   color: var(--sbs-link);
 }
 
-.sbs-lean-column:hover .lean-github-hover {
+.sbs-lean-column:hover .lean-github-hover,
+.sbs-signature:hover .lean-github-hover {
   opacity: 1;
 }
 

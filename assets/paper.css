@@ -106,6 +106,14 @@
    Uses standardized styles from common.css
    --------------------------------------------- */
 
+.paper-theorem .sbs-signature pre,
+.paper-theorem .sbs-proof-lean pre {
+  margin: 0;
+  font-size: 0.85rem;
+  overflow-x: auto;
+}
+
+/* Legacy fallback for dep graph modals */
 .paper-theorem .sbs-lean-column pre {
   margin: 0;
   font-size: 0.85rem;

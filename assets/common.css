@@ -321,13 +321,17 @@ html[data-theme="dark"] {
 }
 
 /* ---------------------------------------------
-   1. Side-by-Side Layout
+   1. Side-by-Side Layout (2-column x 3-row grid)
+   Row 1: heading | spacer
+   Row 2: statement | signature
+   Row 3: proof (LaTeX) | proof (Lean)
    --------------------------------------------- */
 
 .sbs-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  grid-template-rows: auto auto auto;
+  gap: 0.5rem 1rem;
   align-items: start;
   background: var(--sbs-bg-surface);
   padding: 1rem;
@@ -336,6 +340,24 @@ html[data-theme="dark"] {
   overflow: hidden;
 }
 
+/* Grid placement for 3-row layout */
+.sbs-heading         { grid-row: 1; grid-column: 1; }
+.sbs-heading-spacer  { grid-row: 1; grid-column: 2; }
+.sbs-statement       { grid-row: 2; grid-column: 1; align-self: start; min-width: 0; overflow-wrap: break-word; }
+.sbs-signature       { grid-row: 2; grid-column: 2; align-self: start; min-width: 0; max-width: 100%; overflow-x: auto; }
+.sbs-proof-latex     { grid-row: 3; grid-column: 1; min-width: 0; overflow-wrap: break-word; }
+.sbs-proof-lean      { grid-row: 3; grid-column: 2; min-width: 0; max-width: 100%; overflow-x: auto; }
+
+/* Lean code blocks within grid cells */
+.sbs-signature pre.lean-code,
+.sbs-proof-lean pre.lean-code {
+  margin: 0;
+  background: transparent;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Legacy column classes (kept as fallbacks for dep graph modals and Verso) */
 .sbs-latex-column {
   min-width: 0;
   overflow-wrap: break-word;

@@ -488,6 +488,11 @@
   overflow: hidden;  /* Prevent content from pushing modal wider */
 }
 
+.dep-modal-content .sbs-heading,
+.dep-modal-content .sbs-statement,
+.dep-modal-content .sbs-proof-latex,
+.dep-modal-content .sbs-signature,
+.dep-modal-content .sbs-proof-lean,
 .dep-modal-content .sbs-latex-column,
 .dep-modal-content .sbs-lean-column {
   min-width: 0;  /* Allow shrinking below content size */
