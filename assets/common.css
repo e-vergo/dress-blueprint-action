@@ -321,16 +321,19 @@ html[data-theme="dark"] {
 }
 
 /* ---------------------------------------------
-   1. Side-by-Side Layout (2-column x 3-row grid)
-   Row 1: heading | spacer
-   Row 2: statement | signature
-   Row 3: proof (LaTeX) | proof (Lean)
+   1. Side-by-Side Layout (2-column x 5-row grid)
+   Row 1: above (LaTeX narrative, left col only)
+   Row 2: heading | spacer
+   Row 3: statement | signature
+   Row 4: proof (LaTeX) | proof (Lean)
+   Row 5: below (LaTeX narrative, left col only)
+   Rows 1 and 5 collapse when above/below are absent.
    --------------------------------------------- */
 
 .sbs-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto auto auto auto;
   gap: 0.5rem 1rem;
   align-items: start;
   background: var(--sbs-bg-surface);
@@ -340,13 +343,38 @@ html[data-theme="dark"] {
   overflow: hidden;
 }
 
-/* Grid placement for 3-row layout */
-.sbs-heading         { grid-row: 1; grid-column: 1; }
-.sbs-heading-spacer  { grid-row: 1; grid-column: 2; }
-.sbs-statement       { grid-row: 2; grid-column: 1; align-self: start; min-width: 0; overflow-wrap: break-word; }
-.sbs-signature       { grid-row: 2; grid-column: 2; align-self: start; min-width: 0; max-width: 100%; overflow-x: auto; }
-.sbs-proof-latex     { grid-row: 3; grid-column: 1; min-width: 0; overflow-wrap: break-word; }
-.sbs-proof-lean      { grid-row: 3; grid-column: 2; min-width: 0; max-width: 100%; overflow-x: auto; }
+/* Grid placement for 5-row layout */
+.sbs-above-content   { grid-row: 1; grid-column: 1; }
+.sbs-above-spacer    { grid-row: 1; grid-column: 2; }
+.sbs-heading         { grid-row: 2; grid-column: 1; }
+.sbs-heading-spacer  { grid-row: 2; grid-column: 2; }
+.sbs-statement       { grid-row: 3; grid-column: 1; align-self: start; min-width: 0; overflow-wrap: break-word; }
+.sbs-signature       { grid-row: 3; grid-column: 2; align-self: start; min-width: 0; max-width: 100%; overflow-x: auto; }
+.sbs-proof-latex     { grid-row: 4; grid-column: 1; min-width: 0; overflow-wrap: break-word; }
+.sbs-proof-lean      { grid-row: 4; grid-column: 2; min-width: 0; max-width: 100%; overflow-x: auto; }
+.sbs-below-content   { grid-row: 5; grid-column: 1; }
+.sbs-below-spacer    { grid-row: 5; grid-column: 2; }
+
+/* Above/below narrative content styling */
+.sbs-above-content,
+.sbs-below-content {
+  font-style: normal;
+  line-height: 1.6;
+  color: var(--sbs-text);
+  overflow-wrap: break-word;
+}
+
+.sbs-above-content {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--sbs-border);
+  margin-bottom: 0.25rem;
+}
+
+.sbs-below-content {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--sbs-border);
+  margin-top: 0.25rem;
+}
 
 /* Lean code blocks within grid cells */
 .sbs-signature pre.lean-code,

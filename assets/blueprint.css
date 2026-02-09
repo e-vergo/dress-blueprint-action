@@ -242,7 +242,7 @@ section:has(.sbs-container):nth-child(even of section:has(.sbs-container)) .sbs-
   background: var(--sbs-zebra-even);
 }
 
-/* Grid cell styles for 3-row layout */
+/* Grid cell styles for 5-row layout (above, heading, statement, proof, below) */
 .sbs-signature pre.lean-code,
 .sbs-proof-lean pre.lean-code {
   margin: 0;
