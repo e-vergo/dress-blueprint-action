@@ -9,7 +9,7 @@
 .ar5iv-paper {
   font-family: "Computer Modern Serif", "Latin Modern Roman", Georgia, serif;
   width: 100%;
-  max-width: 120ch;
+  max-width: 95%;
   margin: 0 auto;  /* Center horizontally */
   padding: 1.5rem 2rem;
   background: var(--sbs-bg-surface);
@@ -20,7 +20,7 @@
 /* When inside sidebar layout, center within content area */
 .content .ar5iv-paper {
   width: 100%;
-  max-width: 120ch;
+  max-width: 95%;
   margin: 0 auto;
 }
 
@@ -226,22 +226,7 @@
    Responsive
    --------------------------------------------- */
 
-@media (max-width: 1200px) {
-  .ar5iv-paper {
-    width: 85%;
-  }
-  .content .ar5iv-paper {
-    width: 85%;
-  }
-}
-
 @media (max-width: 900px) {
-  .ar5iv-paper {
-    width: 95%;
-  }
-  .content .ar5iv-paper {
-    width: 95%;
-  }
   /* Stack side-by-side on smaller screens */
   .paper-theorem.sbs-container {
     grid-template-columns: 1fr;
@@ -249,8 +234,8 @@
 }
 
 @media (max-width: 600px) {
-  .ar5iv-paper { padding: 1rem; width: 100%; }
-  .content .ar5iv-paper { width: 100%; }
+  .ar5iv-paper { padding: 1rem; width: 100%; max-width: 100%; }
+  .content .ar5iv-paper { width: 100%; max-width: 100%; }
   .paper-abstract { margin: 1rem 0; }
   .paper-theorem { padding: 0.5rem; }
 }
@@ -278,16 +263,41 @@
   }
 }
 
-/* ========== Simplified Proof Toggle for Paper Pages ========== */
-/* Match blueprint.css styling - plain [show]/[hide] text instead of modern button style */
+/* ========== Hide Verification Badges on Paper Pages ========== */
+/* Status dots replace the old (Verified)/(In Progress) text badges.
+   Hide the legacy badge entirely on paper pages. */
+
+.ar5iv-paper .verification-badge {
+  display: none;
+}
+
+/* ========== MathJax Error Styling ========== */
+/* Tone down MathJax rendering errors so they don't dominate the page.
+   Errors like "Unknown environment 'center'" show red-on-yellow by default. */
+
+.ar5iv-paper .MathJax .noError,
+.ar5iv-paper .MathJax .merror,
+.ar5iv-paper mjx-merror,
+.ar5iv-paper [data-mjx-error] {
+  font-size: 0.8rem;
+  color: var(--sbs-text-muted);
+  background: transparent;
+  border: 1px dashed var(--sbs-border);
+  border-radius: 3px;
+  padding: 0.2rem 0.4rem;
+}
+
+/* ========== Proof Toggle for Paper Pages ========== */
+/* Paper uses plain [show]/[hide] text instead of the styled button toggle */
 
 .ar5iv-paper .proof_heading {
+  font-family: inherit;
   background: none;
   border: none;
   border-radius: 0;
   padding: 0;
   box-shadow: none;
-  font-weight: normal;
+  font-weight: bold;
   font-style: italic;
   display: inline;
   gap: 0;
@@ -307,7 +317,7 @@
 .ar5iv-paper .expand-proof {
   font-size: 0;
   color: var(--sbs-text);
-  transform: none !important; /* Never rotate text */
+  transform: none !important;
   display: inline;
 }
 
@@ -324,13 +334,25 @@
   content: '[hide]';
 }
 
+.ar5iv-paper .expand-proof svg,
+.ar5iv-paper .expand-proof .chevron {
+  display: none;
+}
+
 /* Proof caption styling */
 .ar5iv-paper .proof_caption {
   font-style: italic;
   margin-right: 0.25rem;
 }
 
-/* Dark mode */
+/* Dark mode for paper toggle text */
 html[data-theme="dark"] .ar5iv-paper .expand-proof::before {
   color: var(--sbs-text);
+}
+
+/* ========== Anti-Zebra Striping for Paper Pages ========== */
+/* Paper pages should NOT have alternating row backgrounds from blueprint.css */
+
+.ar5iv-paper section:has(.sbs-container):nth-child(even of section:has(.sbs-container)) .sbs-container {
+  background: var(--sbs-bg-surface);
 }

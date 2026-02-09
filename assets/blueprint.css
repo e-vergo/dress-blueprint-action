@@ -33,12 +33,12 @@ table tr td{padding:7px}
 body{height:100vh;margin:0;flex-direction:column;color:var(--sbs-text);background-color:var(--sbs-bg-page)}
 body,div.wrapper{display:flex;overflow:hidden}
 div.wrapper{flex-grow:1}
-div.content-wrapper{max-width:1800px}
+div.content-wrapper{max-width:none}
 @media (min-width:1024px){div.content-wrapper{margin-left:auto;margin-right:auto}}
 div.content{flex-grow:1;display:flex;flex-direction:column;overflow:auto;padding:.5rem;margin-bottom:2.5rem}
 @media (min-width:1024px){div.content{padding:1rem;margin-bottom:0}}
 /* Blueprint content area sizing - fluid width, constrained by viewport */
-div.content{width:100%;max-width:min(calc(200ch + 5rem), 95%);margin-left:auto;margin-right:auto;padding:1.5rem 2rem;box-sizing:border-box}
+div.content{width:100%;max-width:95%;margin-left:auto;margin-right:auto;padding:1.5rem 2rem;box-sizing:border-box}
 div.centered{display:flex;flex-direction:column;flex-wrap:wrap;align-items:center;justify-content:space-around;min-width:100%;margin:0 auto}
 div.flushleft,div.raggedright{display:flex;justify-content:flex-start}
 div.flushright,div.raggedbottom,div.raggedleft{display:flex;justify-content:flex-end}
@@ -202,7 +202,9 @@ pre.verbatim{margin:1rem 2rem;background-color:var(--sbs-bg-surface);padding:.5r
 /* ========== Side-by-side Layout (from leanblueprint) ========== */
 
 /* Constrain non-node content (paragraphs, lists, display math) to left column width.
-   These elements appear in chapter-page, section, and direct content areas. */
+   These elements appear in chapter-page, section, and direct content areas.
+   45% matches the left column of .sbs-container grid (1fr out of 1fr + 1.2fr).
+   80ch caps readability on any screen size. */
 .chapter-page > p,
 .chapter-page > div.displaymath,
 .chapter-page > ul,
@@ -218,7 +220,14 @@ div.content > div.displaymath,
 div.content > ul:not(.chapter-index):not(.dashboard-list):not(.notes-list):not(.toc),
 div.content > ol,
 div.content > blockquote {
-  max-width: 100ch;
+  max-width: min(45%, 80ch);
+}
+
+/* Allow wide equations to scroll within the constrained width */
+.chapter-page > div.displaymath,
+section.section > div.displaymath,
+div.content > div.displaymath {
+  overflow-x: auto;
 }
 
 a.github_link {
@@ -246,13 +255,21 @@ section:has(.sbs-container):nth-child(even of section:has(.sbs-container)) .sbs-
 .sbs-signature pre.lean-code,
 .sbs-proof-lean pre.lean-code {
   margin: 0;
-  background: transparent;
+  background-color: var(--sbs-bg-surface);
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 0.85rem;
   line-height: 1.5;
   white-space: pre;
   max-width: 100%;
   overflow-x: auto;
+}
+
+/* Align Lean proof body top with LaTeX proof body top.
+   The LaTeX column has a proof_wrapper (margin-top 0.75rem) + proof_heading (~1.2rem)
+   + proof_content margin/padding (~0.75rem) + first <p> margin (1rem).
+   Total offset ~4.3rem from grid cell top to first proof text line. */
+.sbs-proof-lean pre.lean-code {
+  padding-top: 2.9rem;
 }
 
 .sbs-signature pre.lean-code code,
@@ -280,7 +297,7 @@ section:has(.sbs-container):nth-child(even of section:has(.sbs-container)) .sbs-
 .sbs-lean-column pre.lean-code {
   margin: 0;
   padding-top: 1.5rem;
-  background: transparent;
+  background-color: var(--sbs-bg-surface);
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 0.85rem;
   line-height: 1.5;
@@ -722,6 +739,16 @@ html[data-theme="dark"] .note-section h4 {
   .dashboard-cell {
     min-height: 150px;
   }
+}
+
+/* Ultra-wide screens (4K/5K) - more breathing room */
+@media (min-width: 2560px) {
+    div.content {
+        padding: 2rem 3rem;
+    }
+    .sbs-container {
+        gap: 0.75rem 1.5rem;
+    }
 }
 
 /* ===================== */
@@ -1327,13 +1354,13 @@ pre.lean-code {
   text-align: left; /* Headings stay left-aligned even with justified body */
 }
 
-/* Narrower prose column for paper-like feel */
+/* Narrower prose column for paper-like feel - matches left column of SBS grid */
 .chapter-page > p,
 .chapter-page > div.displaymath,
 .chapter-page > ul,
 .chapter-page > ol,
 .chapter-page > blockquote {
-  max-width: 80ch; /* Narrower than default 100ch for paper feel */
+  max-width: min(45%, 80ch);
 }
 
 /* Also narrow section content */
@@ -1342,7 +1369,7 @@ pre.lean-code {
 .chapter-page section.section > ul,
 .chapter-page section.section > ol,
 .chapter-page section.section > blockquote {
-  max-width: 80ch;
+  max-width: min(45%, 80ch);
 }
 
 /* More generous paragraph spacing */

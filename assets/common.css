@@ -9,6 +9,11 @@
    ============================================ */
 
 :root {
+  /* Force light color scheme by default so browser never auto-darkens
+     based on prefers-color-scheme. The SBS toggle manages dark mode
+     via html[data-theme="dark"] instead. */
+  color-scheme: light;
+
   /* ======================
      Simplified Color Palette
      ====================== */
@@ -125,7 +130,38 @@
   --sbs-sidebar-section-header: rgba(255, 255, 255, 0.6);
   --sbs-sidebar-separator: rgba(255, 255, 255, 0.3);
   --sbs-sidebar-toggle-border: rgba(255, 255, 255, 0.2);
+
+  /* Tactic indicator dot */
+  --sbs-tactic-dot: #4271ae;
+
+  /* Lean Token Colors (light mode) */
+  --sbs-lean-keyword: #0000ff;
+  --sbs-lean-const: #795e26;
+  --sbs-lean-var: #001080;
+  --sbs-lean-string: #a31515;
+  --sbs-lean-option: #795e26;
+  --sbs-lean-docstring: #008000;
+  --sbs-lean-sort: #267f99;
+  --sbs-lean-level: #098658;
+  --sbs-lean-module: #795e26;
+  --sbs-lean-number: #098658;
+  --sbs-lean-operator: #000000;
+  --sbs-lean-comment: #008000;
+  --sbs-lean-line-comment: #008000;
+  --sbs-lean-sorry: #ff0000;
+  --sbs-lean-sorry-bg: #ffeaea;
+  --sbs-lean-hypothesis: #811f3f;
+  --sbs-lean-binding-hl: rgba(255, 255, 0, 0.3);
+  --sbs-lean-docstring-code-bg: rgba(0, 0, 0, 0.05);
 }
+
+/* ======================
+   Background Hierarchy (light mode default)
+   page    (#ebebeb) -- outermost page background, zebra stripe rows
+   surface (#ffffff) -- cards, panels, modals, code blocks
+   card    (var(--sbs-bg-surface)) -- same as surface for now
+   inset   (transparent or slightly tinted) -- code blocks inside cards
+   ====================== */
 
 /* ============================================
    Status Indicator Dots
@@ -252,6 +288,9 @@
 
 /* Dark Mode (JavaScript-controlled via toggle) */
 html[data-theme="dark"] {
+  /* Tell the browser we're in dark mode (for form controls, scrollbars, etc.) */
+  color-scheme: dark;
+
   /* Backgrounds - different values for zebra striping */
   --sbs-bg-page: #252525;     /* Lighter for alternating rows (was #1a1a1a) */
   --sbs-bg-surface: #1a1a1a;  /* Base dark background */
@@ -318,6 +357,28 @@ html[data-theme="dark"] {
   --sbs-check-pass-bg: rgba(25, 135, 84, 0.2);
   --sbs-check-fail-bg: rgba(220, 53, 69, 0.2);
 
+  /* Tactic indicator dot (brighter for dark backgrounds) */
+  --sbs-tactic-dot: #60a5fa;
+
+  /* Lean Token Colors (dark mode) */
+  --sbs-lean-keyword: #569cd6;
+  --sbs-lean-const: #dcdcaa;
+  --sbs-lean-var: #9cdcfe;
+  --sbs-lean-string: #ce9178;
+  --sbs-lean-option: #d7ba7d;
+  --sbs-lean-docstring: #6a9955;
+  --sbs-lean-sort: #4ec9b0;
+  --sbs-lean-level: #b5cea8;
+  --sbs-lean-module: #d7ba7d;
+  --sbs-lean-number: #b5cea8;
+  --sbs-lean-operator: #d4d4d4;
+  --sbs-lean-comment: #6a9955;
+  --sbs-lean-line-comment: #6a9955;
+  --sbs-lean-sorry: #ff6b6b;
+  --sbs-lean-sorry-bg: #4a1515;
+  --sbs-lean-hypothesis: #ff7b72;
+  --sbs-lean-binding-hl: rgba(255, 255, 0, 0.15);
+  --sbs-lean-docstring-code-bg: rgba(255, 255, 255, 0.1);
 }
 
 /* ---------------------------------------------
@@ -332,7 +393,7 @@ html[data-theme="dark"] {
 
 .sbs-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr minmax(0, 1.2fr);
   grid-template-rows: auto auto auto auto auto;
   gap: 0.5rem 1rem;
   align-items: start;
@@ -380,7 +441,7 @@ html[data-theme="dark"] {
 .sbs-signature pre.lean-code,
 .sbs-proof-lean pre.lean-code {
   margin: 0;
-  background: transparent;
+  background-color: inherit;
   max-width: 100%;
   overflow-x: auto;
 }
@@ -401,7 +462,7 @@ html[data-theme="dark"] {
 
 .sbs-lean-column pre.lean-code {
   margin: 0;
-  background: transparent;
+  background-color: inherit;
   max-width: 100%;
   overflow-x: auto;
 }
@@ -487,29 +548,29 @@ html[data-theme="dark"] .proof_heading:hover {
    --------------------------------------------- */
 
 /* Base token styles */
-.lean-keyword, .hl.lean .keyword, .keyword.token { color: #0000ff; }
-.lean-const, .hl.lean .const, .const.token { color: #AF8700; }
+.lean-keyword, .hl.lean .keyword, .keyword.token { color: var(--sbs-lean-keyword); }
+.lean-const, .hl.lean .const, .const.token { color: var(--sbs-lean-const); }
 .lean-const.lean-def, .hl.lean .const[data-defining="true"], .const.token[data-defining="true"] {
   font-weight: bold;
   text-decoration: underline;
   text-decoration-style: dotted;
   text-underline-offset: 2px;
 }
-.lean-var, .hl.lean .var, .var.token { color: #0070C1; }
-.lean-string, .hl.lean .literal.string, .literal.string.token { color: #a31515; }
-.lean-option, .hl.lean .option, .option.token { color: #795e26; }
-.lean-docstring, .hl.lean .doc-comment, .doc-comment.token { color: #008000; font-style: italic; }
-.lean-sort, .hl.lean .sort, .sort.token { color: #267f99; }
+.lean-var, .hl.lean .var, .var.token { color: var(--sbs-lean-var); }
+.lean-string, .hl.lean .literal.string, .literal.string.token { color: var(--sbs-lean-string); }
+.lean-option, .hl.lean .option, .option.token { color: var(--sbs-lean-option); }
+.lean-docstring, .hl.lean .doc-comment, .doc-comment.token { color: var(--sbs-lean-docstring); font-style: italic; }
+.lean-sort, .hl.lean .sort, .sort.token { color: var(--sbs-lean-sort); }
 .lean-level, .hl.lean .level-var, .hl.lean .level-const, .hl.lean .level-op,
-.level-var.token, .level-const.token, .level-op.token { color: #098658; }
-.lean-module, .hl.lean .module-name, .module-name.token { color: #795e26; }
+.level-var.token, .level-const.token, .level-op.token { color: var(--sbs-lean-level); }
+.lean-module, .hl.lean .module-name, .module-name.token { color: var(--sbs-lean-module); }
 .lean-expr, .hl.lean .typed, .typed.token { color: inherit; }
 .lean-text, .hl.lean .unknown, .hl.lean .inter-text, .unknown.token, .inter-text { color: inherit; }
-.lean-sorry, .sorry.token { color: #ff0000; background-color: #ffeaea; font-weight: bold; }
+.lean-sorry, .sorry.token { color: var(--sbs-lean-sorry); background-color: var(--sbs-lean-sorry-bg); font-weight: bold; }
 
-.lean-number { color: #098658; }
-.lean-operator { color: #000000; }
-.lean-comment { color: #008000; font-style: italic; }
+.lean-number { color: var(--sbs-lean-number); }
+.lean-operator { color: var(--sbs-lean-operator); }
+.lean-comment { color: var(--sbs-lean-comment); font-style: italic; }
 
 /* Rainbow brackets */
 .lean-bracket-1 { color: #d000ff; }
@@ -522,7 +583,7 @@ html[data-theme="dark"] .proof_heading:hover {
 /* Line comments */
 .line-comment,
 .hl.lean .line-comment {
-  color: #6a9955;
+  color: var(--sbs-lean-line-comment);
   font-style: italic;
 }
 
@@ -534,7 +595,7 @@ html[data-theme="dark"] .proof_heading:hover {
 
 /* Token binding highlight */
 .hl.lean .token.binding-hl {
-  background-color: rgba(255, 255, 0, 0.3);
+  background-color: var(--sbs-lean-binding-hl);
   border-radius: 2px;
 }
 
@@ -564,7 +625,7 @@ html[data-theme="dark"] .proof_heading:hover {
 .hl.lean .docstring p { margin: 0.5em 0; }
 
 .hl.lean .docstring code {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--sbs-lean-docstring-code-bg);
   padding: 0 4px;
   border-radius: 2px;
 }
@@ -742,7 +803,7 @@ html[data-theme="dark"] .proof_heading:hover {
 
 .hl.lean .tactic::before {
   content: '\25CF';
-  color: #4271ae;
+  color: var(--sbs-tactic-dot);
   font-size: 0.6em;
   vertical-align: super;
   margin-right: 2px;
@@ -781,7 +842,7 @@ html[data-theme="dark"] .proof_heading:hover {
   display: table-cell;
   padding-right: 8px;
   text-align: right;
-  color: #c82829;
+  color: var(--sbs-lean-hypothesis);
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
@@ -872,101 +933,7 @@ html[data-theme="dark"] .theme-toggle-icon.moon { opacity: 1.0; }
 /* Note: Dark mode graph edge styles moved to dep_graph.css */
 
 /* ---------------------------------------------
-   8. Dark Mode Lean Syntax Highlighting
-   --------------------------------------------- */
-
-/* Lean syntax colors for dark mode (manual toggle only) */
-html[data-theme="dark"] .lean-keyword,
-html[data-theme="dark"] .hl.lean .keyword,
-html[data-theme="dark"] .keyword.token {
-  color: #569cd6;
-}
-
-html[data-theme="dark"] .lean-const,
-html[data-theme="dark"] .hl.lean .const,
-html[data-theme="dark"] .const.token {
-  color: #dcdcaa;
-}
-
-html[data-theme="dark"] .lean-var,
-html[data-theme="dark"] .hl.lean .var,
-html[data-theme="dark"] .var.token {
-  color: #9cdcfe;
-}
-
-html[data-theme="dark"] .lean-string,
-html[data-theme="dark"] .hl.lean .literal.string,
-html[data-theme="dark"] .literal.string.token {
-  color: #ce9178;
-}
-
-html[data-theme="dark"] .lean-option,
-html[data-theme="dark"] .hl.lean .option,
-html[data-theme="dark"] .option.token {
-  color: #d7ba7d;
-}
-
-html[data-theme="dark"] .lean-docstring,
-html[data-theme="dark"] .hl.lean .doc-comment,
-html[data-theme="dark"] .doc-comment.token {
-  color: #6a9955;
-}
-
-html[data-theme="dark"] .lean-sort,
-html[data-theme="dark"] .hl.lean .sort,
-html[data-theme="dark"] .sort.token {
-  color: #4ec9b0;
-}
-
-html[data-theme="dark"] .lean-number {
-  color: #b5cea8;
-}
-
-html[data-theme="dark"] .lean-operator {
-  color: #d4d4d4;
-}
-
-html[data-theme="dark"] .lean-comment {
-  color: #6a9955;
-}
-
-html[data-theme="dark"] .lean-sorry,
-html[data-theme="dark"] .sorry.token {
-  color: #ff6b6b;
-  background-color: #4a1515;
-}
-
-/* Rainbow brackets - brighter for dark mode */
-html[data-theme="dark"] .lean-bracket-1 { color: #ff79c6; }
-html[data-theme="dark"] .lean-bracket-2 { color: #bd93f9; }
-html[data-theme="dark"] .lean-bracket-3 { color: #8be9fd; }
-html[data-theme="dark"] .lean-bracket-4 { color: #50fa7b; }
-html[data-theme="dark"] .lean-bracket-5 { color: #ffb86c; }
-html[data-theme="dark"] .lean-bracket-6 { color: #ff5555; }
-
-/* Line comments - same green works well in dark mode */
-html[data-theme="dark"] .line-comment,
-html[data-theme="dark"] .hl.lean .line-comment {
-  color: #6a9955;
-}
-
-/* Hypothesis names in dark mode */
-html[data-theme="dark"] .hl.lean .hypotheses .name {
-  color: #ff7b72;
-}
-
-/* Token binding highlight - darker yellow for dark mode */
-html[data-theme="dark"] .hl.lean .token.binding-hl {
-  background-color: rgba(255, 255, 0, 0.15);
-}
-
-/* Docstring code blocks in dark mode */
-html[data-theme="dark"] .hl.lean .docstring code {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* ---------------------------------------------
-   10. Sidebar Document Items
+   8. Sidebar Document Items
    --------------------------------------------- */
 
 /* Disabled sidebar items (unavailable documents) */
