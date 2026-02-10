@@ -54,6 +54,54 @@ runs:
         swap-storage: false
 
     # ========================================
+    # STEP 1.5: Extract toolchain versions from project manifest
+    # ========================================
+    - name: Extract toolchain versions
+      id: toolchain-versions
+      shell: bash
+      working-directory: ${{ inputs.project-directory }}
+      run: |
+        MANIFEST="lake-manifest.json"
+        if [ ! -f "$MANIFEST" ]; then
+          echo "::warning::No lake-manifest.json found, using main for all toolchain repos"
+          echo "subverso-ref=main" >> $GITHUB_OUTPUT
+          echo "leanarchitect-ref=main" >> $GITHUB_OUTPUT
+          echo "dress-ref=main" >> $GITHUB_OUTPUT
+          echo "runway-ref=main" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        echo "Extracting toolchain versions from lake-manifest.json..."
+
+        extract_rev() {
+          python3 -c "
+        import json, sys
+        with open('lake-manifest.json') as f:
+            m = json.load(f)
+        for p in m.get('packages', []):
+            if p.get('name','').lower() == sys.argv[1].lower():
+                print(p.get('rev', 'main')); sys.exit(0)
+        print('main')
+        " "$1"
+        }
+
+        SUBVERSO_REF=$(extract_rev "subverso")
+        LEANARCHITECT_REF=$(extract_rev "LeanArchitect")
+        DRESS_REF=$(extract_rev "Dress")
+        RUNWAY_REF=$(extract_rev "Runway")
+
+        echo "subverso-ref=$SUBVERSO_REF" >> $GITHUB_OUTPUT
+        echo "leanarchitect-ref=$LEANARCHITECT_REF" >> $GITHUB_OUTPUT
+        echo "dress-ref=$DRESS_REF" >> $GITHUB_OUTPUT
+        echo "runway-ref=$RUNWAY_REF" >> $GITHUB_OUTPUT
+
+        echo "Resolved toolchain versions:"
+        echo "  SubVerso: $SUBVERSO_REF"
+        echo "  LeanArchitect: $LEANARCHITECT_REF"
+        echo "  Dress: $DRESS_REF"
+        echo "  Runway: $RUNWAY_REF"
+
+    # ========================================
     # STEP 2: Checkout toolchain repos
     # ========================================
     - name: Checkout SubVerso
@@ -61,28 +109,28 @@ runs:
       with:
         repository: e-vergo/subverso
         path: _sbs_toolchain/subverso
-        ref: main
+        ref: ${{ steps.toolchain-versions.outputs.subverso-ref }}
 
     - name: Checkout LeanArchitect
       uses: actions/checkout@v4
       with:
         repository: e-vergo/LeanArchitect
         path: _sbs_toolchain/LeanArchitect
-        ref: main
+        ref: ${{ steps.toolchain-versions.outputs.leanarchitect-ref }}
 
     - name: Checkout Dress
       uses: actions/checkout@v4
       with:
         repository: e-vergo/Dress
         path: _sbs_toolchain/Dress
-        ref: main
+        ref: ${{ steps.toolchain-versions.outputs.dress-ref }}
 
     - name: Checkout Runway
       uses: actions/checkout@v4
       with:
         repository: e-vergo/Runway
         path: _sbs_toolchain/Runway
-        ref: main
+        ref: ${{ steps.toolchain-versions.outputs.runway-ref }}
 
     - name: Checkout dress-blueprint-action (for assets)
       uses: actions/checkout@v4
@@ -151,7 +199,7 @@ runs:
           ${{ github.workspace }}/_sbs_toolchain/LeanArchitect/.lake
           ${{ github.workspace }}/_sbs_toolchain/Dress/.lake
           ${{ github.workspace }}/_sbs_toolchain/Runway/.lake
-        key: toolchain-${{ runner.os }}-${{ hashFiles(format('{0}/lean-toolchain', inputs.project-directory)) }}
+        key: toolchain-${{ runner.os }}-${{ hashFiles(format('{0}/lean-toolchain', inputs.project-directory)) }}-${{ hashFiles(format('{0}/lake-manifest.json', inputs.project-directory)) }}
 
     # ========================================
     # STEP 7: Build toolchain (skipped on cache hit)
