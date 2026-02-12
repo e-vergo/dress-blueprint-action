@@ -187,7 +187,7 @@ Four files in `assets/` organize styles by concern. All files depend on `common.
 | File | Lines | Purpose |
 |------|-------|---------|
 | `common.css` | 1,135 | Design system: CSS variables, status dots, Lean syntax highlighting, Tippy tooltips, modals, dark mode toggle, rainbow brackets |
-| `blueprint.css` | 1,388 | Blueprint pages: plasTeX base styles, sidebar with collapsible chapter list, dashboard grid, side-by-side displays, zebra striping |
+| `blueprint.css` | 1,388 | Blueprint pages: plasTeX base styles, sidebar with collapsible chapter list, dashboard grid, side-by-side displays |
 | `paper.css` | 271 | Paper pages: ar5iv-style academic layout, verification badges, print styles |
 | `dep_graph.css` | 538 | Dependency graph: pan/zoom viewport, toolbar, legend, SVG node styling |
 

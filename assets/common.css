@@ -21,7 +21,7 @@
   /* Grayscale (4 colors) */
   --sbs-black: #000000;
   --sbs-white: #ffffff;
-  --sbs-gray-light: #ebebeb;  /* Increased contrast for zebra striping (was #f8f8f8) */
+  --sbs-gray-light: #ebebeb;
   --sbs-gray-dark: #333333;
 
   /* Blues (sidebar/topper) */
@@ -116,9 +116,6 @@
   --sbs-check-pass-bg: rgba(25, 135, 84, 0.15);
   --sbs-check-fail-bg: rgba(220, 53, 69, 0.15);
 
-  /* Zebra Striping (alternating row backgrounds) */
-  --sbs-zebra-even: #ebebeb;
-
   /* Sidebar Active Item (light mode) - matches content area for tab-like effect */
   --sidebar-active-bg: var(--sbs-bg-page);
   --sidebar-active-text: #1a1a1a;
@@ -157,7 +154,7 @@
 
 /* ======================
    Background Hierarchy (light mode default)
-   page    (#ebebeb) -- outermost page background, zebra stripe rows
+   page    (#ebebeb) -- outermost page background
    surface (#ffffff) -- cards, panels, modals, code blocks
    card    (var(--sbs-bg-surface)) -- same as surface for now
    inset   (transparent or slightly tinted) -- code blocks inside cards
@@ -291,8 +288,9 @@ html[data-theme="dark"] {
   /* Tell the browser we're in dark mode (for form controls, scrollbars, etc.) */
   color-scheme: dark;
 
-  /* Backgrounds - different values for zebra striping */
-  --sbs-bg-page: #252525;     /* Lighter for alternating rows (was #1a1a1a) */
+  /* Backgrounds */
+  --sbs-bg-page: #252525;
+
   --sbs-bg-surface: #1a1a1a;  /* Base dark background */
 
   /* Text */
@@ -345,9 +343,6 @@ html[data-theme="dark"] {
   --sbs-badge-progress-bg: #451a03;
   --sbs-badge-progress-text: #fde68a;
   --sbs-badge-progress-border: #d97706;
-
-  /* Zebra Striping (dark mode) */
-  --sbs-zebra-even: #252525;
 
   /* Sidebar Active Item (dark mode) - matches content area for tab-like effect */
   --sidebar-active-bg: var(--sbs-bg-page);

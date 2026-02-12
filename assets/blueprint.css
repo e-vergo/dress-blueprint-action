@@ -243,19 +243,10 @@ a.github_link {
   margin-bottom: 3rem;
 }
 
-/* Zebra striping for side-by-side containers.
-   Each .sbs-container lives inside its own <section>, so we target the parent
-   section using :has() + :nth-child(even of ...) CSS4 selectors.
-   Supported in Chrome 111+, Safari 15.4+, Firefox 113+. */
-section:has(.sbs-container):nth-child(even of section:has(.sbs-container)) .sbs-container {
-  background: var(--sbs-zebra-even);
-}
-
 /* Grid cell styles for 5-row layout (above, heading, statement, proof, below) */
 .sbs-signature pre.lean-code,
 .sbs-proof-lean pre.lean-code {
   margin: 0;
-  background-color: var(--sbs-bg-surface);
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 0.85rem;
   line-height: 1.5;
