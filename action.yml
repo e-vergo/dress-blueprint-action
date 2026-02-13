@@ -308,23 +308,6 @@ runs:
         echo "Blueprint facet complete"
 
     # ========================================
-    # CACHE LAYER 3: Dependency graph layout
-    # ========================================
-    # Graph layout cache persists the Sugiyama layout computation.
-    # Key is content-addressed: only invalidates when Lean sources or
-    # lakefile change (which could alter graph topology). The restore-key
-    # ensures stale-but-usable layout is available across unrelated changes.
-    # Previous key used github.sha which invalidated every commit unnecessarily.
-    - name: Cache dependency graph
-      id: graph-cache
-      uses: actions/cache@v4
-      with:
-        path: ${{ inputs.project-directory }}/.lake/build/dressed/.graph_cache
-        key: graph-${{ runner.os }}-${{ hashFiles('**/*.lean', '!.lake/**') }}-${{ hashFiles(format('{0}/lakefile.toml', inputs.project-directory), format('{0}/lakefile.lean', inputs.project-directory)) }}
-        restore-keys: |
-          graph-${{ runner.os }}-
-
-    # ========================================
     # STEP 10: Generate dependency graph
     # ========================================
     - name: Generate dependency graph
