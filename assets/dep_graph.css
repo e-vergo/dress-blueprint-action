@@ -25,11 +25,13 @@
   right: 0.5rem;
   z-index: 10;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.25rem;
   background: var(--bp-bg);
   border: 1px solid var(--bp-border);
   border-radius: 4px;
   padding: 0.25rem;
+  max-width: 220px;
 }
 
 .dep-graph-toolbar button {
@@ -392,7 +394,7 @@
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: auto 1fr;
   gap: 0.5rem;
   padding: 0.5rem;
 }
@@ -420,6 +422,8 @@
   padding: 0.5rem;
   font-size: 0.875rem;
   color: var(--sbs-legend-text);
+  min-width: 200px;
+  width: max-content;
 }
 
 .dep-graph-legend .legend-title {
@@ -452,6 +456,7 @@
 .dep-graph-legend .legend-swatch.proven { background-color: var(--sbs-status-proven); }
 .dep-graph-legend .legend-swatch.fully-proven { background-color: var(--sbs-status-fully-proven); }
 .dep-graph-legend .legend-swatch.mathlib-ready { background-color: var(--sbs-status-mathlib-ready); }
+.dep-graph-legend .legend-swatch.axiom { background-color: var(--sbs-status-axiom); }
 
 /* Legend separator line between colors and shapes */
 .dep-graph-legend .legend-separator {
@@ -475,6 +480,83 @@
 .dep-graph-legend .legend-shape.box {
   border-radius: 2px;
 }
+
+.dep-graph-legend .legend-shape.diamond {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--sbs-legend-shape-border, #333);
+  background: var(--sbs-status-axiom);
+  border-radius: 0;
+  transform: rotate(45deg);
+}
+
+/* ========== Status Filter Bar ========== */
+.dep-graph-filter-bar {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--sbs-border, #e0e0e0);
+}
+
+.dep-graph-filter-bar .filter-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sbs-text-secondary, #666);
+  margin-bottom: 0.375rem;
+}
+
+.dep-graph-filter-bar .filter-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+}
+
+.dep-graph-filter-bar .filter-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--sbs-text, #333);
+  user-select: none;
+}
+
+.dep-graph-filter-bar .filter-toggle input[type="checkbox"] {
+  display: none;
+}
+
+.dep-graph-filter-bar .filter-toggle .filter-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  transition: opacity 0.15s;
+}
+
+.dep-graph-filter-bar .filter-toggle input:not(:checked) ~ .filter-swatch {
+  opacity: 0.25;
+}
+
+.dep-graph-filter-bar .filter-toggle input:not(:checked) ~ span:last-child {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+
+.dep-graph-filter-bar .filter-count {
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--sbs-text-secondary, #666);
+}
+
+/* Filter swatch colors - reuse legend status variable pattern */
+.dep-graph-filter-bar .filter-swatch.not-ready { background-color: var(--sbs-status-not-ready); }
+.dep-graph-filter-bar .filter-swatch.ready { background-color: var(--sbs-status-ready); }
+.dep-graph-filter-bar .filter-swatch.sorry { background-color: var(--sbs-status-sorry); }
+.dep-graph-filter-bar .filter-swatch.proven { background-color: var(--sbs-status-proven); }
+.dep-graph-filter-bar .filter-swatch.fully-proven { background-color: var(--sbs-status-fully-proven); }
+.dep-graph-filter-bar .filter-swatch.mathlib-ready { background-color: var(--sbs-status-mathlib-ready); }
+.dep-graph-filter-bar .filter-swatch.axiom { background-color: var(--sbs-status-axiom); }
 
 /* ========== SBS Container in Modal ========== */
 /* Ensure sbs-container displays properly in modal */
@@ -531,26 +613,566 @@
   color: var(--sbs-link-hover, #0055aa);
 }
 
-/* ========== Dark Mode Graph Edge Override ========== */
-/* SVG edge colors in dark mode */
-html[data-theme="dark"] .dep-graph-container svg path,
-html[data-theme="dark"] .dep-graph-svg svg path {
+/* ========== Breadcrumb Navigation ========== */
+.breadcrumb {
+  font-size: 0.875rem;
+  color: var(--bp-text-muted);
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+}
+
+.breadcrumb a {
+  color: var(--bp-primary);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-sep {
+  color: var(--bp-text-muted);
+}
+
+/* ========== Dashboard Page ========== */
+.dg-dashboard-page .wrapper {
+  display: flex;
+}
+
+.dg-dashboard-page .content {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+}
+
+.dg-dashboard-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.75rem;
+}
+
+.dg-full-graph-link-row {
+  margin-bottom: 1.5rem;
+}
+
+.dg-full-graph-link {
+  display: inline-block;
+  color: var(--bp-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--bp-primary);
+  border-radius: 4px;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.dg-full-graph-link:hover {
+  background-color: var(--bp-primary);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ---- Stats Grid ---- */
+.dg-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.dg-stat-card {
+  background: var(--bp-bg-alt);
+  border: 1px solid var(--bp-border);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.dg-stat-count {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.dg-stat-label {
+  font-size: 0.75rem;
+  color: var(--bp-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Status color accents on stat cards */
+.dg-stat-fully-proven { border-top: 3px solid var(--sbs-status-fully-proven); }
+.dg-stat-proven       { border-top: 3px solid var(--sbs-status-proven); }
+.dg-stat-sorry        { border-top: 3px solid var(--sbs-status-sorry); }
+.dg-stat-ready        { border-top: 3px solid var(--sbs-status-ready); }
+.dg-stat-not-ready    { border-top: 3px solid var(--sbs-status-not-ready); }
+.dg-stat-mathlib-ready { border-top: 3px solid var(--sbs-status-mathlib-ready); }
+.dg-stat-axiom        { border-top: 3px solid var(--sbs-status-axiom); }
+
+/* ---- Declaration Table ---- */
+.dg-table-wrapper {
+  overflow-x: auto;
+}
+
+.dg-declaration-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.dg-declaration-table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 2px solid var(--bp-border);
+  font-weight: 600;
+  color: var(--bp-text);
+  white-space: nowrap;
+}
+
+.dg-declaration-table td {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--bp-border);
+  color: var(--bp-text);
+}
+
+.dg-declaration-table tbody tr:hover {
+  background-color: var(--bp-bg-alt);
+}
+
+.dg-declaration-table a {
+  color: var(--bp-primary);
+  text-decoration: none;
+}
+
+.dg-declaration-table a:hover {
+  text-decoration: underline;
+}
+
+.dg-module-cell {
+  font-size: 0.8rem;
+  color: var(--bp-text-muted);
+  font-family: monospace;
+}
+
+/* ---- Chapter-Grouped Declarations ---- */
+.dg-chapter-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dg-chapter-group details {
+  border: 1px solid var(--bp-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.dg-chapter-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  background: var(--bp-bg-alt);
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.925rem;
+}
+
+.dg-chapter-summary:hover {
+  background: var(--sbs-graph-card-hover, var(--bp-bg-alt));
+}
+
+.dg-chapter-title {
+  font-weight: 600;
+  color: var(--bp-text);
+}
+
+.dg-chapter-count {
+  font-size: 0.8rem;
+  color: var(--bp-text-muted);
+  margin-left: 1rem;
+  white-space: nowrap;
+}
+
+.dg-chapter-table-wrapper {
+  border-top: 1px solid var(--bp-border);
+}
+
+.dg-chapter-table-wrapper .dg-table-wrapper {
+  overflow-x: auto;
+}
+
+/* Remove outer border from tables inside chapter groups (the details border is enough) */
+.dg-chapter-table-wrapper .dg-declaration-table {
+  border: none;
+}
+
+/* ---- SBS Content on Individual Node Pages ---- */
+.dg-node-sbs-section {
+  margin-bottom: 1.5rem;
+}
+
+.dg-node-sbs-section h2 {
+  font-size: 1.25rem;
+  margin: 0 0 0.75rem 0;
+}
+
+/* Ensure sbs-container renders properly on node pages (same treatment as modals) */
+.dg-node-sbs-section .sbs-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-left: 0;
+  margin-bottom: 1rem;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.dg-node-sbs-section .sbs-heading,
+.dg-node-sbs-section .sbs-statement,
+.dg-node-sbs-section .sbs-proof-latex,
+.dg-node-sbs-section .sbs-signature,
+.dg-node-sbs-section .sbs-proof-lean,
+.dg-node-sbs-section .sbs-latex-column,
+.dg-node-sbs-section .sbs-lean-column {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dg-node-sbs-section .proof_wrapper {
+  margin-top: 0.5rem;
+}
+
+.dg-node-sbs-section .proof_heading {
+  cursor: pointer;
+}
+
+.dg-node-sbs-section .lean-code {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* ---- Status Badges (in table and node page) ---- */
+.dg-status-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dg-status-not-ready    { background: var(--sbs-status-not-ready); color: #fff; }
+.dg-status-ready        { background: var(--sbs-status-ready); color: #fff; }
+.dg-status-sorry        { background: var(--sbs-status-sorry); color: #fff; }
+.dg-status-proven       { background: var(--sbs-status-proven); color: #000; }
+.dg-status-fully-proven { background: var(--sbs-status-fully-proven); color: #fff; }
+.dg-status-mathlib-ready { background: var(--sbs-status-mathlib-ready); color: #fff; }
+
+/* ========== Individual Node Page ========== */
+.dg-node-page .wrapper {
+  display: flex;
+}
+
+.dg-node-page .content {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+}
+
+.dg-node-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.dg-node-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--bp-bg-alt);
+  border: 1px solid var(--bp-border);
+  border-radius: 6px;
+}
+
+.dg-node-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dg-detail-label {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--bp-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dg-node-relations {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dg-node-relation-col h3 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.dg-node-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dg-node-links li {
+  padding: 0.25rem 0;
+}
+
+.dg-node-links a {
+  color: var(--bp-primary);
+  text-decoration: none;
+}
+
+.dg-node-links a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Subgraph Section ---- */
+.dg-subgraph-section {
+  margin-bottom: 2rem;
+}
+
+.dg-subgraph-section h2 {
+  font-size: 1.25rem;
+  margin: 0 0 0.75rem 0;
+}
+
+.dg-subgraph-container {
+  min-height: 200px;
+  border: 1px solid var(--bp-border);
+  border-radius: 6px;
+  background: var(--sbs-graph-bg, var(--bp-bg-alt));
+  overflow: hidden;
+}
+
+/* ========== Dark Mode SVG Overrides ========== */
+/* These target CSS classes added to SVG elements by Dress/Graph/Svg.lean.
+   Inline fill/stroke attributes are kept as fallbacks for standalone SVG viewing;
+   dark mode overrides them via !important when the SVG is embedded in the page. */
+
+/* --- Background --- */
+html[data-theme="dark"] svg .graph-bg {
+  fill: var(--sbs-graph-bg) !important;
+}
+
+/* --- Edges --- */
+html[data-theme="dark"] svg .graph-edge {
   stroke: var(--sbs-graph-edge) !important;
 }
 
-html[data-theme="dark"] .dep-graph-container svg path:hover,
-html[data-theme="dark"] .dep-graph-svg svg path:hover {
+html[data-theme="dark"] svg .graph-edge:hover {
   stroke: var(--sbs-graph-edge-hover) !important;
 }
 
-/* Also override marker (arrow) colors */
-html[data-theme="dark"] .dep-graph-container svg marker path,
-html[data-theme="dark"] .dep-graph-svg svg marker path {
+/* Arrowhead markers */
+html[data-theme="dark"] svg .graph-arrowhead {
   fill: var(--sbs-graph-edge) !important;
 }
 
-/* SVG background rect in dark mode */
-html[data-theme="dark"] .dep-graph-container svg > rect:first-child,
-html[data-theme="dark"] .dep-graph-svg svg > rect:first-child {
-  fill: var(--sbs-graph-bg) !important;
+/* --- Node text --- */
+html[data-theme="dark"] svg .node-text {
+  fill: #e0e0e0 !important;
+}
+
+/* White text on dark status backgrounds should remain white.
+   SVG structure: <a> <shape class="node-shape status-*"/> <text class="node-text"/> </a>
+   Use adjacent sibling combinator inside the <a>. */
+html[data-theme="dark"] svg .status-sorry ~ .node-text,
+html[data-theme="dark"] svg .status-fully-proven ~ .node-text,
+html[data-theme="dark"] svg .status-ready ~ .node-text,
+html[data-theme="dark"] svg .status-axiom ~ .node-text {
+  fill: #ffffff !important;
+}
+
+/* --- Node stroke (border) --- */
+html[data-theme="dark"] svg .node-shape {
+  stroke: #555555 !important;
+}
+
+/* --- Node fill colors (dark mode adjusted) --- */
+/* Slightly muted versions of the light-mode status colors for dark backgrounds */
+html[data-theme="dark"] svg .status-not-ready {
+  fill: #B56508 !important;
+}
+
+html[data-theme="dark"] svg .status-ready {
+  fill: #007B8A !important;
+}
+
+html[data-theme="dark"] svg .status-sorry {
+  fill: #A12020 !important;
+}
+
+html[data-theme="dark"] svg .status-proven {
+  fill: #4E9C52 !important;
+}
+
+html[data-theme="dark"] svg .status-fully-proven {
+  fill: #155418 !important;
+}
+
+html[data-theme="dark"] svg .status-mathlib-ready {
+  fill: #2E8BD4 !important;
+}
+
+html[data-theme="dark"] svg .status-axiom {
+  fill: #6A4AA0 !important;
+}
+
+/* ========== Compact Toolbar (inside controls sidebar) ========== */
+.dep-graph-toolbar-compact {
+  position: static;
+  max-width: none;
+}
+
+/* ========== Compact Legend (modal / node page) ========== */
+.dep-graph-legend-compact {
+  font-size: 0.75rem;
+  padding: 0.375rem;
+}
+
+.dep-graph-legend-compact .legend-title {
+  font-size: 0.7rem;
+  margin-bottom: 0.375rem;
+}
+
+.dep-graph-legend-compact .legend-swatch {
+  width: 12px;
+  height: 12px;
+}
+
+.dep-graph-legend-compact .legend-shape {
+  width: 12px;
+  height: 10px;
+}
+
+/* ========== Subgraph Controls (node page wrapper) ========== */
+.dg-subgraph-wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  border: 1px solid var(--bp-border);
+  border-radius: 6px;
+  background: var(--sbs-graph-bg, var(--bp-bg-alt));
+  overflow: hidden;
+}
+
+.dg-subgraph-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  align-self: start;
+}
+
+.dg-subgraph-controls .dep-graph-toolbar {
+  position: static;
+  max-width: none;
+}
+
+.dg-subgraph-wrapper .dg-subgraph-container {
+  border: none;
+  border-radius: 0;
+  border-left: 1px solid var(--bp-border);
+}
+
+/* ========== Depth Slider ========== */
+.subgraph-depth-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.subgraph-depth-control label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--bp-text);
+  white-space: nowrap;
+}
+
+.subgraph-depth-control .depth-slider {
+  flex: 1;
+  min-width: 60px;
+  height: 4px;
+  accent-color: var(--bp-primary, #396282);
+  cursor: pointer;
+}
+
+.subgraph-depth-control .depth-value {
+  font-weight: 700;
+  color: var(--bp-primary, #396282);
+}
+
+/* ========== Direction Toggle ========== */
+.direction-toggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--bp-border, #d0d0d0);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.direction-btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: none;
+  background: var(--bp-bg, #fff);
+  color: var(--bp-text, #333);
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.direction-btn:not(:last-child) {
+  border-right: 1px solid var(--bp-border, #d0d0d0);
+}
+
+.direction-btn:hover {
+  background: var(--bp-bg-alt, #f5f5f5);
+}
+
+.direction-btn.active {
+  background: var(--bp-primary, #396282);
+  color: #fff;
+}
+
+/* Loading state for subgraph fetch */
+.subgraph-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  color: var(--bp-text-muted, #888);
+  font-size: 0.875rem;
+}
+
+/* ========== Modal Legend + Toolbar Row ========== */
+.sbs-modal-legend-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.sbs-modal-legend-toolbar .dep-graph-legend {
+  flex: 1;
+}
+
+.sbs-modal-legend-toolbar .dep-graph-toolbar {
+  position: static;
+  max-width: none;
+  flex-shrink: 0;
 }

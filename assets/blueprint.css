@@ -1445,3 +1445,174 @@ html[data-theme="dark"] .chapter-page .expand-proof::before {
   color: var(--sbs-text);
 }
 
+/* ========== Status Dot Modal (Per-Node Dependency Subgraph) ========== */
+
+.sbs-modal-backdrop {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.sbs-modal-panel {
+  background: var(--sbs-bg-surface);
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 800px;
+  width: 90%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.sbs-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--sbs-border);
+}
+
+.sbs-modal-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--sbs-text);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sbs-modal-status-badge {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sbs-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--sbs-text-muted);
+  padding: 0 0.25rem;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.sbs-modal-close:hover {
+  color: var(--sbs-text);
+}
+
+.sbs-modal-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.subgraph-viewport {
+  min-height: 120px;
+  overflow: auto;
+  border: 1px solid var(--sbs-border);
+  border-radius: 4px;
+  background: var(--sbs-bg-surface);
+  padding: 0.5rem;
+}
+
+.subgraph-viewport svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.subgraph-viewport svg text {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  fill: var(--sbs-text);
+  pointer-events: none;
+}
+
+.subgraph-viewport svg .subgraph-node rect,
+.subgraph-viewport svg .subgraph-node ellipse {
+  stroke: var(--sbs-border);
+  stroke-width: 1.5;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.subgraph-viewport svg .subgraph-node:hover rect,
+.subgraph-viewport svg .subgraph-node:hover ellipse {
+  opacity: 0.85;
+}
+
+.subgraph-viewport svg .subgraph-target rect,
+.subgraph-viewport svg .subgraph-target ellipse {
+  stroke-width: 3;
+  stroke: var(--sbs-text);
+}
+
+.subgraph-viewport svg .subgraph-edge {
+  stroke: var(--sbs-text-muted);
+  stroke-width: 1;
+  fill: none;
+}
+
+.subgraph-viewport svg .subgraph-edge-arrow {
+  fill: var(--sbs-text-muted);
+}
+
+.subgraph-empty {
+  text-align: center;
+  color: var(--sbs-text-muted);
+  font-style: italic;
+  padding: 1.5rem;
+  font-size: 0.85rem;
+}
+
+.subgraph-show-more {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.subgraph-show-more a {
+  font-size: 0.8rem;
+  color: var(--sbs-link);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Modal viewport (uses .subgraph-viewport class for shared SVG styles) */
+.sbs-modal-viewport {
+  flex: 1;
+  min-height: 200px;
+  overflow: auto;
+}
+
+.sbs-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--sbs-border);
+}
+
+.sbs-modal-full-link {
+  font-size: 0.85rem;
+  color: var(--sbs-link);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.sbs-modal-full-link:hover {
+  text-decoration: underline;
+  color: var(--sbs-link-hover);
+}
+

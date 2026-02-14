@@ -99,12 +99,13 @@
      IMPORTANT: These colors must match the Lean definitions in:
      - Dress/Dress/Graph/Svg.lean
      - Dress/Dress/Render/SideBySide.lean */
-  --sbs-status-not-ready: #F4A460;      /* Sandy Brown */
-  --sbs-status-ready: #20B2AA;          /* Light Sea Green */
-  --sbs-status-sorry: #8B0000;          /* Dark Red */
-  --sbs-status-proven: #90EE90;         /* Light Green */
-  --sbs-status-fully-proven: #228B22;   /* Forest Green */
-  --sbs-status-mathlib-ready: #87CEEB;  /* Light Blue */
+  --sbs-status-not-ready: #E8820C;      /* Vivid Orange */
+  --sbs-status-ready: #0097A7;          /* Deep Teal/Cyan */
+  --sbs-status-sorry: #C62828;          /* Vivid Red */
+  --sbs-status-proven: #66BB6A;         /* Medium Green */
+  --sbs-status-fully-proven: #1B5E20;   /* Deep Forest Green */
+  --sbs-status-mathlib-ready: #42A5F5;  /* Vivid Blue */
+  --sbs-status-axiom: #7E57C2;          /* Vivid Purple - axioms */
 
   /* Semantic Colors */
   --sbs-success: #198754;
@@ -175,7 +176,31 @@
   flex-shrink: 0;
 }
 
-/* Header status dot (blueprint theorem headers) */
+/* Header status dot as clickable button (blueprint theorem headers) */
+.status-dot-btn {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: transform 0.15s, box-shadow 0.15s;
+  vertical-align: middle;
+}
+
+.status-dot-btn:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.status-dot-btn:focus-visible {
+  outline: 2px solid var(--sbs-link);
+  outline-offset: 2px;
+}
+
+/* Legacy header status dot (kept for dep-graph modals) */
 .header-status-dot {
   width: 10px;
   height: 10px;
@@ -347,6 +372,9 @@ html[data-theme="dark"] {
   /* Sidebar Active Item (dark mode) - matches content area for tab-like effect */
   --sidebar-active-bg: var(--sbs-bg-page);
   --sidebar-active-text: #ffffff;
+
+  /* Axiom status (dark mode) */
+  --sbs-status-axiom: #B088E8;          /* Lighter purple for dark mode */
 
   /* Check Status Colors (dark mode) */
   --sbs-check-pass-bg: rgba(25, 135, 84, 0.2);

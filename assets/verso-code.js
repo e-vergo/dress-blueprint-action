@@ -460,19 +460,18 @@ function onModalOpen(modalElement) {
     }
 }
 
-// Dependency graph node click modal handling
-document.addEventListener('DOMContentLoaded', function() {
-    // Helper to escape special characters in label for CSS selector
-    function escapeLabel(label) {
-        return label.replace(/\./g, '\\.').replace(/:/g, '\\:');
-    }
+// Initialize click handlers on SVG graph nodes within a container.
+// Attaches click-to-open-modal behavior to all .node elements found inside `container`.
+// Safe to call multiple times (e.g., after fetching a subgraph SVG).
+function initNodeClickHandlers(container) {
+    if (!container) return;
 
-    // Add click handlers to SVG nodes
-    var svgContainer = document.getElementById('dep-graph');
-    if (!svgContainer) return;
-
-    var nodes = svgContainer.querySelectorAll('.node');
+    var nodes = container.querySelectorAll('.node');
     nodes.forEach(function(node) {
+        // Skip if already initialized
+        if (node._modalClickInit) return;
+        node._modalClickInit = true;
+
         node.style.cursor = 'pointer';
         node.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -500,9 +499,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+}
 
+// Initialize close handlers for all modals on the page (called once on DOMContentLoaded).
+function initModalCloseHandlers() {
     // Close button handlers
     document.querySelectorAll('.dep-closebtn').forEach(function(btn) {
+        if (btn._closeInit) return;
+        btn._closeInit = true;
         btn.addEventListener('click', function() {
             var modal = btn.closest('.dep-modal-container');
             if (modal) {
@@ -513,12 +517,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Close modal when clicking outside content
     document.querySelectorAll('.dep-modal-container').forEach(function(modal) {
+        if (modal._backdropInit) return;
+        modal._backdropInit = true;
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
                 modal.style.display = 'none';
             }
         });
     });
+}
+
+// Dependency graph node click modal handling
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize click handlers on the full graph SVG container
+    var svgContainer = document.getElementById('dep-graph');
+    if (svgContainer) {
+        initNodeClickHandlers(svgContainer);
+    }
+
+    // Initialize close/backdrop handlers for all modals
+    initModalCloseHandlers();
 
     // Close modal on Escape key
     document.addEventListener('keydown', function(e) {
@@ -529,3 +547,545 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// ============================================================
+// Status Filter for Dependency Graph
+// ============================================================
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    var filterBar = document.getElementById('graph-filter-bar');
+    var dataEl = document.getElementById('dep-graph-data');
+    var svgContainer = document.getElementById('dep-graph');
+    if (!filterBar || !dataEl || !svgContainer) return;
+
+    var graphData;
+    try {
+      graphData = JSON.parse(dataEl.dataset.graph);
+    } catch (e) { return; }
+
+    // Build nodeId -> {status, envType} map
+    var nodeInfo = {};
+    graphData.nodes.forEach(function(n) {
+      nodeInfo[n.id] = { status: n.status, envType: (n.envType || '').toLowerCase() };
+    });
+
+    // Get filter status for a node (axiom overrides status)
+    function getFilterStatus(nodeId) {
+      var info = nodeInfo[nodeId];
+      if (!info) return null;
+      if (info.envType === 'axiom') return 'axiom';
+      return info.status;
+    }
+
+    var checkboxes = filterBar.querySelectorAll('input[type="checkbox"]');
+    var countEl = document.getElementById('filter-count');
+
+    function applyFilters() {
+      var activeStatuses = new Set();
+      checkboxes.forEach(function(cb) {
+        if (cb.checked) activeStatuses.add(cb.dataset.status);
+      });
+
+      var hiddenNodes = new Set();
+      var totalNodes = 0;
+      var visibleNodes = 0;
+
+      // Show/hide nodes
+      svgContainer.querySelectorAll('.node').forEach(function(nodeEl) {
+        var titleEl = nodeEl.querySelector('title');
+        if (!titleEl) return;
+        var nodeId = titleEl.textContent.trim();
+        var filterStatus = getFilterStatus(nodeId);
+        totalNodes++;
+
+        if (filterStatus && !activeStatuses.has(filterStatus)) {
+          nodeEl.style.display = 'none';
+          hiddenNodes.add(nodeId);
+        } else {
+          nodeEl.style.display = '';
+          visibleNodes++;
+        }
+      });
+
+      // Show/hide edges based on data-from/data-to attributes
+      svgContainer.querySelectorAll('path[data-from]').forEach(function(edgeEl) {
+        var from = edgeEl.getAttribute('data-from');
+        var to = edgeEl.getAttribute('data-to');
+        if (hiddenNodes.has(from) || hiddenNodes.has(to)) {
+          edgeEl.style.display = 'none';
+        } else {
+          edgeEl.style.display = '';
+        }
+      });
+
+      // Update count display
+      if (countEl) {
+        if (visibleNodes < totalNodes) {
+          countEl.textContent = visibleNodes + ' / ' + totalNodes;
+        } else {
+          countEl.textContent = '';
+        }
+      }
+    }
+
+    checkboxes.forEach(function(cb) {
+      cb.addEventListener('change', applyFilters);
+    });
+  });
+})();
+
+// ============================================================
+// Per-Node Dependency Subgraph Renderer (Pre-rendered SVG fetch)
+// ============================================================
+(function() {
+  'use strict';
+
+  var STATUS_COLORS = {
+    notReady:     '#E8820C',
+    ready:        '#0097A7',
+    sorry:        '#C62828',
+    proven:       '#66BB6A',
+    fullyProven:  '#1B5E20',
+    mathlibReady: '#42A5F5',
+    axiom:        '#7E57C2'
+  };
+
+  var STATUS_CLASS_MAP = {
+    'not-ready':     'notReady',
+    'ready':         'ready',
+    'sorry':         'sorry',
+    'proven':        'proven',
+    'fully-proven':  'fullyProven',
+    'mathlib-ready': 'mathlibReady',
+    'axiom':         'axiom'
+  };
+
+  function getStatusColor(status) {
+    if (STATUS_COLORS[status]) return STATUS_COLORS[status];
+    var mapped = STATUS_CLASS_MAP[status];
+    if (mapped && STATUS_COLORS[mapped]) return STATUS_COLORS[mapped];
+    return '#E8820C';
+  }
+
+  // Sanitize node ID for filesystem paths (colons to hyphens)
+  function sanitizeId(id) {
+    return id.replace(/:/g, '-');
+  }
+
+  // Determine the base path for subgraph SVGs.
+  // On individual node pages (dep_graph/<node>.html), subgraphs dir is a sibling
+  // On the full graph page (dep_graph/full.html), same
+  // On the dashboard or chapter pages, need to go into dep_graph/
+  function getSubgraphBasePath() {
+    var path = window.location.pathname;
+    if (path.indexOf('/dep_graph/') >= 0) {
+      return 'subgraphs/';
+    }
+    return 'dep_graph/subgraphs/';
+  }
+
+  // Cached subgraph depth metadata (per-node max depths)
+  var subgraphMetadata = null;
+  var subgraphMetadataLoading = false;
+  var subgraphMetadataCallbacks = [];
+
+  // Fetch and cache subgraph depth metadata
+  function getSubgraphMetadata(callback) {
+    if (subgraphMetadata) {
+      callback(subgraphMetadata);
+      return;
+    }
+    subgraphMetadataCallbacks.push(callback);
+    if (subgraphMetadataLoading) return;
+    subgraphMetadataLoading = true;
+
+    var basePath = getSubgraphBasePath();
+    var url = basePath + 'metadata.json';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        try {
+          subgraphMetadata = JSON.parse(xhr.responseText);
+        } catch (e) {
+          subgraphMetadata = {};
+        }
+      } else {
+        subgraphMetadata = {};
+      }
+      var cbs = subgraphMetadataCallbacks;
+      subgraphMetadataCallbacks = [];
+      cbs.forEach(function(cb) { cb(subgraphMetadata); });
+    };
+    xhr.onerror = function() {
+      subgraphMetadata = {};
+      var cbs = subgraphMetadataCallbacks;
+      subgraphMetadataCallbacks = [];
+      cbs.forEach(function(cb) { cb(subgraphMetadata); });
+    };
+    xhr.send();
+  }
+
+  // Get the max depth for a node in a given direction from metadata
+  function getMaxDepthForNode(metadata, nodeId, direction) {
+    var sanitized = sanitizeId(nodeId);
+    var info = metadata[sanitized];
+    if (!info) return 5; // fallback to default max
+    var depth = info[direction];
+    return (typeof depth === 'number' && depth >= 1) ? depth : 5;
+  }
+
+  // Update a depth slider's max attribute based on metadata
+  function updateSliderMax(slider, label, metadata, nodeId, direction) {
+    if (!slider) return;
+    var maxDepth = getMaxDepthForNode(metadata, nodeId, direction);
+    // Ensure at least 1 for the slider range
+    maxDepth = Math.max(maxDepth, 1);
+    slider.max = maxDepth;
+    // Clamp current value if it exceeds the new max
+    if (parseInt(slider.value) > maxDepth) {
+      slider.value = maxDepth;
+      if (label) label.textContent = maxDepth;
+    }
+  }
+
+  // Fetch a pre-rendered subgraph SVG
+  function fetchSubgraphSvg(nodeId, direction, depth, callback) {
+    var basePath = getSubgraphBasePath();
+    var url = basePath + sanitizeId(nodeId) + '/' + direction + '-' + depth + '.svg';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        callback(null, xhr.responseText);
+      } else {
+        callback('HTTP ' + xhr.status);
+      }
+    };
+    xhr.onerror = function() { callback('Network error'); };
+    xhr.send();
+  }
+
+  // Render fetched SVG into a container element
+  function renderSvgInto(container, nodeId, direction, depth) {
+    container.innerHTML = '<div class="subgraph-loading">Loading...</div>';
+    fetchSubgraphSvg(nodeId, direction, depth, function(err, svgContent) {
+      if (err) {
+        container.innerHTML = '<div class="subgraph-empty">Subgraph not available</div>';
+      } else {
+        container.innerHTML = svgContent;
+        // Attach modal click handlers to nodes in the newly injected SVG
+        if (typeof initNodeClickHandlers === 'function') {
+          initNodeClickHandlers(container);
+        }
+      }
+    });
+  }
+
+  // Get current direction from toggle buttons within a controls container
+  function getActiveDirection(controlsEl) {
+    if (!controlsEl) return 'both';
+    var activeBtn = controlsEl.querySelector('.direction-btn.active');
+    return activeBtn ? activeBtn.dataset.direction : 'both';
+  }
+
+  // Wire up direction toggle buttons within a controls container
+  function initDirectionToggle(controlsEl, onChange) {
+    if (!controlsEl) return;
+    var buttons = controlsEl.querySelectorAll('.direction-btn');
+    buttons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        buttons.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        if (onChange) onChange();
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Build node lookup from JSON (if available, for modal metadata)
+    var nodesById = {};
+    var dataEl = document.getElementById('dep-graph-data');
+    if (dataEl) {
+      try {
+        var graphData = JSON.parse(dataEl.dataset.graph);
+        (graphData.nodes || []).forEach(function(n) {
+          nodesById[n.id] = n;
+        });
+      } catch (e) {
+        console.warn('Subgraph: failed to parse dep-graph-data', e);
+      }
+    }
+
+    // Resolve a possibly-normalized node ID to the original ID in nodesById
+    function resolveNodeId(normalizedId) {
+      if (nodesById[normalizedId]) return normalizedId;
+      for (var key in nodesById) {
+        if (nodesById.hasOwnProperty(key) && key.replace(/:/g, '-') === normalizedId) {
+          return key;
+        }
+      }
+      // If no JSON data, return the sanitized ID as-is (for individual node pages)
+      return normalizedId;
+    }
+
+    // ---- Modal subgraph support ----
+
+    var sbsModal = null;
+    var sbsModalCurrentNodeId = null;
+
+    function buildLegendHtml() {
+      return '<div class="dep-graph-legend">' +
+        '<div class="legend-title">Legend</div>' +
+        '<div class="legend-items">' +
+          '<div class="legend-item"><span class="legend-swatch not-ready"></span><span>Not Ready</span></div>' +
+          '<div class="legend-item"><span class="legend-swatch ready"></span><span>Ready</span></div>' +
+          '<div class="legend-item"><span class="legend-swatch sorry"></span><span>Sorry</span></div>' +
+          '<div class="legend-item"><span class="legend-swatch proven"></span><span>Proven</span></div>' +
+          '<div class="legend-item"><span class="legend-swatch fully-proven"></span><span>Fully Proven</span></div>' +
+          '<div class="legend-item"><span class="legend-swatch mathlib-ready"></span><span>Mathlib Ready</span></div>' +
+          '<div class="legend-item"><span class="legend-swatch axiom"></span><span>Axiom</span></div>' +
+          '<div class="legend-separator"></div>' +
+          '<div class="legend-item"><span class="legend-shape ellipse"></span><span>Theorems</span></div>' +
+          '<div class="legend-item"><span class="legend-shape box"></span><span>Definitions</span></div>' +
+          '<div class="legend-item"><span class="legend-shape diamond"></span><span>Axioms</span></div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    function buildToolbarHtml(prefix) {
+      return '<div class="dep-graph-toolbar dep-graph-toolbar-compact">' +
+        '<button id="' + prefix + '-zoom-in" title="Zoom in" aria-label="Zoom in">+</button>' +
+        '<button id="' + prefix + '-zoom-out" title="Zoom out" aria-label="Zoom out">\u2212</button>' +
+        '<button id="' + prefix + '-fit" title="Fit to window" aria-label="Fit to window">Fit</button>' +
+        '</div>';
+    }
+
+    function buildDirectionToggleHtml() {
+      return '<div class="direction-toggle">' +
+        '<button class="direction-btn active" data-direction="both">Both</button>' +
+        '<button class="direction-btn" data-direction="ancestors">Ancestors</button>' +
+        '<button class="direction-btn" data-direction="descendants">Descendants</button>' +
+        '</div>';
+    }
+
+    function createSbsModal() {
+      var backdrop = document.createElement('div');
+      backdrop.className = 'sbs-modal-backdrop';
+      backdrop.style.display = 'none';
+
+      var panel = document.createElement('div');
+      panel.className = 'sbs-modal-panel';
+
+      // Header
+      var header = document.createElement('div');
+      header.className = 'sbs-modal-header';
+
+      var titleSpan = document.createElement('span');
+      titleSpan.className = 'sbs-modal-title';
+
+      var badgeSpan = document.createElement('span');
+      badgeSpan.className = 'sbs-modal-status-badge';
+
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'sbs-modal-close';
+      closeBtn.innerHTML = '&times;';
+      closeBtn.setAttribute('aria-label', 'Close');
+
+      header.appendChild(titleSpan);
+      header.appendChild(badgeSpan);
+      header.appendChild(closeBtn);
+
+      // Controls: depth slider + direction toggle
+      var controls = document.createElement('div');
+      controls.className = 'sbs-modal-controls';
+
+      var depthControl = document.createElement('div');
+      depthControl.className = 'subgraph-depth-control';
+      depthControl.innerHTML = '<label>Depth: <span class="depth-value">1</span></label>' +
+        '<input type="range" class="depth-slider" min="1" max="5" value="1">';
+      controls.appendChild(depthControl);
+
+      var dirToggleDiv = document.createElement('div');
+      dirToggleDiv.innerHTML = buildDirectionToggleHtml();
+      controls.appendChild(dirToggleDiv.firstChild);
+
+      // Legend + toolbar row
+      var legendToolbar = document.createElement('div');
+      legendToolbar.className = 'sbs-modal-legend-toolbar';
+      legendToolbar.innerHTML = buildLegendHtml() + buildToolbarHtml('modal');
+      controls.appendChild(legendToolbar);
+
+      // Viewport
+      var viewport = document.createElement('div');
+      viewport.className = 'sbs-modal-viewport subgraph-viewport';
+
+      // Footer
+      var footer = document.createElement('div');
+      footer.className = 'sbs-modal-footer';
+
+      var fullLink = document.createElement('a');
+      fullLink.className = 'sbs-modal-full-link';
+      fullLink.textContent = 'View full graph \u2192';
+      footer.appendChild(fullLink);
+
+      // Assemble
+      panel.appendChild(header);
+      panel.appendChild(controls);
+      panel.appendChild(viewport);
+      panel.appendChild(footer);
+      backdrop.appendChild(panel);
+      document.body.appendChild(backdrop);
+
+      // Close handlers
+      closeBtn.addEventListener('click', function() { closeSbsModal(); });
+      backdrop.addEventListener('click', function(e) {
+        if (e.target === backdrop) closeSbsModal();
+      });
+
+      // Depth slider handler
+      var depthSlider = depthControl.querySelector('.depth-slider');
+      var depthLabel = depthControl.querySelector('.depth-value');
+      depthSlider.addEventListener('input', function() {
+        depthLabel.textContent = this.value;
+        renderSbsModalSubgraph();
+      });
+
+      // Direction toggle handler - also update slider max for new direction
+      initDirectionToggle(controls, function() {
+        if (sbsModalCurrentNodeId && subgraphMetadata) {
+          var direction = getActiveDirection(controls);
+          updateSliderMax(depthSlider, depthLabel, subgraphMetadata, sbsModalCurrentNodeId, direction);
+        }
+        renderSbsModalSubgraph();
+      });
+
+      return {
+        backdrop: backdrop,
+        controls: controls,
+        title: titleSpan,
+        badge: badgeSpan,
+        viewport: viewport,
+        fullLink: fullLink,
+        depthSlider: depthSlider,
+        depthLabel: depthLabel
+      };
+    }
+
+    function renderSbsModalSubgraph() {
+      if (!sbsModal || !sbsModalCurrentNodeId) return;
+      var nodeId = sbsModalCurrentNodeId;
+      var depth = sbsModal.depthSlider ? parseInt(sbsModal.depthSlider.value) : 1;
+      var direction = getActiveDirection(sbsModal.controls);
+      renderSvgInto(sbsModal.viewport, nodeId, direction, depth);
+    }
+
+    function openSbsModal(nodeId) {
+      if (!sbsModal) sbsModal = createSbsModal();
+
+      sbsModalCurrentNodeId = nodeId;
+
+      // Reset depth slider and direction
+      if (sbsModal.depthSlider) {
+        sbsModal.depthSlider.value = '1';
+        sbsModal.depthLabel.textContent = '1';
+      }
+      // Reset direction to "both"
+      var dirBtns = sbsModal.controls.querySelectorAll('.direction-btn');
+      dirBtns.forEach(function(b) {
+        b.classList.toggle('active', b.dataset.direction === 'both');
+      });
+
+      // Set title and badge from JSON metadata (if available)
+      var resolvedId = resolveNodeId(nodeId);
+      var nodeData = nodesById[resolvedId];
+      var label = nodeData ? (nodeData.label || nodeId) : nodeId;
+      var status = nodeData ? (nodeData.status || 'not-ready') : 'not-ready';
+      var statusColor = getStatusColor(status);
+
+      sbsModal.title.textContent = label;
+      sbsModal.badge.style.background = statusColor;
+      sbsModal.badge.textContent = '';
+
+      // Set full graph link - normalize colon to hyphen for the static page URL
+      var normalizedId = sanitizeId(nodeId);
+      sbsModal.fullLink.href = 'dep_graph/' + normalizedId + '.html';
+
+      // Fetch depth metadata and update slider max
+      getSubgraphMetadata(function(metadata) {
+        var direction = getActiveDirection(sbsModal.controls);
+        updateSliderMax(sbsModal.depthSlider, sbsModal.depthLabel, metadata, nodeId, direction);
+      });
+
+      // Render subgraph
+      renderSbsModalSubgraph();
+
+      // Show modal
+      sbsModal.backdrop.style.display = 'flex';
+    }
+
+    function closeSbsModal() {
+      if (sbsModal) {
+        sbsModal.backdrop.style.display = 'none';
+      }
+    }
+
+    // Listen for status dot button clicks (delegated)
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('.status-dot-btn');
+      if (btn && btn.dataset.nodeId) {
+        e.preventDefault();
+        e.stopPropagation();
+        openSbsModal(btn.dataset.nodeId);
+      }
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeSbsModal();
+    });
+
+    // Auto-init subgraph on individual node pages (dep_graph/<node-id>.html)
+    var nodeSubgraphEl = document.getElementById('node-subgraph');
+    if (nodeSubgraphEl) {
+      var targetNodeId = nodeSubgraphEl.dataset.nodeId;
+      var controlsEl = nodeSubgraphEl.parentElement.querySelector('.dg-subgraph-controls');
+
+      var pageDepthSlider = controlsEl ? controlsEl.querySelector('.depth-slider') : null;
+      var pageDepthLabel = controlsEl ? controlsEl.querySelector('.depth-value') : null;
+
+      function renderNodePageSubgraph() {
+        if (!targetNodeId) {
+          nodeSubgraphEl.innerHTML = '<div class="subgraph-empty">Node not found</div>';
+          return;
+        }
+        var depth = pageDepthSlider ? parseInt(pageDepthSlider.value) : 1;
+        var direction = getActiveDirection(controlsEl);
+        renderSvgInto(nodeSubgraphEl, targetNodeId, direction, depth);
+      }
+
+      if (pageDepthSlider) {
+        pageDepthSlider.addEventListener('input', function() {
+          if (pageDepthLabel) pageDepthLabel.textContent = this.value;
+          renderNodePageSubgraph();
+        });
+      }
+
+      // Wire direction toggle on node page - also update slider max
+      initDirectionToggle(controlsEl, function() {
+        if (subgraphMetadata && targetNodeId) {
+          var direction = getActiveDirection(controlsEl);
+          updateSliderMax(pageDepthSlider, pageDepthLabel, subgraphMetadata, targetNodeId, direction);
+        }
+        renderNodePageSubgraph();
+      });
+
+      // Fetch metadata and set initial slider max, then render
+      getSubgraphMetadata(function(metadata) {
+        var direction = getActiveDirection(controlsEl);
+        updateSliderMax(pageDepthSlider, pageDepthLabel, metadata, targetNodeId, direction);
+        renderNodePageSubgraph();
+      });
+    }
+  });
+})();
