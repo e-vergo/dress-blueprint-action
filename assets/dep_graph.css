@@ -74,6 +74,8 @@
 
 /* ========== Graph Viewport (pan/zoom area) ========== */
 .dep-graph-viewport {
+  position: relative;
+  z-index: 1;  /* Below controls (z-index: 20) so legend isn't covered by pan/zoom */
   width: 100%;
   min-height: 200px;
   max-height: 600px;
@@ -1115,6 +1117,16 @@ html[data-theme="dark"] svg .status-axiom {
 .subgraph-depth-control .depth-value {
   font-weight: 700;
   color: var(--bp-primary, #396282);
+}
+
+.subgraph-depth-control .depth-max {
+  color: var(--sbs-text-muted, #666);
+  font-size: 0.85rem;
+}
+
+.subgraph-depth-control input[type="range"] {
+  /* Ensure datalist ticks are visible */
+  list-style-type: none;
 }
 
 /* ========== Direction Toggle ========== */

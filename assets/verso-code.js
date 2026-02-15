@@ -210,16 +210,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Dependency graph pan/zoom controls
-document.addEventListener('DOMContentLoaded', function() {
-    var viewport = document.getElementById('dep-graph-viewport');
-    var svgContainer = document.getElementById('dep-graph');
-    if (!viewport || !svgContainer) return;
-
+// Reusable pan/zoom for any viewport + SVG container pair.
+// `prefix` is used to find toolbar buttons (e.g., 'graph' -> 'graph-zoom-in').
+function initPanZoom(viewport, svgContainer, prefix) {
     var svg = svgContainer.querySelector('svg');
     if (!svg) return;
 
-    // Set transform origin for proper scaling behavior
     svgContainer.style.transformOrigin = '0 0';
 
     var scale = 1;
@@ -228,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var isDragging = false;
     var startX, startY;
 
-    // Prevent all selection during drag
     function preventSelection(e) {
         e.preventDefault();
         return false;
@@ -242,10 +237,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var viewportWidth = viewport.clientWidth;
         var viewportHeight = viewport.clientHeight;
 
-        // Get SVG content bounds
         var bbox = svg.getBBox();
 
-        // Calculate scale to fit with padding
         var padding = 40;
         var availableWidth = viewportWidth - padding;
         var availableHeight = viewportHeight - padding;
@@ -254,19 +247,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var scaleY = availableHeight / bbox.height;
         scale = Math.min(scaleX, scaleY, 1);  // Don't scale up
 
-        // Calculate scaled content dimensions
         var scaledWidth = bbox.width * scale;
         var scaledHeight = bbox.height * scale;
 
-        // Center: translate so bbox top-left maps to centered position
-        // After scaling, bbox.x*scale and bbox.y*scale give the offset of content
         translateX = (viewportWidth - scaledWidth) / 2 - bbox.x * scale;
         translateY = (viewportHeight - scaledHeight) / 2 - bbox.y * scale;
 
         updateTransform();
     }
 
-    // Zoom centered on cursor position
     function zoomAtPoint(delta, clientX, clientY) {
         var rect = viewport.getBoundingClientRect();
         var x = clientX - rect.left;
@@ -275,17 +264,17 @@ document.addEventListener('DOMContentLoaded', function() {
         var oldScale = scale;
         scale = Math.max(0.1, Math.min(5, scale * delta));
 
-        // Adjust translation to keep cursor point fixed
         translateX = x - (x - translateX) * (scale / oldScale);
         translateY = y - (y - translateY) * (scale / oldScale);
 
         updateTransform();
     }
 
-    // Zoom buttons
-    var zoomIn = document.getElementById('graph-zoom-in');
-    var zoomOut = document.getElementById('graph-zoom-out');
-    var fitBtn = document.getElementById('graph-fit');
+    // Find toolbar buttons using prefix, looking first in a local wrapper, then globally
+    var container = viewport.closest('.dg-subgraph-wrapper') || viewport.parentElement;
+    var zoomIn = container.querySelector('#' + prefix + '-zoom-in') || document.getElementById(prefix + '-zoom-in');
+    var zoomOut = container.querySelector('#' + prefix + '-zoom-out') || document.getElementById(prefix + '-zoom-out');
+    var fitBtn = container.querySelector('#' + prefix + '-fit') || document.getElementById(prefix + '-fit');
 
     if (zoomIn) {
         zoomIn.addEventListener('click', function() {
@@ -308,26 +297,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mouse wheel zoom (centered on cursor)
     viewport.addEventListener('wheel', function(e) {
         e.preventDefault();
-        var delta = e.deltaY > 0 ? 0.975 : 1.025;  // 4x reduced sensitivity (was 0.9/1.1)
+        var delta = e.deltaY > 0 ? 0.975 : 1.025;
         zoomAtPoint(delta, e.clientX, e.clientY);
     }, { passive: false });
 
-    // Pan with pointer drag (pointer events provide better tracking than mouse events)
+    // Pan with pointer drag
     viewport.addEventListener('pointerdown', function(e) {
-        if (e.button !== 0) return;  // Only left click
-        // Don't start drag if clicking on a node
+        if (e.button !== 0) return;
         if (e.target.closest('.node')) return;
         e.preventDefault();
         isDragging = true;
         startX = e.clientX - translateX;
         startY = e.clientY - translateY;
 
-        // Disable transitions during drag
         svgContainer.classList.add('dragging');
         viewport.style.cursor = 'grabbing';
         viewport.setPointerCapture(e.pointerId);
 
-        // Prevent all selection
         document.addEventListener('selectstart', preventSelection);
         document.addEventListener('dragstart', preventSelection);
     });
@@ -360,14 +346,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.removeEventListener('dragstart', preventSelection);
     });
 
-    // Pan step size (pixels)
-    var panStep = 80;
-
     // Pan buttons
-    var panLeft = document.getElementById('graph-pan-left');
-    var panRight = document.getElementById('graph-pan-right');
-    var panUp = document.getElementById('graph-pan-up');
-    var panDown = document.getElementById('graph-pan-down');
+    var panStep = 80;
+    var panLeft = container.querySelector('#' + prefix + '-pan-left') || document.getElementById(prefix + '-pan-left');
+    var panRight = container.querySelector('#' + prefix + '-pan-right') || document.getElementById(prefix + '-pan-right');
+    var panUp = container.querySelector('#' + prefix + '-pan-up') || document.getElementById(prefix + '-pan-up');
+    var panDown = container.querySelector('#' + prefix + '-pan-down') || document.getElementById(prefix + '-pan-down');
 
     if (panLeft) {
         panLeft.addEventListener('click', function() {
@@ -394,15 +378,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Initial fit - use requestAnimationFrame to ensure SVG is rendered and getBBox is accurate
+    // Auto-fit on init
     requestAnimationFrame(function() {
         fitToWindow();
     });
+}
 
-    // Re-fit after all resources (fonts, images) are loaded for accurate getBBox
-    window.addEventListener('load', function() {
-        fitToWindow();
-    });
+// Initialize pan/zoom on the full dependency graph page
+document.addEventListener('DOMContentLoaded', function() {
+    var viewport = document.getElementById('dep-graph-viewport');
+    var svgContainer = document.getElementById('dep-graph');
+    if (viewport && svgContainer) {
+        initPanZoom(viewport, svgContainer, 'graph');
+
+        // Re-fit after all resources (fonts, images) are loaded for accurate getBBox
+        window.addEventListener('load', function() {
+            var svg = svgContainer.querySelector('svg');
+            if (svg) {
+                // Re-run fitToWindow by re-initializing (the RAF in initPanZoom already fires once)
+                svgContainer.style.transformOrigin = '0 0';
+                var bbox = svg.getBBox();
+                var padding = 40;
+                var vw = viewport.clientWidth - padding;
+                var vh = viewport.clientHeight - padding;
+                var s = Math.min(vw / bbox.width, vh / bbox.height, 1);
+                var sw = bbox.width * s;
+                var sh = bbox.height * s;
+                var tx = (viewport.clientWidth - sw) / 2 - bbox.x * s;
+                var ty = (viewport.clientHeight - sh) / 2 - bbox.y * s;
+                svgContainer.style.transform = 'translate(' + tx + 'px, ' + ty + 'px) scale(' + s + ')';
+            }
+        });
+    }
 });
 
 // Initialize MathJax and Tippy.js when a modal is opened
@@ -732,21 +739,41 @@ document.addEventListener('DOMContentLoaded', function() {
     var info = metadata[sanitized];
     if (!info) return 5; // fallback to default max
     var depth = info[direction];
-    return (typeof depth === 'number' && depth >= 1) ? depth : 5;
+    return (typeof depth === 'number' && depth >= 0) ? depth : 5;
   }
 
   // Update a depth slider's max attribute based on metadata
+  // Returns the actual max depth (may be 0 for isolated nodes)
   function updateSliderMax(slider, label, metadata, nodeId, direction) {
-    if (!slider) return;
+    if (!slider) return 0;
     var maxDepth = getMaxDepthForNode(metadata, nodeId, direction);
-    // Ensure at least 1 for the slider range
-    maxDepth = Math.max(maxDepth, 1);
+    if (maxDepth === 0) {
+      // Isolated node: hide slider, will show message instead
+      slider.closest('.subgraph-controls, .sbs-modal-controls, .dg-controls')?.classList.add('depth-zero');
+      return 0;
+    }
+    // Remove depth-zero class if previously set
+    slider.closest('.subgraph-controls, .sbs-modal-controls, .dg-controls')?.classList.remove('depth-zero');
     slider.max = maxDepth;
+    // Update max display
+    var maxLabel = slider.parentElement.querySelector('.depth-max');
+    if (maxLabel) maxLabel.textContent = maxDepth;
+    // Update datalist ticks
+    var datalist = slider.parentElement.parentElement.querySelector('datalist');
+    if (datalist) {
+      datalist.innerHTML = '';
+      for (var i = 1; i <= maxDepth; i++) {
+        var opt = document.createElement('option');
+        opt.value = i;
+        datalist.appendChild(opt);
+      }
+    }
     // Clamp current value if it exceeds the new max
     if (parseInt(slider.value) > maxDepth) {
       slider.value = maxDepth;
       if (label) label.textContent = maxDepth;
     }
+    return maxDepth;
   }
 
   // Fetch a pre-rendered subgraph SVG
@@ -766,8 +793,18 @@ document.addEventListener('DOMContentLoaded', function() {
     xhr.send();
   }
 
-  // Render fetched SVG into a container element
-  function renderSvgInto(container, nodeId, direction, depth) {
+  // Render fetched SVG into a container element.
+  // Optional toolbarPrefix enables pan/zoom on the freshly loaded SVG.
+  // If metadata is provided, checks for isolated nodes (maxDepth=0) and shows message.
+  function renderSvgInto(container, nodeId, direction, depth, toolbarPrefix, metadata) {
+    // Check if this is an isolated node (no dependencies in this direction)
+    if (metadata) {
+      var maxD = getMaxDepthForNode(metadata, nodeId, direction);
+      if (maxD === 0) {
+        container.innerHTML = '<div class="subgraph-empty">This node has no dependencies</div>';
+        return;
+      }
+    }
     container.innerHTML = '<div class="subgraph-loading">Loading...</div>';
     fetchSubgraphSvg(nodeId, direction, depth, function(err, svgContent) {
       if (err) {
@@ -778,15 +815,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof initNodeClickHandlers === 'function') {
           initNodeClickHandlers(container);
         }
+        // Initialize pan/zoom on the freshly loaded SVG
+        if (toolbarPrefix && typeof initPanZoom === 'function') {
+          initPanZoom(container, container, toolbarPrefix);
+        }
       }
     });
   }
 
   // Get current direction from toggle buttons within a controls container
   function getActiveDirection(controlsEl) {
-    if (!controlsEl) return 'both';
+    if (!controlsEl) return 'ancestors';
     var activeBtn = controlsEl.querySelector('.direction-btn.active');
-    return activeBtn ? activeBtn.dataset.direction : 'both';
+    return activeBtn ? activeBtn.dataset.direction : 'ancestors';
   }
 
   // Wire up direction toggle buttons within a controls container
@@ -829,220 +870,20 @@ document.addEventListener('DOMContentLoaded', function() {
       return normalizedId;
     }
 
-    // ---- Modal subgraph support ----
+    // ---- Status dot click: navigate to node page ----
 
-    var sbsModal = null;
-    var sbsModalCurrentNodeId = null;
-
-    function buildLegendHtml() {
-      return '<div class="dep-graph-legend">' +
-        '<div class="legend-title">Legend</div>' +
-        '<div class="legend-items">' +
-          '<div class="legend-item"><span class="legend-swatch not-ready"></span><span>Not Ready</span></div>' +
-          '<div class="legend-item"><span class="legend-swatch ready"></span><span>Ready</span></div>' +
-          '<div class="legend-item"><span class="legend-swatch sorry"></span><span>Sorry</span></div>' +
-          '<div class="legend-item"><span class="legend-swatch proven"></span><span>Proven</span></div>' +
-          '<div class="legend-item"><span class="legend-swatch fully-proven"></span><span>Fully Proven</span></div>' +
-          '<div class="legend-item"><span class="legend-swatch mathlib-ready"></span><span>Mathlib Ready</span></div>' +
-          '<div class="legend-item"><span class="legend-swatch axiom"></span><span>Axiom</span></div>' +
-          '<div class="legend-separator"></div>' +
-          '<div class="legend-item"><span class="legend-shape ellipse"></span><span>Theorems</span></div>' +
-          '<div class="legend-item"><span class="legend-shape box"></span><span>Definitions</span></div>' +
-          '<div class="legend-item"><span class="legend-shape diamond"></span><span>Axioms</span></div>' +
-        '</div>' +
-      '</div>';
-    }
-
-    function buildToolbarHtml(prefix) {
-      return '<div class="dep-graph-toolbar dep-graph-toolbar-compact">' +
-        '<button id="' + prefix + '-zoom-in" title="Zoom in" aria-label="Zoom in">+</button>' +
-        '<button id="' + prefix + '-zoom-out" title="Zoom out" aria-label="Zoom out">\u2212</button>' +
-        '<button id="' + prefix + '-fit" title="Fit to window" aria-label="Fit to window">Fit</button>' +
-        '</div>';
-    }
-
-    function buildDirectionToggleHtml() {
-      return '<div class="direction-toggle">' +
-        '<button class="direction-btn active" data-direction="both">Both</button>' +
-        '<button class="direction-btn" data-direction="ancestors">Ancestors</button>' +
-        '<button class="direction-btn" data-direction="descendants">Descendants</button>' +
-        '</div>';
-    }
-
-    function createSbsModal() {
-      var backdrop = document.createElement('div');
-      backdrop.className = 'sbs-modal-backdrop';
-      backdrop.style.display = 'none';
-
-      var panel = document.createElement('div');
-      panel.className = 'sbs-modal-panel';
-
-      // Header
-      var header = document.createElement('div');
-      header.className = 'sbs-modal-header';
-
-      var titleSpan = document.createElement('span');
-      titleSpan.className = 'sbs-modal-title';
-
-      var badgeSpan = document.createElement('span');
-      badgeSpan.className = 'sbs-modal-status-badge';
-
-      var closeBtn = document.createElement('button');
-      closeBtn.className = 'sbs-modal-close';
-      closeBtn.innerHTML = '&times;';
-      closeBtn.setAttribute('aria-label', 'Close');
-
-      header.appendChild(titleSpan);
-      header.appendChild(badgeSpan);
-      header.appendChild(closeBtn);
-
-      // Controls: depth slider + direction toggle
-      var controls = document.createElement('div');
-      controls.className = 'sbs-modal-controls';
-
-      var depthControl = document.createElement('div');
-      depthControl.className = 'subgraph-depth-control';
-      depthControl.innerHTML = '<label>Depth: <span class="depth-value">1</span></label>' +
-        '<input type="range" class="depth-slider" min="1" max="5" value="1">';
-      controls.appendChild(depthControl);
-
-      var dirToggleDiv = document.createElement('div');
-      dirToggleDiv.innerHTML = buildDirectionToggleHtml();
-      controls.appendChild(dirToggleDiv.firstChild);
-
-      // Legend + toolbar row
-      var legendToolbar = document.createElement('div');
-      legendToolbar.className = 'sbs-modal-legend-toolbar';
-      legendToolbar.innerHTML = buildLegendHtml() + buildToolbarHtml('modal');
-      controls.appendChild(legendToolbar);
-
-      // Viewport
-      var viewport = document.createElement('div');
-      viewport.className = 'sbs-modal-viewport subgraph-viewport';
-
-      // Footer
-      var footer = document.createElement('div');
-      footer.className = 'sbs-modal-footer';
-
-      var fullLink = document.createElement('a');
-      fullLink.className = 'sbs-modal-full-link';
-      fullLink.textContent = 'View full graph \u2192';
-      footer.appendChild(fullLink);
-
-      // Assemble
-      panel.appendChild(header);
-      panel.appendChild(controls);
-      panel.appendChild(viewport);
-      panel.appendChild(footer);
-      backdrop.appendChild(panel);
-      document.body.appendChild(backdrop);
-
-      // Close handlers
-      closeBtn.addEventListener('click', function() { closeSbsModal(); });
-      backdrop.addEventListener('click', function(e) {
-        if (e.target === backdrop) closeSbsModal();
-      });
-
-      // Depth slider handler
-      var depthSlider = depthControl.querySelector('.depth-slider');
-      var depthLabel = depthControl.querySelector('.depth-value');
-      depthSlider.addEventListener('input', function() {
-        depthLabel.textContent = this.value;
-        renderSbsModalSubgraph();
-      });
-
-      // Direction toggle handler - also update slider max for new direction
-      initDirectionToggle(controls, function() {
-        if (sbsModalCurrentNodeId && subgraphMetadata) {
-          var direction = getActiveDirection(controls);
-          updateSliderMax(depthSlider, depthLabel, subgraphMetadata, sbsModalCurrentNodeId, direction);
-        }
-        renderSbsModalSubgraph();
-      });
-
-      return {
-        backdrop: backdrop,
-        controls: controls,
-        title: titleSpan,
-        badge: badgeSpan,
-        viewport: viewport,
-        fullLink: fullLink,
-        depthSlider: depthSlider,
-        depthLabel: depthLabel
-      };
-    }
-
-    function renderSbsModalSubgraph() {
-      if (!sbsModal || !sbsModalCurrentNodeId) return;
-      var nodeId = sbsModalCurrentNodeId;
-      var depth = sbsModal.depthSlider ? parseInt(sbsModal.depthSlider.value) : 1;
-      var direction = getActiveDirection(sbsModal.controls);
-      renderSvgInto(sbsModal.viewport, nodeId, direction, depth);
-    }
-
-    function openSbsModal(nodeId) {
-      if (!sbsModal) sbsModal = createSbsModal();
-
-      sbsModalCurrentNodeId = nodeId;
-
-      // Reset depth slider and direction
-      if (sbsModal.depthSlider) {
-        sbsModal.depthSlider.value = '1';
-        sbsModal.depthLabel.textContent = '1';
-      }
-      // Reset direction to "both"
-      var dirBtns = sbsModal.controls.querySelectorAll('.direction-btn');
-      dirBtns.forEach(function(b) {
-        b.classList.toggle('active', b.dataset.direction === 'both');
-      });
-
-      // Set title and badge from JSON metadata (if available)
-      var resolvedId = resolveNodeId(nodeId);
-      var nodeData = nodesById[resolvedId];
-      var label = nodeData ? (nodeData.label || nodeId) : nodeId;
-      var status = nodeData ? (nodeData.status || 'not-ready') : 'not-ready';
-      var statusColor = getStatusColor(status);
-
-      sbsModal.title.textContent = label;
-      sbsModal.badge.style.background = statusColor;
-      sbsModal.badge.textContent = '';
-
-      // Set full graph link - normalize colon to hyphen for the static page URL
-      var normalizedId = sanitizeId(nodeId);
-      sbsModal.fullLink.href = 'dep_graph/' + normalizedId + '.html';
-
-      // Fetch depth metadata and update slider max
-      getSubgraphMetadata(function(metadata) {
-        var direction = getActiveDirection(sbsModal.controls);
-        updateSliderMax(sbsModal.depthSlider, sbsModal.depthLabel, metadata, nodeId, direction);
-      });
-
-      // Render subgraph
-      renderSbsModalSubgraph();
-
-      // Show modal
-      sbsModal.backdrop.style.display = 'flex';
-    }
-
-    function closeSbsModal() {
-      if (sbsModal) {
-        sbsModal.backdrop.style.display = 'none';
-      }
-    }
-
-    // Listen for status dot button clicks (delegated)
+    // Listen for status dot button clicks (delegated) — navigate to static node page
     document.addEventListener('click', function(e) {
       var btn = e.target.closest('.status-dot-btn');
       if (btn && btn.dataset.nodeId) {
         e.preventDefault();
         e.stopPropagation();
-        openSbsModal(btn.dataset.nodeId);
+        var normalizedId = sanitizeId(btn.dataset.nodeId);
+        // From dep_graph/ pages, navigate to sibling; from other pages, go into dep_graph/
+        var path = window.location.pathname;
+        var prefix = (path.indexOf('/dep_graph/') >= 0) ? '' : 'dep_graph/';
+        window.location.href = prefix + normalizedId + '.html';
       }
-    });
-
-    // Close on Escape
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeSbsModal();
     });
 
     // Auto-init subgraph on individual node pages (dep_graph/<node-id>.html)
@@ -1061,7 +902,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         var depth = pageDepthSlider ? parseInt(pageDepthSlider.value) : 1;
         var direction = getActiveDirection(controlsEl);
-        renderSvgInto(nodeSubgraphEl, targetNodeId, direction, depth);
+        getSubgraphMetadata(function(metadata) {
+          renderSvgInto(nodeSubgraphEl, targetNodeId, direction, depth, 'node-graph', metadata);
+        });
       }
 
       if (pageDepthSlider) {

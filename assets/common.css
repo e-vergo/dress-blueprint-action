@@ -116,6 +116,7 @@
   /* Check Status Colors */
   --sbs-check-pass-bg: rgba(25, 135, 84, 0.15);
   --sbs-check-fail-bg: rgba(220, 53, 69, 0.15);
+  --sbs-check-warn-bg: rgba(255, 193, 7, 0.15);
 
   /* Sidebar Active Item (light mode) - matches content area for tab-like effect */
   --sidebar-active-bg: var(--sbs-bg-page);
@@ -379,6 +380,7 @@ html[data-theme="dark"] {
   /* Check Status Colors (dark mode) */
   --sbs-check-pass-bg: rgba(25, 135, 84, 0.2);
   --sbs-check-fail-bg: rgba(220, 53, 69, 0.2);
+  --sbs-check-warn-bg: rgba(255, 193, 7, 0.2);
 
   /* Tactic indicator dot (brighter for dark backgrounds) */
   --sbs-tactic-dot: #60a5fa;
@@ -1177,7 +1179,26 @@ html[data-theme="dark"] .theme-toggle-icon.moon { opacity: 1.0; }
 }
 
 /* ---------------------------------------------
-   12. PDF Page Styles (fullpage embed)
+   12. Blueprint / Paper Inline Links
+   --------------------------------------------- */
+
+.blueprint-link,
+.paper-link {
+  font-style: italic;
+  font-size: 0.85em;
+  margin-left: 0.5em;
+  color: var(--sbs-link);
+  text-decoration: none;
+}
+
+.blueprint-link:hover,
+.paper-link:hover {
+  text-decoration: none;
+  color: var(--sbs-link-hover);
+}
+
+/* ---------------------------------------------
+   13. PDF Page Styles (fullpage embed)
    --------------------------------------------- */
 
 /* PDF page body - prevent scrolling */

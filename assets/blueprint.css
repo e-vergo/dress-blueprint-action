@@ -1011,8 +1011,6 @@ html[data-theme="dark"] .notes-messages h4 {
   border-radius: 8px;
   padding: 0;  /* Match stats-box padding (handled by children) */
   margin-top: 1rem;
-  height: 500px;  /* Match stats-box height */
-  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -1107,6 +1105,38 @@ html[data-theme="dark"] .check-item.check-fail {
   font-size: 0.8rem;
   color: var(--sbs-text-muted);
   margin-left: auto;
+}
+
+/* Warning state for checks (e.g., partial coverage) */
+.check-item.check-warn {
+  background-color: var(--sbs-check-warn-bg);
+  border-left: 3px solid var(--sbs-warning);
+}
+
+.check-warn .check-icon {
+  color: var(--sbs-warning);
+}
+
+html[data-theme="dark"] .check-item.check-warn {
+  background-color: var(--sbs-check-warn-bg);
+}
+
+/* Coverage detail list (mirrors cycles-detail) */
+.coverage-detail {
+  margin-top: 0.5rem;
+  padding-left: 1.5rem;
+}
+
+.coverage-detail ul {
+  margin: 0;
+  padding-left: 1rem;
+  font-size: 0.85rem;
+  color: var(--sbs-text-muted);
+}
+
+.coverage-detail li {
+  margin: 0.25rem 0;
+  font-family: monospace;
 }
 
 /* Legacy progress bar styles (kept for backwards compatibility) */
@@ -1445,79 +1475,69 @@ html[data-theme="dark"] .chapter-page .expand-proof::before {
   color: var(--sbs-text);
 }
 
-/* ========== Status Dot Modal (Per-Node Dependency Subgraph) ========== */
+/* ========== Simplified Proof Toggle for Node Pages (dep_graph) ========== */
+/* Same paper-like [show]/[hide] text as chapter pages */
 
-.sbs-modal-backdrop {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  justify-content: center;
-  align-items: center;
-}
-
-.sbs-modal-panel {
-  background: var(--sbs-bg-surface);
-  border-radius: 8px;
-  padding: 1.5rem;
-  max-width: 800px;
-  width: 90%;
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.sbs-modal-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--sbs-border);
-}
-
-.sbs-modal-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--sbs-text);
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sbs-modal-status-badge {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.sbs-modal-close {
+.dg-node-page .proof_heading {
   background: none;
   border: none;
-  font-size: 1.5rem;
-  line-height: 1;
-  cursor: pointer;
-  color: var(--sbs-text-muted);
-  padding: 0 0.25rem;
-  flex-shrink: 0;
-  transition: color 0.15s;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  font-weight: normal;
+  font-style: italic;
+  display: inline;
+  gap: 0;
 }
 
-.sbs-modal-close:hover {
+.dg-node-page .proof_heading:hover {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.dg-node-page .proof_heading:active {
+  background: none;
+}
+
+/* Hide the chevron, replace with [show]/[hide] text */
+.dg-node-page .expand-proof,
+.dep-modal-body-wrapper .expand-proof {
+  font-size: 0;
+  color: var(--sbs-text);
+  transform: none !important; /* Never rotate text */
+  display: inline;
+}
+
+.dg-node-page .expand-proof::before,
+.dep-modal-body-wrapper .expand-proof::before {
+  content: '[show]';
+  font-size: 0.85rem;
+  color: var(--sbs-text);
+  text-decoration: underline;
+  font-style: normal;
+  font-weight: normal;
+}
+
+.dg-node-page .proof_wrapper.expanded .expand-proof::before,
+.dep-modal-body-wrapper .proof_wrapper.expanded .expand-proof::before {
+  content: '[hide]';
+}
+
+/* Proof caption styling */
+.dg-node-page .proof_caption,
+.dep-modal-body-wrapper .proof_caption {
+  font-style: italic;
+  margin-right: 0.25rem;
+}
+
+/* Dark mode for node page proof toggle */
+html[data-theme="dark"] .dg-node-page .expand-proof::before,
+html[data-theme="dark"] .dep-modal-body-wrapper .expand-proof::before {
   color: var(--sbs-text);
 }
 
-.sbs-modal-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
+/* ========== Subgraph Viewport (Node Pages) ========== */
 
 .subgraph-viewport {
   min-height: 120px;
@@ -1587,32 +1607,5 @@ html[data-theme="dark"] .chapter-page .expand-proof::before {
   color: var(--sbs-link);
   cursor: pointer;
   text-decoration: underline;
-}
-
-/* Modal viewport (uses .subgraph-viewport class for shared SVG styles) */
-.sbs-modal-viewport {
-  flex: 1;
-  min-height: 200px;
-  overflow: auto;
-}
-
-.sbs-modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 0.75rem;
-  margin-top: 0.5rem;
-  border-top: 1px solid var(--sbs-border);
-}
-
-.sbs-modal-full-link {
-  font-size: 0.85rem;
-  color: var(--sbs-link);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.sbs-modal-full-link:hover {
-  text-decoration: underline;
-  color: var(--sbs-link-hover);
 }
 
