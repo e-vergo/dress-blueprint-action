@@ -530,6 +530,61 @@ runs:
           fi
         done
 
+    - name: Optimize site for deployment
+      if: inputs.deploy-pages == 'true'
+      shell: bash
+      run: |
+        PROJECT_DIR="${{ inputs.project-directory }}"
+        if [ "$PROJECT_DIR" == "." ]; then
+          PROJECT_DIR="${{ github.workspace }}"
+        else
+          PROJECT_DIR="${{ github.workspace }}/${{ inputs.project-directory }}"
+        fi
+
+        SITE_DIR="$PROJECT_DIR/.lake/build/runway"
+        SUBGRAPH_DIR="$SITE_DIR/dep_graph/subgraphs"
+        MAX_SIZE_MB=900
+
+        # Get initial site size
+        INITIAL_SIZE=$(du -sm "$SITE_DIR" | cut -f1)
+        echo "Initial site size: ${INITIAL_SIZE} MB"
+
+        if [ "$INITIAL_SIZE" -gt "$MAX_SIZE_MB" ] && [ -d "$SUBGRAPH_DIR" ]; then
+          echo "Site exceeds ${MAX_SIZE_MB} MB limit. Optimizing SVGs..."
+
+          # Phase 1: SVGO optimization
+          npm install -g svgo@3 --silent 2>/dev/null
+          SVG_COUNT=$(find "$SUBGRAPH_DIR" -name "*.svg" | wc -l)
+          echo "Optimizing $SVG_COUNT SVG files with SVGO..."
+          find "$SUBGRAPH_DIR" -name "*.svg" -print0 | \
+            xargs -0 -P4 svgo --multipass --quiet 2>/dev/null || true
+          AFTER_SVGO=$(du -sm "$SITE_DIR" | cut -f1)
+          echo "After SVGO: ${AFTER_SVGO} MB (saved $((INITIAL_SIZE - AFTER_SVGO)) MB)"
+
+          # Phase 2: Progressive depth trimming if still over budget
+          # Remove highest-depth subgraphs first (both-5, ancestors-5, descendants-5, then 4, 3...)
+          for DEPTH in 5 4 3; do
+            CURRENT_SIZE=$(du -sm "$SITE_DIR" | cut -f1)
+            if [ "$CURRENT_SIZE" -le "$MAX_SIZE_MB" ]; then
+              echo "Site is now ${CURRENT_SIZE} MB - under budget."
+              break
+            fi
+            echo "Still ${CURRENT_SIZE} MB. Removing depth-${DEPTH} subgraphs..."
+            find "$SUBGRAPH_DIR" -name "*-${DEPTH}.svg" -delete 2>/dev/null || true
+            AFTER_TRIM=$(du -sm "$SITE_DIR" | cut -f1)
+            echo "After removing depth ${DEPTH}: ${AFTER_TRIM} MB"
+          done
+
+          FINAL_SIZE=$(du -sm "$SITE_DIR" | cut -f1)
+          echo "Final site size: ${FINAL_SIZE} MB (reduced from ${INITIAL_SIZE} MB)"
+
+          if [ "$FINAL_SIZE" -gt "$MAX_SIZE_MB" ]; then
+            echo "::warning::Site still exceeds ${MAX_SIZE_MB} MB after optimization (${FINAL_SIZE} MB). Deployment may fail."
+          fi
+        else
+          echo "Site is ${INITIAL_SIZE} MB - no optimization needed."
+        fi
+
     - name: Upload Pages artifact
       if: inputs.deploy-pages == 'true'
       uses: actions/upload-pages-artifact@v3
